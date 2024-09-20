@@ -14,6 +14,10 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleMiPerfil = () => {
+    navigate('/mi_perfil')
+  };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
@@ -22,7 +26,7 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
     logout();
     navigate('/login_user'); // Redirige a la página de inicio de sesión después de cerrar sesión
     };
-
+  console.log(user);
   return (
     <AppBar
       position="fixed"
@@ -78,7 +82,7 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
           },
         }}
       >
-        <MenuItem onClick={handleLogout}>Perfil</MenuItem>
+        <MenuItem onClick={handleMiPerfil}>Perfil</MenuItem>
         <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
       </Menu>
     </AppBar>

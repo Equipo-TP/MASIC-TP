@@ -130,6 +130,7 @@ const RegistrarUsuario = () => {
         console.log('Usuario registrado con éxito:', response.data);
         setSnackbarMessage('Usuario registrado con éxito!');
         setSnackbarSeverity('success');
+        navigate('/gestionar_usuarios')
       } catch (error) {
         console.error('Error al registrar el usuario:', error);
         setSnackbarMessage('Error al registrar el usuario.');

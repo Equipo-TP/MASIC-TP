@@ -9,6 +9,7 @@ import RegistrarUsuario from './pages/Administrador/RegistrarUsuario';
 import GestionarUsuarios from './pages/Administrador/GestionarUsuario';
 import EditUserPage from './pages/Administrador/EditUserPage';
 import LoggedUsuario from './pages/Usuario/LoggedUsuario';
+import MiPerfil from './pages/Usuario/Miperfil';
 
 function App() {
   //const { checkAuth } = useAuth();
@@ -20,6 +21,7 @@ function App() {
         <Route path='/login_user' element={<LoginPage/>}/>       
         <Route element={<PrivateRoute />}>
         <Route path='/logged_user' element={<LoggedUsuario/>}/>
+        <Route path='/mi_perfil' element={<MiPerfil/>} />
         <Route path='/registrar_usuario' element={<RegistrarUsuario/>}/>
         <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
         <Route path='/editar_usuario/:id' element={<EditUserPage/>}/>

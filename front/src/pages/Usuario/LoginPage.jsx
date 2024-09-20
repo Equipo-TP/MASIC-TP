@@ -21,7 +21,14 @@ export function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/logged_user");
+      // Redirige según el rol del usuario
+      if (role === 'Administrador') {
+        navigate("/logged_user");
+      } else if (role === 'Tecnico') {
+        navigate("/logged_user");
+      } else if (role === 'Vendedor') {
+        navigate("/logged_user");
+      }
     }
   }, [isAuthenticated, role, navigate]);
 

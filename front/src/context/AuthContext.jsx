@@ -99,7 +99,7 @@ export const UserProvider = ({children}) => {
     }, []);  // Se ejecuta una sola vez cuando el componente se monta
 
     return (
-        <UserContext.Provider value = {{user, isAuthenticated, role, name, registerUser, signin, checkAuth, logout, updateUser}}>
+        <UserContext.Provider value = {{user, setUser, isAuthenticated, role, name, registerUser, signin, checkAuth, logout, updateUser}}>
             {children}
         </UserContext.Provider>
     )
