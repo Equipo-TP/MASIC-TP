@@ -70,5 +70,5 @@ module.exports = {
     listar_clientes,
     editar_cliente,
     obtener_cliente,
-    eliminar_cliente,
+    //eliminar_cliente,
 }

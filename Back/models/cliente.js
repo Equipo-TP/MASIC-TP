@@ -10,6 +10,7 @@ var ClienteSchema = Schema({
     RUC: {type: Number, required: false},
     email: {type: String, required: true},
     telefono: {type: String, required: true},
+    createdAt: {type: Date, default: Date.now, required: true}
 });
 
 module.exports = mongoose.model('cliente', ClienteSchema );
