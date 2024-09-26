@@ -23,11 +23,11 @@ export function LoginPage() {
     if (isAuthenticated) {
       // Redirige según el rol del usuario
       if (role === 'Administrador') {
-        navigate("/registro_user");
+        navigate("/logged_user");
       } else if (role === 'Tecnico') {
-        navigate("/tecnico");
+        navigate("/logged_user");
       } else if (role === 'Vendedor') {
-        navigate("/vendedor");
+        navigate("/logged_user");
       }
     }
   }, [isAuthenticated, role, navigate]);

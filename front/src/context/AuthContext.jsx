@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { loginRequest } from "../api/auth";
+import { editarUserRequest, loginRequest } from "../api/auth";
 
 export const UserContext = createContext();
 export const useAuth = () => {
@@ -81,6 +81,17 @@ export const UserProvider = ({children}) => {
         setRole(null);
         setName(null);
     };
+    //funcion para manejar la actualizacion del usuario
+    const updateUser = async(id,user)=>{
+        try{
+            await editarUserRequest(id,user);
+            setIsAuthenticated(true);
+        } catch(error){
+            console.log(error.response);
+            console.log("Error");
+        }
+    };
+
 
     // Usar useEffect para chequear la autenticación al cargar la app
     useEffect(() => {
@@ -88,8 +99,10 @@ export const UserProvider = ({children}) => {
     }, []);  // Se ejecuta una sola vez cuando el componente se monta
 
     return (
-        <UserContext.Provider value = {{user, isAuthenticated, role, name, registerUser, signin, checkAuth, logout}}>
+        <UserContext.Provider value = {{user, setUser, isAuthenticated, role, name, registerUser, signin, checkAuth, logout, updateUser}}>
             {children}
         </UserContext.Provider>
     )
+
+    
 }

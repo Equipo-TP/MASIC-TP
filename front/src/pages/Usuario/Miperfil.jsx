@@ -1,153 +1,128 @@
+import React, { useEffect, useState } from 'react';
+import { editarUserRequest } from '../../api/auth';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import MenuSideBar from '../../components/MenuSideBar'; // Sidebar
+import NavBar from '../../components/NavBar'; // Navbar
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Typography, Paper, Box } from '@mui/material';
-import React from 'react';
-import {zodResolver} from "@hookform/resolvers/zod"; 
-import { loginSchema } from '../../Schemas/AUTH';
 
-export function LoginPage() {
-  const { register, handleSubmit, setError,formState:{errors} } = useForm({resolver:zodResolver(loginSchema)});
-  const { signin, isAuthenticated, role } = useAuth();
+
+export function MiPerfil () {
   const navigate = useNavigate();
-
-  // Estado para manejar el índice de las imágenes de fondo
-  const [backgroundIndex, setBackgroundIndex] = useState(0);
-
-  const onSubmit = (data) => signin(data);
+  const { user, setUser } = useAuth();
+  const { register, handleSubmit, setValue } = useForm();
+  const [usuario, setUsuario] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false); // Estado para abrir/cerrar el sidebar
 
   useEffect(() => {
-    if (isAuthenticated) {
-      // Redirige según el rol del usuario
-      if (role === 'Administrador') {
-        navigate("/abc");
-      } else if (role === 'Tecnico') {
-        navigate("/tecnico");
-      } else if (role === 'Vendedor') {
-        navigate("/vendedor");
+    const fetchUsuario = async () => {
+      try {
+        setValue('rol', user.data.rol);
+        setValue('nombre', user.data.nombre);
+        setValue('apellidos', user.data.apellidos);
+        setValue('dni', user.data.dni);
+        setValue('telefono', user.data.telefono);
+        setValue('email', user.data.email);
+      } catch (error) {
+        console.error('Error al obtener el usuario:', error);
       }
+    };
+
+    fetchUsuario();
+  }, [user, usuario, setValue]);
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await editarUserRequest(user.data._id, data); // Actualizar los datos del usuario
+      setUser(res.data);
+      alert('Información actualizada correctamente');
+      navigate('/logged_user');
+    } catch (error) {
+      console.error('Error al actualizar el usuario:', error);
     }
-  }, [isAuthenticated, role, navigate]);
+  };
 
-  useEffect(() => {
-    const images = [
-      '/images/luces1.jpg',
-      '/images/luces2.jpg',
-      '/images/luces3.jpg',
-      '/images/luces4.jpg',
-      '/images/luces5.jpg',
-    ];
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen); // Alterna el estado del sidebar
+  };
 
-    // Cambia la imagen cada 5 segundos con transición suave
-    const intervalId = setInterval(() => {
-      setBackgroundIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+  //if (!user) return <div>Cargando...</div>; // Muestra mientras carga
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: '100vw', // Asegura que el ancho cubra toda la ventana
-        height: '100vh', // Asegura que la altura cubra toda la ventana
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-        margin: 0,
-        padding: 0,
-      }}
-    >
-      {/* Contenedor de imágenes con efecto de transición */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `url(/images/luces${backgroundIndex + 1}.jpg)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          transition: 'background-image 2s ease-in-out',
-          zIndex: 0,
-        }}
-      />
-
-      {/* Capa para el tono verdoso sobre las imágenes */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 128, 0, 0.2)', // Tono verdoso
-          zIndex: 1,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Resto del contenido (el login) */}
-      <Paper
-        elevation={6}
-        sx={{
-          padding: 4,
-          borderRadius: 5,
-          width: '100%',
-          maxWidth: 350,
-          backgroundColor: 'rgba(211, 211, 211, 0.8)', // Fondo gris claro transparente
-          backdropFilter: 'blur(5px)', // Efecto de desenfoque para un toque estético
-          zIndex: 2,
-        }}
-      >
-        <Typography
-          variant="h4"
-          component="h1"
-          align="center"
-          gutterBottom
-          sx={{
-            fontFamily: 'Montserrat, sans-serif',
-            fontWeight: 600,
-            color: '#E0E0E0',
-            textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)',
-          }}
-        >
-          Masic S.A.C.
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            {...register("email", { required: true })}
-          />
-          {errors.email?.message && <p>{errors.email?.message}</p>}
-          <TextField
-            label="Password"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            {...register("password", { required: true })}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ marginTop: 2 }}
-          >
-            Login
-          </Button>
-        </form>
-      </Paper>
-    </Box>
+    <div className="flex">
+      <MenuSideBar open={drawerOpen} />
+      <div className="flex-1">
+        <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
+        <div className="p-6">
+          <Typography variant="h4" component="h1" gutterBottom>
+            Mi Perfil
+          </Typography>
+          <Paper elevation={6} className="p-4">
+            <form onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+                label="Rol"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                {...register('rol')}
+                disabled
+              />
+              <TextField
+                label="Nombre"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                {...register('nombre')}
+                disabled
+              />
+              <TextField
+                label="Apellidos"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                {...register('apellidos')}
+                disabled
+              />
+              <TextField
+                label="Dni"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                {...register('dni')}
+                disabled
+              />
+              <TextField
+                label="Teléfono"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                {...register('telefono')}
+                //disabled
+              />
+              <TextField
+                label="Correo Electrónico"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                {...register('email')}
+                disabled // No editable
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                className="mt-4"
+              >
+                Actualizar Información
+              </Button>
+            </form>
+          </Paper>
+        </div>
+      </div>
+    </div>
   );
 }
 
-export default LoginPage;
+export default MiPerfil;

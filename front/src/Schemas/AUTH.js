@@ -1,4 +1,5 @@
 import {z}   from "zod";
+// Esquema para el inicio de sesión
 export const loginSchema = z.object({
     email: z.string()
     .min(1, { message: 'No ha ingresado el email' }) // El email no puede estar vacío
@@ -7,9 +8,8 @@ export const loginSchema = z.object({
   password: z.string()
     .min(1, { message: 'No ha ingresado la contraseña' }) // La contraseña no puede estar vacía
     .min(6, { message: 'La contraseña es incorrecta' }) // Validar longitud mínima de la contraseña
-    
 
 
-    
     
 });
+

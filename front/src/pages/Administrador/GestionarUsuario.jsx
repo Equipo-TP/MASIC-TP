@@ -60,7 +60,7 @@ const GestionarUsuarios = () => {
           <div className="relative overflow-x-auto sm:rounded-lg">
             <h1 className="text-3xl font-bold mb-2">Gestor de Usuarios</h1>
             <div className="flex justify-end mb-4">
-              <Link to="/registrar_usuario">
+              <Link to="/registro_user">
                 <button className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   Crear Usuario
                 </button>
@@ -84,8 +84,12 @@ const GestionarUsuarios = () => {
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{usuario.email}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{usuario.rol}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">
-                      <a href={`/ver_usuario/${usuario._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">Ver</a>
-                      <a href={`/editar_usuario/${usuario._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">Editar</a>
+                    <Link to={`/ver_usuario/${usuario._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                      Ver
+                    </Link>
+                    <Link to={`/editar_usuario/${usuario._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
+                      Editar
+                    </Link>
                       <button
                         onClick={() => handleDelete(usuario._id)}
                         className="font-medium text-red-600 dark:text-red-500 hover:underline"

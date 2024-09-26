@@ -1,6 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { useNavigate } from 'react-router-dom';
 import { Box, Drawer, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
+import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
 import BudgetIcon from '@mui/icons-material/AttachMoney';
@@ -12,24 +13,27 @@ import RateIcon from '@mui/icons-material/LocalOffer';
 import StateIcon from '@mui/icons-material/Assessment';
 import CalendarIcon from '@mui/icons-material/CalendarToday';
 
-const drawerWidth = 300; // Ancho máximo del Drawer cuando está abierto
-const collapsedWidth = 70; // Ancho del Drawer cuando está colapsado
+const drawerWidth = 300;
+const collapsedWidth = 70;
 
 function MenuSideBar({ open }) {
-  const navigate = useNavigate(); // Usar useNavigate para redirección
+  const navigate = useNavigate();
+  const { role } = useAuth(); // Obtén el rol del usuario desde AuthContext
 
+  // Definir los ítems del menú y los roles permitidos para cada uno
   const menuItems = [
-    { icon: <PersonIcon />, text: 'Gestionar usuario', path: '/gestionar_usuarios' },
-    { icon: <GroupIcon />, text: 'Gestionar roles', path: '/gestionar_roles' },
-    { icon: <BudgetIcon />, text: 'Gestionar presupuestos', path: '/gestionar_presupuestos' },
-    { icon: <InventoryIcon />, text: 'Control de inventario', path: '/control_inventario' },
-    { icon: <ProjectIcon />, text: 'Gestionar programación de proyectos', path: '/gestionar_programacion_proyectos' },
-    { icon: <ClientIcon />, text: 'Gestionar clientes', path: '/gestionar_clientes' },
-    { icon: <PersonnelIcon />, text: 'Gestionar personal', path: '/gestionar_personal' },
-    { icon: <RateIcon />, text: 'Gestionar tarifas', path: '/gestionar_tarifas' },
-    { icon: <ProjectIcon />, text: 'Gestionar proyectos', path: '/gestionar_proyectos' },
-    { icon: <StateIcon />, text: 'Gestionar estado de cobro', path: '/gestionar_estado_cobro' },
-    { icon: <CalendarIcon />, text: 'Visualizar cronograma', path: '/visualizar_cronograma' },
+    { icon: <PersonIcon />, text: 'Gestionar usuario', path: '/gestionar_usuarios', roles: ['Administrador'] },
+    { icon: <GroupIcon />, text: 'Ver solicitudes', path: '/gestionar_solicitudes', roles: ['Administrador'] },
+    { icon: <BudgetIcon />, text: 'Gestionar presupuestos', path: '/gestionar_presupuestos', roles: ['Administrador', 'Vendedor'] },
+    { icon: <InventoryIcon />, text: 'Control de inventario', path: '/control_inventario', roles: ['Administrador', 'Tecnico'] },
+    { icon: <ProjectIcon />, text: 'Gestionar programación de proyectos', path: '/gestionar_programacion_proyectos', roles: ['Administrador', 'Tecnico'] },
+    { icon: <ClientIcon />, text: 'Gestionar clientes', path: '/gestionar_clientes', roles: ['Administrador', 'Vendedor'] },
+    { icon: <PersonnelIcon />, text: 'Gestionar personal', path: '/gestionar_personal', roles: ['Administrador'] },
+    { icon: <RateIcon />, text: 'Gestionar tarifas', path: '/gestionar_tarifas', roles: ['Administrador'] },
+    { icon: <ProjectIcon />, text: 'Gestionar proyectos', path: '/gestionar_proyectos', roles: ['Administrador', 'Tecnico'] },
+    { icon: <StateIcon />, text: 'Gestionar estado de cobro', path: '/gestionar_estado_cobro', roles: ['Administrador', 'Vendedor'] },
+    { icon: <CalendarIcon />, text: 'Visualizar cronograma', path: '/visualizar_cronograma', roles: ['Administrador', 'Tecnico'] },
+    { icon: <ProjectIcon />, text: 'Gestionar solicitudes', path: '/gestionar_solicitudes', roles: ['Vendedor'] },
   ];
 
   return (
@@ -50,6 +54,7 @@ function MenuSideBar({ open }) {
         },
       }}
     >
+      {/* Código del logo */}
       <Box
         sx={{
           display: 'flex',
@@ -116,60 +121,41 @@ function MenuSideBar({ open }) {
             height: 'auto',
           }}
         >
-          {menuItems.map(({ icon, text, path }, index) => (
-            <ListItem
-              button
-              key={index}
-              sx={{ 
-                padding: '8px 8px', 
-                height: '56px', 
-                cursor: 'pointer' // Cambia el cursor a pointer al pasar el mouse
-              }}
-              onClick={() => navigate(path)} // Redirección al hacer clic
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: '50px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  color: 'white',
-                  '& svg': {
-                    fontSize: '24px',
-                  },
-                }}
+          {menuItems
+            .filter(({ roles }) => roles.includes(role)) // Filtra los ítems según el rol del usuario
+            .map(({ icon, text, path }, index) => (
+              <ListItem
+                button
+                key={index}
+                sx={{ padding: '8px 8px', height: '56px', cursor: 'pointer' }}
+                onClick={() => navigate(path)}
               >
-                {icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={text}
-                sx={{
-                  display: open ? 'block' : 'none',
-                  marginLeft: '8px',
-                  color: 'white',
-                }}
-              />
-            </ListItem>
-          ))}
+                <ListItemIcon
+                  sx={{
+                    minWidth: '50px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: 'white',
+                    '& svg': {
+                      fontSize: '24px',
+                    },
+                  }}
+                >
+                  {icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={text}
+                  sx={{
+                    display: open ? 'block' : 'none',
+                    marginLeft: '8px',
+                    color: 'white',
+                  }}
+                />
+              </ListItem>
+            ))}
         </List>
       </Box>
-      <style>
-        {`
-          .scrollbar-container::-webkit-scrollbar {
-            width: 12px;
-          }
-          .scrollbar-container::-webkit-scrollbar-track {
-            background: transparent;
-          }
-          .scrollbar-container::-webkit-scrollbar-thumb {
-            background: rgba(128, 128, 128, 0.5);
-            border-radius: 10px;
-          }
-          .scrollbar-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(128, 128, 128, 0.8);
-          }
-        `}
-      </style>
     </Drawer>
   );
 }

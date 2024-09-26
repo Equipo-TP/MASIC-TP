@@ -124,17 +124,17 @@ const eliminar_usuario = async function(req, res) {
 };
 //obtener usuario por ID nomas (para uso de admin)
 const obtener_usuario_por_id = async function(req, res) {
-    const id = req.params.id;
+    const id = req.params['id'];
     try {
         // Buscar el usuario por ID
-        let usuario = await User.findById(id);
+        let usuario = await User.findById({_id:id});
         if (usuario) {
             res.status(200).send({ data: usuario });
         } else {
             res.status(404).send({ message: 'Usuario no encontrado' });
         }
     } catch (error) {
-        res.status(500).send({ message: 'Error al obtener el usuario', error });
+        res.status(500).send({ message: 'Error al obtener el usuario' + id, error });
     }
 };
 //mostrar usuario por id y contrasena, (uso para iniciar sesion para cuando se ponga la contra la base de datos)
