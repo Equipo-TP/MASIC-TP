@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var app = express();
 
 var user_route = require('./routes/usuario');
+var solicitud_route = require('./routes/solicitud');
 
 //llamamos a la variable mongoose para que se conecte con mongodb al puerto 27017
 mongoose.connect('mongodb+srv://valery:proyectotp24@masic.xd5ik.mongodb.net/Masic', {useUnifiedTopology: true, useNewUrlParser: true})
@@ -42,7 +43,7 @@ app.use((req,res,next)=>{
 });
 
 app.use('/api', user_route);
-
+app.use('/api', solicitud_route);
 
 //Exportación del módulo app para que se puedan comunicar entre sí
 module.exports = app;

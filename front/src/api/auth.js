@@ -18,3 +18,9 @@ export const obtenerUsuarioRequest = async (id) => {
   export const actualizarUsuarioRequest = async (id, data) => {
     return await axios.put(`/api/usuarios/${id}`, data);
   }; 
+  export const listarSolicitudesRequest = async () => {
+    return await axios.get(`${API}/listar_solicitudes_administrador`);
+};
+export const actualizarEstadoSolicitudRequest = async (id, estado) => {
+  return await axios.put(`${API}/editar_solicitud/${id}`, { estado_1: estado });
+};

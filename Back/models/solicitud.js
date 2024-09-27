@@ -4,8 +4,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SolicitudSchema = Schema({
- vendedor: {type: Schema.ObjectId, ref: 'usuario', required: true},
- cliente: {type: Schema.ObjectId, ref:'cliente', required: true},
+id: {type: Number, required: true},
+ vendedor: {type: Schema.ObjectId, ref: 'usuario', required: false},
+ cliente: {type: Schema.ObjectId, ref:'cliente', required: false},
  caracteristicas_obra: {type: String, required: true},
  descripcion_servicio: {type: String, required: true},
  observaciones: {type: String, default: 'No hay observaciones', required: false},
