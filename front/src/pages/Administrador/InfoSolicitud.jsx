@@ -38,9 +38,11 @@ const InfoSolicitud = () => {
               <h1 className="text-2xl font-bold mb-4">Detalles de la Solicitud</h1>
               <div className="grid grid-cols-2 gap-4">
                 <div><strong>ID Cliente:</strong> {solicitud.cliente}</div>
-                <div><strong>Distrito:</strong> {solicitud.distrito}</div>
-                <div><strong>Descripción:</strong> {solicitud.descripcion_servicio}</div>
-                <div><strong>Estado:</strong> {solicitud.estado_1}</div>
+                <div><strong>Vendedor:</strong> {solicitud.vendedor}</div>
+                <div><strong>Cliente:</strong> {solicitud.cliente}</div>
+                <div><strong>Caracteristicas:</strong> {solicitud.caracteristicas_obra}</div>
+                <div><strong>Descripcion:</strong> {solicitud.descripcion_servicio}</div>
+                <div><strong>Fecha de registro:</strong> {solicitud.createdAt}</div>
                 {/* Agrega más detalles según tus variables */}
               </div>
               <button
