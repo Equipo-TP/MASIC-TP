@@ -1,13 +1,13 @@
 'use strict'
 
-const cliente = require('../models/cliente');
+//const cliente = require('../models/cliente');
 var Solicitud = require('../models/solicitud');
 
 const registro_solicitud = async function(req,res){
     //variable para que reciba toda la data que esta en el cuerpo del request
     var data = req.body;
     var solicitud_arr = [];
-    solicitud_arr = await Solicitud.find({email:data.email}, {telefono:data.telefono});
+    solicitud_arr = await Solicitud.find({id:data.id});
     if (solicitud_arr.length == 0) {
           //registrando
             var reg = await Solicitud.create(data);
@@ -21,7 +21,8 @@ const registro_solicitud = async function(req,res){
 const listar_solicitudes_vendedora = async function(req,res) {
  try {
     var reg = await Solicitud.find({vendedor: req.user._id }).sort({createdAt:-1});
-    res.status(200).send({data: reg});} catch(error){
+    res.status(200).send({data: reg});
+    } catch(error){
         res.status(500).send({ message: 'Error en la solicitud', error });
     }
 }
