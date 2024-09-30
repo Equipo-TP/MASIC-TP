@@ -5,11 +5,12 @@ import NavBar from '../../components/NavBar';
 import { Link } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useNavigate } from 'react-router-dom';
 
 const GestionSolicitud = () => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchSolicitudes = async () => {
             try {
@@ -62,7 +63,7 @@ const GestionSolicitud = () => {
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th className="px-6 py-3">ID</th>
-                <th className="px-6 py-3">caracteristica</th>
+                <th className="px-6 py-3">Característica</th>
                 <th className="px-6 py-3">Descripción</th>
                 <th className="px-6 py-3">Estado</th>
                 <th className="px-6 py-3">Acciones</th>
@@ -76,9 +77,12 @@ const GestionSolicitud = () => {
                   <td className="px-6 py-4">{solicitud.descripcion_servicio}</td>
                   <td className="px-6 py-4">{solicitud.estado_2}</td>
                   <td className="px-6 py-4">
-                    <button className="mr-2 text-green-600">✔</button>
-                    <button className="mr-2 text-red-600">✖</button>
-                    <button className="text-blue-600">Ver</button>
+                    <button
+                      className="bg-blue-500 text-black px-4 py-2 rounded"
+                      onClick={() => navigate(`/info_solicitud/${solicitud._id}`)}
+                    >
+                      Ver
+                    </button>
                   </td>
                 </tr>
               ))}
