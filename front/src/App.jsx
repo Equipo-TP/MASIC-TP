@@ -10,6 +10,10 @@ import GestionarUsuarios from './pages/Administrador/GestionarUsuario';
 import EditUserPage from './pages/Administrador/EditUserPage';
 import LoggedUsuario from './pages/Usuario/LoggedUsuario';
 import MiPerfil from './pages/Usuario/Miperfil';
+import GestionarSolicitudes from './pages/Vendedor/GestionarSolicitudes';
+import RegistroSolicitud from './pages/Vendedor/CrearSolicitud';
+import VerSolicitud from './pages/Vendedor/VerSolicitud';
+import EditarSolicitud from './pages/Vendedor/EditarSolicitud';
 
 function App() {
   //const { checkAuth } = useAuth();
@@ -27,6 +31,10 @@ function App() {
         <Route path='/editar_usuario/:id' element={<EditUserPage/>}/>
         <Route path='/registro_user' element={<RegistrarUsuario/>}/>
         <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>  
+        <Route path='/gestionar_solicitudes' element={<GestionarSolicitudes/>}/>
+        <Route path='/registro_solicitud' element={<RegistroSolicitud/>}/>  
+        <Route path='/ver_solicitud/:id' element={<VerSolicitud/>}/>
+        <Route path='/editar_solicitud/:id' element={<EditarSolicitud/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>
