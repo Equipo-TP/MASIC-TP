@@ -1,6 +1,6 @@
 'use strict'
 
-const cliente = require('../models/cliente');
+//const cliente = require('../models/cliente');
 var Solicitud = require('../models/solicitud');
 
 const registro_solicitud = async function(req,res){
@@ -12,19 +12,20 @@ const registro_solicitud = async function(req,res){
           //registrando
             var reg = await Solicitud.create(data);
             res.status(200).send({data:reg.toJSON()});
-
+                
     }else{
         res.status(200).send({message:'La solicitud ya existe en la base de datos', data: undefined});
     }
 
-};
+}
 const listar_solicitudes_vendedora = async function(req,res) {
  try {
     var reg = await Solicitud.find({vendedor: req.user._id }).sort({createdAt:-1});
-    res.status(200).send({data: reg});} catch(error){
+    res.status(200).send({data: reg});
+    } catch(error){
         res.status(500).send({ message: 'Error en la solicitud', error });
     }
-};
+}
 
 const listar_solicitudes_administrador = async function(req,res) {
     var reg = await Solicitud.find({estado_1: 'Enviado'}).sort({createdAt:-1});

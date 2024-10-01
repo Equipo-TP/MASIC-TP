@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 const API = 'http://localhost:8000/api'
 
 export const registrousuarioRequest = async (user) => axios.post(`${API}/registro_usuario`, user);
@@ -11,8 +12,13 @@ export const obtenerUserRequest = async (id) => axios.get(`${API}/actualizar_usu
 export const editarUserRequest = async (id, user) => axios.put(`${API}/actualizar_usuario/${id}`, user);
 
 
+
+export const obtenerClienteRequest = async (id) => {
+  return await axios.get(`${API}/obtener_cliente/${id}`);
+};
+
 export const obtenerUsuarioRequest = async (id) => {
-    return await axios.get(`/api/usuarios/${id}`);
+    return await axios.get(`${API}/usuarios/${id}`);
   };
 
   export const actualizarUsuarioRequest = async (id, data) => {
@@ -21,6 +27,9 @@ export const obtenerUsuarioRequest = async (id) => {
   export const listarSolicitudesRequest = async () => {
     return await axios.get(`${API}/listar_solicitudes_administrador`);
 };
-export const actualizarEstadoSolicitudRequest = async (id, estado) => {
-  return await axios.put(`${API}/editar_solicitud/${id}`, { estado_1: estado });
+export const actualizarEstadoSolicitudRequest = async (id, estado_2) => {
+  return await axios.put(`${API}/editar_solicitud/${id}`,{estado_2});
+};
+export const obtener_solicitud_por_idRequest = async (id) => {
+  return await axios.post(`${API}/obtener_solicitud_por_id/${id}`);
 };

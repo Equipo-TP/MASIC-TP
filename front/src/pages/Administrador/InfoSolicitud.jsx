@@ -2,26 +2,39 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
-import axios from 'axios';
+
+import { obtener_solicitud_por_idRequest, actualizarEstadoSolicitudRequest, obtenerClienteRequest, obtenerUsuarioRequest } from '../../api/auth';
 
 const InfoSolicitud = () => {
   const { id } = useParams();
   const [solicitud, setSolicitud] = useState(null);
-  const [drawerOpen, setDrawerOpen] = useState(false); // Estado para controlar la apertura del sidebar
+  const [nombreCliente, setNombreCliente] = useState('');
+  const [nombreVendedor, setNombreVendedor] = useState('');
+  const [drawerOpen, setDrawerOpen] = useState(false); 
   const navigate = useNavigate();
 
-  // Función para obtener la solicitud por ID
+
   useEffect(() => {
     const fetchSolicitud = async () => {
       try {
-        const response = await axios.get(`/api/obtener_solicitud_por_id/${id}`);
+        const response = await obtener_solicitud_por_idRequest(id);
         setSolicitud(response.data.data);
+
+       
+      const clienteResponse = await obtenerClienteRequest(response.data.data.cliente);
+        setNombreCliente(clienteResponse.data.data);  
+        consolelog(nombreCliente.nombre); 
+     
+        const vendedorResponse = await obtenerUsuarioRequest(response.data.data.vendedor);
+        setNombreVendedor(vendedorResponse.data.data);  
+
       } catch (error) {
-        console.error('Error al obtener la solicitud:', error);
+        console.error('Error al obtener la solicitud o los datos del cliente/vendedor:', error);
       }
     };
-
+    
     fetchSolicitud();
+   
   }, [id]);
 
   const handleDrawerToggle = () => {
@@ -37,13 +50,13 @@ const InfoSolicitud = () => {
           ...solicitud,  // Mantiene los mismos datos actuales de la solicitud
           estado_2: nuevoEstado,  // Actualiza el campo estado_2
         };
-  
-        // Ajustar la URL para que incluya el prefijo /api
-        const response = await axios.put(`/api/editar_solicitud/${id}`, dataActualizada);
-  
+
+        const response = await actualizarEstadoSolicitudRequest(id, nuevoEstado);
+
         if (response.status === 200) {
           setSolicitud(response.data.data);  // Actualiza el estado en el frontend
           alert(`La solicitud ha sido marcada como ${nuevoEstado}`);
+          navigate('/gestion_solicitud');
         } else {
           alert('Error al actualizar la solicitud.');
         }
@@ -53,7 +66,6 @@ const InfoSolicitud = () => {
       alert('Hubo un problema al actualizar la solicitud.');
     }
   };
-  
 
   return (
     <div className="flex">
@@ -65,9 +77,8 @@ const InfoSolicitud = () => {
             <div className="bg-white shadow-md rounded-lg p-6">
               <h1 className="text-2xl font-bold mb-4">Detalles de la Solicitud</h1>
               <div className="grid grid-cols-2 gap-4">
-                <div><strong>ID Cliente:</strong> {solicitud.cliente}</div>
-                <div><strong>Vendedor:</strong> {solicitud.vendedor}</div>
-                <div><strong>Cliente:</strong> {solicitud.cliente}</div>
+                <div><strong>Nombre de cliente:</strong> {nombreCliente.nombre}</div>
+                <div><strong>Nombre de vendedor:</strong> {nombreVendedor.nombre}</div>
                 <div><strong>Características:</strong> {solicitud.caracteristicas_obra}</div>
                 <div><strong>Descripción:</strong> {solicitud.descripcion_servicio}</div>
                 <div><strong>Fecha de registro:</strong> {new Date(solicitud.createdAt).toLocaleDateString()}</div>
