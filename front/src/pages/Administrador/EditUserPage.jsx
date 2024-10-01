@@ -21,7 +21,7 @@ function EditUserPage() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: user,
   });
-
+  
   // Obtener datos del usuario
   useEffect(() => {
     const obtUsuario = async () => {

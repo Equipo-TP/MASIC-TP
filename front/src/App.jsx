@@ -11,6 +11,10 @@ import EditUserPage from './pages/Administrador/EditUserPage';
 import LoggedUsuario from './pages/Usuario/LoggedUsuario';
 import MiPerfil from './pages/Usuario/Miperfil';
 
+import RegistrarTarifa from './pages/Administrador/RegistrarTarifa';
+import GestionarTarifas from './pages/Administrador/GestionarTarifa';
+import EditTarifaPage from './pages/Administrador/EditTarifaPage';
+
 function App() {
   //const { checkAuth } = useAuth();
 
@@ -26,7 +30,10 @@ function App() {
         <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
         <Route path='/editar_usuario/:id' element={<EditUserPage/>}/>
         <Route path='/registro_user' element={<RegistrarUsuario/>}/>
-        <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>  
+        <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
+        <Route path='/registrar_tarifa' element={<RegistrarTarifa />} />
+        <Route path='/gestionar_tarifas' element={<GestionarTarifas />} />
+        <Route path='/editar_tarifa/:id' element={<EditTarifaPage />} /> 
         </Route>     
       </Routes>
     </BrowserRouter>
