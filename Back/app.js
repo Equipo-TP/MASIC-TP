@@ -46,9 +46,6 @@ app.use((req,res,next)=>{
 
 app.use('/api', user_route);
 app.use('/api', solicitud_route);
-app.use('/api', cliente_route);
-app.use('/api', instalacion_route);
-
 
 //Exportación del módulo app para que se puedan comunicar entre sí
 module.exports = app;
