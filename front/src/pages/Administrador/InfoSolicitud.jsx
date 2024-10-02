@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
 
-import { obtener_solicitud_por_idRequest, actualizarEstadoSolicitudRequest, obtenerClienteRequest, obtenerUsuarioRequest } from '../../api/auth';
+import { obtener_solicitud_por_idRequest, actualizarEstadoSolicitudRequest, obtener_cliente_por_idRequest, obtener_usuario_por_idRequest } from '../../api/auth';
 
 const InfoSolicitud = () => {
   const { id } = useParams();
@@ -19,23 +19,34 @@ const InfoSolicitud = () => {
       try {
         const response = await obtener_solicitud_por_idRequest(id);
         setSolicitud(response.data.data);
-
        
-      const clienteResponse = await obtenerClienteRequest(response.data.data.cliente);
-        setNombreCliente(clienteResponse.data.data);  
-        consolelog(nombreCliente.nombre); 
-     
-        const vendedorResponse = await obtenerUsuarioRequest(response.data.data.vendedor);
-        setNombreVendedor(vendedorResponse.data.data);  
+       
+
 
       } catch (error) {
         console.error('Error al obtener la solicitud o los datos del cliente/vendedor:', error);
       }
     };
-    
+
     fetchSolicitud();
-   
   }, [id]);
+
+  useEffect(() => {
+    if (solicitud) {
+      const setClienteYVendedor = async () => {
+        try {
+          const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente);
+          setNombreCliente(clienteResponse.data.data);
+
+          const vendedorResponse = await obtener_usuario_por_idRequest(solicitud.vendedor);
+          setNombreVendedor(vendedorResponse.data.data);
+        } catch (error) {
+          console.error('Error al obtener los datos del cliente o vendedor:', error);
+        }
+      };
+      setClienteYVendedor();
+    }
+  }, [solicitud]);
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen); // Alterna el estado del sidebar
@@ -66,9 +77,22 @@ const InfoSolicitud = () => {
       alert('Hubo un problema al actualizar la solicitud.');
     }
   };
-
+  const setclienteyvendedor = async (id) => {
+    try {
+      const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente);
+      setNombreCliente(clienteResponse.data.data);  
+      consolelog(nombreCliente.nombre); 
+   
+      const vendedorResponse = await obtener_usuario_por_idRequest(solicitud.vendedor);
+      setNombreVendedor(vendedorResponse.data.data);  
+    } catch (error) {
+      console.error('Error al obtener la solicitud o los datos del cliente/vendedor:', error);
+    }
+  };
   return (
+  
     <div className="flex">
+     
       <MenuSideBar open={drawerOpen} />
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />

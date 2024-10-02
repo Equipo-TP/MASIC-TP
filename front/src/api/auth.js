@@ -11,10 +11,12 @@ export const eliminarUsuarioRequest = async (id) => axios.delete(`${API}/elimina
 export const obtenerUserRequest = async (id) => axios.get(`${API}/actualizar_usuario/${id}`);
 export const editarUserRequest = async (id, user) => axios.put(`${API}/actualizar_usuario/${id}`, user);
 
+export const obtener_usuario_por_idRequest = async (id) => {
+  return await axios.post(`${API}/obtener_usuario_por_id/${id}`);
+};
 
-
-export const obtenerClienteRequest = async (id) => {
-  return await axios.get(`${API}/obtener_cliente/${id}`);
+export const obtener_cliente_por_idRequest = async (id) => {
+  return await axios.post(`${API}/obtener_cliente_por_id/${id}`);
 };
 
 export const obtenerUsuarioRequest = async (id) => {
