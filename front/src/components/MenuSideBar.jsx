@@ -23,7 +23,7 @@ function MenuSideBar({ open }) {
   // Definir los ítems del menú y los roles permitidos para cada uno
   const menuItems = [
     { icon: <PersonIcon />, text: 'Gestionar usuario', path: '/gestionar_usuarios', roles: ['Administrador'] },
-    { icon: <GroupIcon />, text: 'Ver solicitudes', path: '/gestionar_solicitudes', roles: ['Administrador'] },
+    { icon: <GroupIcon />, text: 'Ver solicitudes', path: '/gestion_solicitud', roles: ['Administrador'] },
     { icon: <BudgetIcon />, text: 'Gestionar presupuestos', path: '/gestionar_presupuestos', roles: ['Administrador', 'Vendedor'] },
     { icon: <InventoryIcon />, text: 'Control de inventario', path: '/control_inventario', roles: ['Administrador', 'Tecnico'] },
     { icon: <ProjectIcon />, text: 'Gestionar programación de proyectos', path: '/gestionar_programacion_proyectos', roles: ['Administrador', 'Tecnico'] },

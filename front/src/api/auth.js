@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 const API = 'http://localhost:8000/api'
 
 export const registrousuarioRequest = async (user) => axios.post(`${API}/registro_usuario`, user);
@@ -15,3 +16,8 @@ export const listarTarifasRequest = async () => axios.get(`${API}/listar_tarifas
 export const eliminarTarifaRequest = async (id) => axios.delete(`${API}/eliminar_tarifa/${id}`);
 export const obtenerTarifaRequest = async (id) => axios.get(`${API}/obtener_tarifa_por_id/${id}`);
 export const editarTarifaRequest = async (id, tarifa) => axios.put(`${API}/editar_tarifa/${id}`, tarifa);
+
+export const obtener_cliente_por_idRequest = async (id) => {return await axios.post(`${API}/obtener_cliente_por_id/${id}`);};
+export const listarSolicitudesRequest = async () => {return await axios.get(`${API}/listar_solicitudes_administrador`);};
+export const actualizarEstadoSolicitudRequest = async (id, estado_2) => {return await axios.put(`${API}/editar_solicitud/${id}`,{estado_2});};
+export const obtener_solicitud_por_idRequest = async (id) => {return await axios.post(`${API}/obtener_solicitud_por_id/${id}`);};
