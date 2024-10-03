@@ -21,7 +21,7 @@ function EditUserPage() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: user,
   });
-
+  
   // Obtener datos del usuario
   useEffect(() => {
     const obtUsuario = async () => {
@@ -93,7 +93,10 @@ function EditUserPage() {
                     fullWidth
                     label="Nombre"
                     defaultValue={user?.nombre || ''}
-                    {...register('nombre', { required: 'El nombre es requerido' })}
+                    {...register('nombre', {
+                      required: 'El nombre es requerido',
+                      minLength: { value: 2, message: 'El nombre debe tener al menos 2 caracteres' },
+                    })}
                     error={!!errors.nombre}
                     helperText={errors.nombre ? errors.nombre.message : ''}
                   />
@@ -103,7 +106,10 @@ function EditUserPage() {
                     fullWidth
                     label="Apellidos"
                     defaultValue={user?.apellidos || ''}
-                    {...register('apellidos', { required: 'El apellido es requerido' })}
+                    {...register('apellidos', {
+                      required: 'El apellido es requerido',
+                      minLength: { value: 2, message: 'El apellido debe tener al menos 2 caracteres' },
+                    })}
                     error={!!errors.apellidos}
                     helperText={errors.apellidos ? errors.apellidos.message : ''}
                   />
@@ -113,7 +119,10 @@ function EditUserPage() {
                     fullWidth
                     label="Email"
                     defaultValue={user?.email || ''}
-                    {...register('email', { required: 'El email es requerido' })}
+                    {...register('email', {
+                      required: 'El email es requerido',
+                      pattern: { value: /^\S+@\S+\.\S+$/, message: 'Formato de email inválido' },
+                    })}
                     error={!!errors.email}
                     helperText={errors.email ? errors.email.message : ''}
                   />
@@ -123,7 +132,10 @@ function EditUserPage() {
                     fullWidth
                     label="DNI"
                     defaultValue={user?.dni || ''}
-                    {...register('dni', { required: 'El DNI es requerido' })}
+                    {...register('dni', {
+                      required: 'El DNI es requerido',
+                      pattern: { value: /^[0-9]{8,10}$/, message: 'Formato de DNI inválido, debe tener entre 8 y 10 dígitos' },
+                    })}
                     error={!!errors.dni}
                     helperText={errors.dni ? errors.dni.message : ''}
                   />
@@ -133,7 +145,11 @@ function EditUserPage() {
                     fullWidth
                     label="Teléfono"
                     defaultValue={user?.telefono || ''}
-                    {...register('telefono', { required: 'El teléfono es requerido' })}
+                    {...register('telefono', {
+                      required: 'El teléfono es requerido',
+                      pattern: { value: /^[0-9]+$/, message: 'Solo se permiten números' },
+                      minLength: { value: 9, message: 'El teléfono debe tener al menos 9 dígitos' },
+                    })}
                     error={!!errors.telefono}
                     helperText={errors.telefono ? errors.telefono.message : ''}
                   />

@@ -14,27 +14,33 @@ import MiPerfil from './pages/Usuario/Miperfil';
 import GestionSolicitud from './pages/Administrador/GestionSolicitud'; 
 import InfoSolicitud from './pages/Administrador/InfoSolicitud'
 
+import RegistrarTarifa from './pages/Administrador/RegistrarTarifa';
+import GestionarTarifas from './pages/Administrador/GestionarTarifa';
+import EditTarifaPage from './pages/Administrador/EditTarifaPage';
+
 function App() {
     //const { checkAuth } = useAuth();
   return (
     <UserProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path='/login_user' element={<LoginPage />} />
-          <Route element={<PrivateRoute />}>
-            <Route path='/logged_user' element={<LoggedUsuario />} />
-            <Route path='/mi_perfil' element={<MiPerfil />} />
-            <Route path='/registrar_usuario' element={<RegistrarUsuario />} />
-            <Route path='/gestionar_usuarios' element={<GestionarUsuarios />} />
-            <Route path='/editar_usuario/:id' element={<EditUserPage />} />
-            <Route path='/registro_user' element={<RegistrarUsuario />} />
-            <Route path='/gestionar_usuarios' element={<GestionarUsuarios />} />
-            <Route path='/editar_perfil' element={<EditarUsuario />} />
-            <Route path='/gestion_solicitud' element={<GestionSolicitud />} /> 
-            <Route path='/info_solicitud/:id' element={<InfoSolicitud />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path='/login_user' element={<LoginPage/>}/>       
+        <Route element={<PrivateRoute />}>
+        <Route path='/logged_user' element={<LoggedUsuario/>}/>
+        <Route path='/mi_perfil' element={<MiPerfil/>} />
+        <Route path='/registrar_usuario' element={<RegistrarUsuario/>}/>
+        <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
+        <Route path='/editar_usuario/:id' element={<EditUserPage/>}/>
+        <Route path='/registro_user' element={<RegistrarUsuario/>}/>
+        <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
+        <Route path='/gestion_solicitud' element={<GestionSolicitud />} /> 
+        <Route path='/info_solicitud/:id' element={<InfoSolicitud />} />
+        <Route path='/registrar_tarifa' element={<RegistrarTarifa />} />
+        <Route path='/gestionar_tarifas' element={<GestionarTarifas />} />
+        <Route path='/editar_tarifa/:id' element={<EditTarifaPage />} /> 
+        </Route>     
+      </Routes>
+    </BrowserRouter>
     </UserProvider>
   );
 }
