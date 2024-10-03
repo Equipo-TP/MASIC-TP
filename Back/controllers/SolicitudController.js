@@ -51,7 +51,7 @@ const obtener_solicitud_por_id = async function(req, res) {
     const id = req.params['id'];
     try {
         // Buscar la solicitud por ID y hacer populate en 'cliente'
-        let solicitud = await Solicitud.findById(id).populate('cliente');
+        let solicitud = await Solicitud.findById(id).populate('cliente'); // Aquí se aplica el populate
         if (solicitud) {
             res.status(200).send({ data: solicitud });
         } else {

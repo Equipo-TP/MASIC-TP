@@ -11,15 +11,10 @@ export const obtenerUserRequest = async (id) => axios.get(`${API}/actualizar_usu
 export const editarUserRequest = async (id, user) => axios.put(`${API}/actualizar_usuario/${id}`, user);
 
 export const registroSolicitudRequest = async (data) => axios.post(`${API}/registro_solicitud`, data);
-export const listarSolicitudesVendedoraRequest = async (headers, currentPage) => {
-    const params = {
-      page: currentPage, // Agregar el número de página
-      limit: 10,
-    };
+export const listarSolicitudesVendedoraRequest = async (headers) => {
   
     return await axios.get('http://localhost:8000/API/listar_solicitudes_vendedora', { 
       headers, 
-      params // Agregar los parámetros a la solicitud
     });
   };
   

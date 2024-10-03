@@ -9,8 +9,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 const GestionarSolicitudes = () => {
   const [solicitudes, setSolicitudes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const itemsPerPage = 5; // Número máximo de solicitudes por página
 
   useEffect(() => {
     const fetchSolicitudes = async () => {
@@ -20,16 +20,21 @@ const GestionarSolicitudes = () => {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         };
-        const response = await listarSolicitudesVendedoraRequest(headers, currentPage); // Enviamos currentPage
+        const response = await listarSolicitudesVendedoraRequest(headers);
         setSolicitudes(response.data.data);
-        setTotalPages(response.data.totalPages); // Actualizamos totalPages
       } catch (error) {
         console.error('Error al listar las solicitudes:', error.response ? error.response.data : error.message);
       }
     };
 
     fetchSolicitudes();
-  }, [currentPage]); // Dependemos de currentPage
+  }, []);
+
+  // Calcular las solicitudes que se mostrarán en la página actual
+  const indexOfLastSolicitud = currentPage * itemsPerPage;
+  const indexOfFirstSolicitud = indexOfLastSolicitud - itemsPerPage;
+  const currentSolicitudes = solicitudes.slice(indexOfFirstSolicitud, indexOfLastSolicitud);
+  const totalPages = Math.ceil(solicitudes.length / itemsPerPage);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -47,14 +52,14 @@ const GestionarSolicitudes = () => {
         <div className="p-6">
           <div className="relative overflow-x-auto sm:rounded-lg">
             <div className='select-none flex items-center justify-between mb-4'>
-                <h1 className="text-3xl font-bold mb-2">Gestor de Solicitudes de Vendedoras</h1>
-                <div className="flex justify-end mb-4">
-                    <Link to="/registro_solicitud">
-                        <button className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">
-                            Crear Solicitud
-                        </button>
-                    </Link>
-                </div>  
+              <h1 className="text-3xl font-bold mb-2">Gestor de Solicitudes de Vendedoras</h1>
+              <div className="flex justify-end mb-4">
+                <Link to="/registro_solicitud">
+                  <button className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">
+                    Crear Solicitud
+                  </button>
+                </Link>
+              </div>  
             </div>
             <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -68,7 +73,7 @@ const GestionarSolicitudes = () => {
                 </tr>
               </thead>
               <tbody>
-                {solicitudes.map((solicitud) => (
+                {currentSolicitudes.map((solicitud) => (
                   <tr key={solicitud._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{solicitud.id}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {solicitud.cliente.nombre + (solicitud.cliente.apellidos ? " " + solicitud.cliente.apellidos : "")} </td>

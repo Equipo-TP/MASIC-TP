@@ -14,6 +14,7 @@ import GestionarSolicitudes from './pages/Vendedor/GestionarSolicitudes';
 import RegistroSolicitud from './pages/Vendedor/CrearSolicitud';
 import VerSolicitud from './pages/Vendedor/VerSolicitud';
 import EditarSolicitud from './pages/Vendedor/EditarSolicitud';
+import VerUsuarioPage from './pages/Administrador/VerUsuario';
 
 function App() {
   //const { checkAuth } = useAuth();
@@ -30,7 +31,8 @@ function App() {
         <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
         <Route path='/editar_usuario/:id' element={<EditUserPage/>}/>
         <Route path='/registro_user' element={<RegistrarUsuario/>}/>
-        <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>  
+        <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
+        <Route path='/ver_usuario/:id' element={<VerUsuarioPage/>}/>
         <Route path='/gestionar_solicitudes' element={<GestionarSolicitudes/>}/>
         <Route path='/registro_solicitud' element={<RegistroSolicitud/>}/>  
         <Route path='/ver_solicitud/:id' element={<VerSolicitud/>}/>
