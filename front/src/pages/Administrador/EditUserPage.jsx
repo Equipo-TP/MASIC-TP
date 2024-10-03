@@ -28,6 +28,7 @@ function EditUserPage() {
       try {
         const res = await obtenerUserRequest(id); // API para obtener datos del usuario
         const userData = res.data.data;
+        console.log(userData);
         setUser(userData);
         reset(userData); // Resetea el formulario con los datos obtenidos
         setLoading(false); // Termina la carga
