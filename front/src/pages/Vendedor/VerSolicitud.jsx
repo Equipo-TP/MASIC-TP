@@ -122,15 +122,29 @@ const VerSolicitud = () => {
 
                     <div className="col-span-6 sm:col-span-3">
                         <label className="text-sm font-medium text-gray-900 block mb-2">
-                            Presupuesto
+                            Estado
                         </label>
                         <input
-                            type="number"
-                            value={solicitud.presupuesto}
+                            type="text"
+                            value={solicitud.estado_1}
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                             disabled // Solo lectura
                         />
                     </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Estado #2
+                        </label>
+                        <input
+                            type="text"
+                            value={solicitud.estado_2}
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                            disabled // Solo lectura
+                        />
+                    </div>
+
+                    
                 </div>
             </div>
         </div>

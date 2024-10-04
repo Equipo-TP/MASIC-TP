@@ -2,22 +2,31 @@
 
 //const cliente = require('../models/cliente');
 var Solicitud = require('../models/solicitud');
+const Contador = require('../models/contador'); 
 
-const registro_solicitud = async function(req,res){
-    //variable para que reciba toda la data que esta en el cuerpo del request
-    var data = req.body;
-    var solicitud_arr = [];
-    solicitud_arr = await Solicitud.find({id:data.id});
-    if (solicitud_arr.length == 0) {
-          //registrando
-            var reg = await Solicitud.create(data);
-            res.status(200).send({data:reg.toJSON()});
-                
-    }else{
-        res.status(200).send({message:'La solicitud ya existe en la base de datos', data: undefined});
-    }
-
+async function obtenerProximoId(nombreContador) {
+    const contador = await Contador.findOneAndUpdate(
+        { nombre: nombreContador },
+        { $inc: { valor: 1 } },
+        { new: true, upsert: true }
+    );
+    return contador.valor;
 }
+
+const registro_solicitud = async function(req, res) {
+    var data = req.body;
+    const nuevoId = await obtenerProximoId('solicitudes');
+    data.id = nuevoId;
+
+    var solicitud_arr = await Solicitud.find({ id: data.id });
+    if (solicitud_arr.length == 0) {
+        var reg = await Solicitud.create(data);
+        res.status(200).send({ data: reg.toJSON() });
+    } else {
+        res.status(200).send({ message: 'La solicitud ya existe en la base de datos', data: undefined });
+    }
+}
+
 const listar_solicitudes_vendedora = async function(req, res) {
     const { page = 1, limit = 10 } = req.query; // Recibe page y limit desde la query
     const skip = (page - 1) * limit;

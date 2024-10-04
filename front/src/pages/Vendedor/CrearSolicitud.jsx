@@ -8,7 +8,6 @@ const SolicitudForm = () => {
     const { user, name } = useAuth();
     const [clientes, setClientes] = useState([]);
     const [nuevaSolicitud, setNuevaSolicitud] = useState({
-        id: '',
         vendedor: user.data._id, // Aquí se guarda el ID del vendedor
         cliente: '',
         caracteristicas_obra: '',
@@ -30,33 +29,34 @@ const SolicitudForm = () => {
     });
      // Para manejar los datos de un nuevo cliente
 
+    // Función para cargar la lista de clientes
+    const fetchClientes = async () => {
+        try {
+            const response = await listarClientesRequest();
+            if (Array.isArray(response.data.data)) {
+                setClientes(response.data.data);
+            } else {
+                console.error('La respuesta no es un array:', response.data.data);
+                setClientes([]);
+            }
+        } catch (error) {
+            console.error('Error al listar clientes:', error);
+        }
+    };
+
     // Cargar la lista de clientes cuando el componente se monta
     useEffect(() => {
-        const fetchClientes = async () => {
-            try {
-                const response = await listarClientesRequest(); // Asegúrate que esta función retorne un array
-                if (Array.isArray(response.data.data)) {
-                    setClientes(response.data.data); // Asegúrate de que esto sea un array
-                } else {
-                    console.error('La respuesta no es un array:', response.data.data);
-                    setClientes([]); // Resetea a un array vacío si la respuesta no es válida
-                }
-            } catch (error) {
-                console.error('Error al listar clientes:', error);
-            }
-        };
-
-        fetchClientes();
+        fetchClientes(); // Carga la lista de clientes al montar el componente
     }, []);
 
     // Manejar el cambio del combobox de clientes
     const handleClienteChange = async (e) => {
         const selectedId = e.target.value;
-        setNuevaSolicitud({ ...nuevaSolicitud, cliente: selectedId }); // Actualiza el cliente aquí
-
+        setNuevaSolicitud({ ...nuevaSolicitud, cliente: selectedId });
+    
         if (selectedId === 'nuevo') {
-            setNuevoCliente(true); // Mostrar los campos de nuevo cliente
-            setDatosNuevoCliente({ // Resetear los datos del nuevo cliente
+            setNuevoCliente(true);
+            setDatosNuevoCliente({
                 nombre: '',
                 apellidos: '',
                 tipo: 'Persona Natural',
@@ -65,21 +65,17 @@ const SolicitudForm = () => {
             });
         } else {
             const response = await obtenerClientePorIdRequest(selectedId);
-            const cliente = response.data;
-            setNuevoCliente(false); // Ocultar los campos de nuevo cliente
-            // Si se elige un cliente existente, actualiza la solicitud
-            setNuevaSolicitud({
-                ...nuevaSolicitud,
-                cliente: selectedId,
-            });
+            setNuevoCliente(false);
+            setNuevaSolicitud({ ...nuevaSolicitud, cliente: selectedId });
         }
     };
+    
 
 
     // Manejar el cambio de input de la solicitud y los datos del nuevo cliente
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-
+    
         if (nuevoCliente && name in datosNuevoCliente) {
             setDatosNuevoCliente({
                 ...datosNuevoCliente,
@@ -93,21 +89,35 @@ const SolicitudForm = () => {
         }
     };
 
+    //Ingreso de nuevo cliente
+    const handleNuevoClienteSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const clienteResponse = await registroClienteRequest(datosNuevoCliente);
+            const nuevoClienteId = clienteResponse.data._id;
+            setNuevaSolicitud({ ...nuevaSolicitud, cliente: nuevoClienteId });
+            alert('Nuevo cliente registrado con éxito.');
+            setNuevoCliente(false); // Oculta el formulario de nuevo cliente
+            setDatosNuevoCliente({ // Reinicia los campos del nuevo cliente
+                nombre: '',
+                apellidos: '',
+                tipo: 'Persona Natural',
+                ruc: '',
+                email: '',
+                telefono: '',
+            });
+        } catch (error) {
+            console.error('Error al registrar el nuevo cliente:', error);
+            alert('Hubo un error al registrar el nuevo cliente.');
+        }
+        fetchClientes();
+    };
+    
+
     // Manejar el registro de la solicitud
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Registrar el nuevo cliente si es necesario
-            if (nuevoCliente) {
-                console.log('Datos del nuevo cliente:', datosNuevoCliente);
-                const clienteResponse = await registroClienteRequest(datosNuevoCliente);
-                // Guardar el ID del nuevo cliente
-                const nuevoClienteId = clienteResponse.data._id; 
-                // Agregar el ID del nuevo cliente a la solicitud
-                nuevaSolicitud.cliente = nuevoClienteId; 
-            }
-    
-            console.log('Datos enviados:', nuevaSolicitud);
             // Registrar la solicitud
             await registroSolicitudRequest(nuevaSolicitud);
             alert('Solicitud registrada');
@@ -116,6 +126,7 @@ const SolicitudForm = () => {
             alert('Hubo un error al registrar la solicitud.');
         }
     };
+    
     
     return (
         <div className="bg-white border-4 rounded-lg shadow relative m-10">
@@ -156,21 +167,6 @@ const SolicitudForm = () => {
                                 required
                             />
                         </div>
-
-                        <div className="col-span-6 sm:col-span-3">
-                            <label htmlFor="id" className="text-sm font-medium text-gray-900 block mb-2">
-                                ID de Solicitud
-                            </label>
-                            <input
-                                type="number"
-                                name="id"
-                                id="id"
-                                value={nuevaSolicitud.id || ''} // Permitir que el usuario escriba, evitando undefined
-                                onChange={handleInputChange} // Manejar el cambio del input
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                            />
-                        </div>
-
 
                         <div className="col-span-6 sm:col-span-3">
                             <label htmlFor="cliente" className="text-sm font-medium text-gray-900 block mb-2">
@@ -285,6 +281,14 @@ const SolicitudForm = () => {
                                         required
                                     />
                                 </div>
+                                <button
+                                    type="button"
+                                    onClick={handleNuevoClienteSubmit}
+                                    className="mt-4 bg-green-800 text-white font-bold py-2 px-4 rounded hover:bg-green-900"
+                                >
+                                    Registrar Nuevo Cliente
+                                </button>
+
                             </>
                         )}
 

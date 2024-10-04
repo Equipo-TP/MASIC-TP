@@ -10,6 +10,9 @@ const EditarSolicitud = () => {
     const { name } = useAuth();
     const [solicitud, setSolicitud] = useState(null);
     const [loading, setLoading] = useState(true);
+    const estados_1 = ['Enviado', 'Cancelado'];
+
+
 
     // Cargar los datos de la solicitud cuando el componente se monta
     useEffect(() => {
@@ -154,6 +157,35 @@ const EditarSolicitud = () => {
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                     />
                 </div>
+                <div className="col-span-6 sm:col-span-3">
+                    <label className="text-sm font-medium text-gray-900 block mb-2">
+                        Estado
+                    </label>
+                    <select
+                        value={solicitud.estado_1}
+                        onChange={(e) => setSolicitud({ ...solicitud, estado_1: e.target.value })}
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                    >
+                        {estados_1.map((estado, index) => (
+                            <option key={index} value={estado}>
+                                {estado}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="col-span-6 sm:col-span-3">
+                    <label className="text-sm font-medium text-gray-900 block mb-2">
+                        Estado #2
+                    </label>
+                    <input
+                        type="text"
+                        value={solicitud.estado_2}
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                        disabled // Solo lectura
+                    />
+                </div>
+
             </div>
 
             <div className="flex justify-end">
