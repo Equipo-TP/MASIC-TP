@@ -77,11 +77,15 @@ const RegistrarTarifa = () => {
       try {
         const response = await axios.post('http://localhost:8000/api/registro_tarifa', formData);
         console.log('Tarifa registrada con éxito:', response.data);
+        if(response.data.data){
         setSnackbarMessage('Tarifa registrada con éxito!');
         setSnackbarSeverity('success');
-        navigate('/gestionar_tarifas');
+        navigate('/gestionar_tarifas');}
+        /*else{ 
+          console.log('No se pudo registrar una tarifa');
+          setSnackbarSeverity('error'); }*/
       } catch (error) {
-        console.error('Error al registrar la tarifa:', error.response?.data || error.message);
+        console.error('Error al registrar la tarifa:', error);
         setSnackbarMessage('Error al registrar la tarifa.');
         setSnackbarSeverity('error');
       } finally {

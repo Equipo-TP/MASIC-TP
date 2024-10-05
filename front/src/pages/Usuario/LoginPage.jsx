@@ -29,6 +29,9 @@ export function LoginPage() {
       } else if (role === 'Vendedor') {
         navigate("/logged_user");
       }
+      else {
+        alert("Usuario y/o contraseña incorrecto")
+      }
     }
   }, [isAuthenticated, role, navigate]);
 
@@ -124,7 +127,7 @@ export function LoginPage() {
             margin="normal"
             {...register("email", { required: true })}
           />
-          {errors.email?.message && <p>{errors.email?.message}</p>}
+          {errors.email?.message && <p className="text-red-700">{errors.email?.message}</p>}
           <TextField
             label="Password"
             type="password"
@@ -133,7 +136,7 @@ export function LoginPage() {
             margin="normal"
             {...register("password", { required: true })}
           />
-          {errors.password?.message && <p>{errors.password?.message}</p>}
+          {errors.password?.message && <p className="text-red-700">{errors.password?.message}</p>}
           <Button
             type="submit"
             variant="contained"
