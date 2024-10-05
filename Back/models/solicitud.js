@@ -12,8 +12,8 @@ var SolicitudSchema = Schema({
  observaciones: {type: String, default: 'No hay observaciones', required: false},
  estado_1: {type: String, default: 'Enviado', required: false},
  estado_2: {type: String, default: 'Pendiente', required: false},
- presupuesto: {type: Schema.ObjectId, ref: 'presupuesto', required: false},
+ presupuesto: {type: Number, ref: 'presupuesto', required: false}, //modificado nuevamente a number, ya que presupuesto no puede ser un ID
  createdAt: {type: Date, default: Date.now, required: true}
 });
 
-module.exports = mongoose.model('solicitud', SolicitudSchema );
+module.exports = mongoose.model('solicitud', SolicitudSchema ); 

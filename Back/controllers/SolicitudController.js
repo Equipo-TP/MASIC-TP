@@ -2,30 +2,53 @@
 
 //const cliente = require('../models/cliente');
 var Solicitud = require('../models/solicitud');
+const Contador = require('../models/contador'); 
 
-const registro_solicitud = async function(req,res){
-    //variable para que reciba toda la data que esta en el cuerpo del request
-    var data = req.body;
-    var solicitud_arr = [];
-    solicitud_arr = await Solicitud.find({id:data.id});
-    if (solicitud_arr.length == 0) {
-          //registrando
-            var reg = await Solicitud.create(data);
-            res.status(200).send({data:reg.toJSON()});
-                
-    }else{
-        res.status(200).send({message:'La solicitud ya existe en la base de datos', data: undefined});
-    }
-
+async function obtenerProximoId(nombreContador) {
+    const contador = await Contador.findOneAndUpdate(
+        { nombre: nombreContador },
+        { $inc: { valor: 1 } },
+        { new: true, upsert: true }
+    );
+    return contador.valor;
 }
-const listar_solicitudes_vendedora = async function(req,res) {
- try {
-    var reg = await Solicitud.find({vendedor: req.user._id }).sort({createdAt:-1});
-    res.status(200).send({data: reg});
-    } catch(error){
+
+const registro_solicitud = async function(req, res) {
+    var data = req.body;
+    const nuevoId = await obtenerProximoId('solicitudes');
+    data.id = nuevoId;
+
+    var solicitud_arr = await Solicitud.find({ id: data.id });
+    if (solicitud_arr.length == 0) {
+        var reg = await Solicitud.create(data);
+        res.status(200).send({ data: reg.toJSON() });
+    } else {
+        res.status(200).send({ message: 'La solicitud ya existe en la base de datos', data: undefined });
+    }
+}
+
+const listar_solicitudes_vendedora = async function(req, res) {
+    const { page = 1, limit = 10 } = req.query; // Recibe page y limit desde la query
+    const skip = (page - 1) * limit;
+
+    try {
+        const totalSolicitudes = await Solicitud.countDocuments({ vendedor: req.user._id });
+        const solicitudes = await Solicitud.find({ vendedor: req.user._id })
+            .populate('cliente')
+            .skip(skip)
+            .limit(limit);
+
+        res.status(200).send({
+            total: totalSolicitudes,
+            totalPages: Math.ceil(totalSolicitudes / limit),
+            currentPage: page,
+            data: solicitudes
+        });
+    } catch (error) {
         res.status(500).send({ message: 'Error en la solicitud', error });
     }
 }
+
 
 const listar_solicitudes_administrador = async function(req,res) {
     var reg = await Solicitud.find({estado_1: 'Enviado'}).sort({createdAt:-1});
@@ -36,17 +59,18 @@ const listar_solicitudes_administrador = async function(req,res) {
 const obtener_solicitud_por_id = async function(req, res) {
     const id = req.params['id'];
     try {
-        // Buscar la solicitud por ID
-        let solicitud = await Solicitud.findById({_id:id});
+        // Buscar la solicitud por ID y hacer populate en 'cliente'
+        let solicitud = await Solicitud.findById(id).populate('cliente'); // Aquí se aplica el populate
         if (solicitud) {
             res.status(200).send({ data: solicitud });
         } else {
             res.status(404).send({ message: 'Solicitud no encontrada' });
         }
     } catch (error) {
-        res.status(500).send({ message: 'Error al obtener la solicitud' + id, error });
+        res.status(500).send({ message: 'Error al obtener la solicitud con ID ' + id, error });
     }
 };
+
 
 const editar_solicitud = async function(req, res) {
     var Id = req.params['id'];

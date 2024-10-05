@@ -16,6 +16,7 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
 
   const handleMiPerfil = () => {
     navigate('/mi_perfil')
+    console.log(user);
   };
 
   const handleMenuClose = () => {
@@ -26,7 +27,7 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
     logout();
     navigate('/login_user'); // Redirige a la página de inicio de sesión después de cerrar sesión
     };
-  console.log(user);
+    
   return (
     <AppBar
       position="fixed"
