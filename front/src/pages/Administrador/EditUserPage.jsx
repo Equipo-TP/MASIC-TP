@@ -21,13 +21,14 @@ function EditUserPage() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: user,
   });
-
+  
   // Obtener datos del usuario
   useEffect(() => {
     const obtUsuario = async () => {
       try {
         const res = await obtenerUserRequest(id); // API para obtener datos del usuario
         const userData = res.data.data;
+        console.log(userData);
         setUser(userData);
         reset(userData); // Resetea el formulario con los datos obtenidos
         setLoading(false); // Termina la carga

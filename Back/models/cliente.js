@@ -9,7 +9,7 @@ var ClienteSchema = Schema({
     tipo:{type:String, required: true},
     RUC: {type: Number, required: false},
     email: {type: String, required: true},
-    telefono: {type: String, required: true},
+    telefono: {type: Number, required: true},
     createdAt: {type: Date, default: Date.now, required: true}
 });
 
