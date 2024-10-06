@@ -55,6 +55,11 @@ const listar_solicitudes_administrador = async function(req,res) {
     res.status(200).send({data: reg});
 };
 
+const listar_solicitudes_aprobadas = async function(req,res) {
+    var reg = await Solicitud.find({estado_2: 'Aprobado'}).sort({createdAt:-1});
+    res.status(200).send({data: reg});
+};
+
 //obtener solicitud por ID 
 const obtener_solicitud_por_id = async function(req, res) {
     const id = req.params['id'];
@@ -98,4 +103,5 @@ module.exports = {
     listar_solicitudes_administrador,
     obtener_solicitud_por_id,
     editar_solicitud,
+    listar_solicitudes_aprobadas,
 }
