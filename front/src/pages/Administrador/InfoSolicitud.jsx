@@ -35,13 +35,16 @@ const InfoSolicitud = () => {
     if (solicitud) {
       const setClienteYVendedor = async () => {
         try {
-          const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente);
+          const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente._id);
           setNombreCliente(clienteResponse.data.data);
+          console.log(clienteResponse.data);
 
           const vendedorResponse = await obtener_usuario_por_idRequest(solicitud.vendedor);
           setNombreVendedor(vendedorResponse.data.data);
         } catch (error) {
           console.error('Error al obtener los datos del cliente o vendedor:', error);
+          console.log(solicitud.cliente);
+          console.log(nombreCliente);
         }
       };
       setClienteYVendedor();
@@ -101,8 +104,8 @@ const InfoSolicitud = () => {
             <div className="bg-white shadow-md rounded-lg p-6">
               <h1 className="text-2xl font-bold mb-4">Detalles de la Solicitud</h1>
               <div className="grid grid-cols-2 gap-4">
-                <div><strong>Nombre de cliente:</strong> {nombreCliente.nombre}</div>
-                <div><strong>Nombre de vendedor:</strong> {nombreVendedor.nombre}</div>
+                <div><strong>Nombre de cliente:</strong> {nombreCliente.nombre + " " + nombreCliente?.apellidos || ''}</div>
+                <div><strong>Nombre de vendedor:</strong> {nombreVendedor.nombre + " " + nombreVendedor.apellidos}</div>
                 <div><strong>Características:</strong> {solicitud.caracteristicas_obra}</div>
                 <div><strong>Descripción:</strong> {solicitud.descripcion_servicio}</div>
                 <div><strong>Fecha de registro:</strong> {new Date(solicitud.createdAt).toLocaleDateString()}</div>

@@ -41,3 +41,4 @@ export const actualizarEstadoSolicitudRequest = async (id, estado_2) => {return 
 export const obtener_solicitud_por_idRequest = async (id) => {return await axios.post(`${API}/obtener_solicitud_por_id/${id}`);};
 export const actualizarUsuarioRequest = async (id, data) => {return await axios.put(`/api/usuarios/${id}`, data);};
 
+
