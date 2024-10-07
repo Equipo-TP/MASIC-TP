@@ -128,9 +128,13 @@ const RegistrarUsuario = () => {
       try {
         const response = await axios.post('http://localhost:8000/api/registro_usuario', formData);
         console.log('Usuario registrado con éxito:', response.data);
+        if(response.data.data){
         setSnackbarMessage('Usuario registrado con éxito!');
         setSnackbarSeverity('success');
-        navigate('/gestionar_usuarios')
+        navigate('/gestionar_usuarios')}
+        else{
+          alert('Ya existe un usuario registrado con los mismos datos');
+        }
       } catch (error) {
         console.error('Error al registrar el usuario:', error);
         setSnackbarMessage('Error al registrar el usuario.');

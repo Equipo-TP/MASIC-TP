@@ -6,14 +6,15 @@ var Instalacion = require('../models/instalacion');
 const registro_precio_instalacion = async function (req, res) {
     var data = req.body;
 
-    var instalacion_arr = await Instalacion.find({ tipo_luminaria: data.tipo_luminaria });
-    
+    var instalacion_arr = await Instalacion.find({ tipo_luminaria: data.tipo_luminaria }); 
     if (instalacion_arr.length === 0) {
+        if(data.tipo_luminaria&&data.precio&&data.descripcion){
         // Registrando
         var reg = await Instalacion.create(data);
         res.status(200).send({ 
             
-            data: reg.toJSON() });
+            data: reg.toJSON() });}
+      else { res.status(400).send({message: 'Complete todos los datos'});}
     } else {
         res.status(400).send({ message: 'El tipo de instalación ya existe en la base de datos', data: undefined }); // Cambiar a 400
     }

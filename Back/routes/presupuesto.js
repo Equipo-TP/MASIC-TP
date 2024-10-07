@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+
 
 var express = require('express');
 var presupuestoController = require('../controllers/PresupuestoController');
@@ -10,4 +11,8 @@ api.post('/registro_presupuesto', presupuestoController.registro_presupuesto);
 api.get('/obtener_presupuesto_por_id_solicitud/:id', auth, presupuestoController.obtener_presupuesto_por_solicitud);
 api.put('/editar_presupuesto/:id', auth, presupuestoController.editar_presupuesto);
 api.delete('/eliminar_presupuesto/:id', auth, presupuestoController.eliminar_presupuesto);
+api.get('/listar_presupuestos_vendedora', auth, presupuestoController.listar_presupuestos_vendedora);
+api.get('/listar_presupuestos_administrador', presupuestoController.listar_presupuestos);
+//api.get('/presupuestos_aceptados', presupuestoController.presupuestos_aceptados);
+
 module.exports = api;

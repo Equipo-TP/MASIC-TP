@@ -10,6 +10,7 @@ api.post('/registro_usuario', usuarioController.registro_usuario);
 api.get('/listar_usuarios', usuarioController.listar_usuarios);
 api.delete('/eliminar_usuario/:id', usuarioController.eliminar_usuario);
 api.post('/obtener_usuario_por_id/:id', usuarioController.obtener_usuario_por_id);
+api.post('/actualizar_usuario/:id', usuarioController.obtener_usuario_por_id);
 api.post('/obtener_usuario_por_id_y_password', usuarioController.obtener_usuario_por_id_y_password);
 api.put('/actualizar_usuario/:id', usuarioController.actualizar_usuario);
 
