@@ -4,23 +4,24 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PresupuestoSchema = Schema({
-  ID_Presupuesto: { type: Number, required: true },
+  ID_Presupuesto: { type: Number, required: false },
   ID_Solicitud_Presupuesto: { type: Schema.ObjectId, ref: 'solicitud', required: true, unique: true },
-  ID_Presupuesto_Tarifa: { type: Schema.ObjectId, ref: 'presupuesto_tarifa', required: true },
-  IGV: { type: Number, required: false, default: 18 }, 
+  IGV: { type: Number, required: false }, 
   Tiempo: { type: Date, required: false},
   Transporte_Personal: { type: String, required: true },
+  instalaciones: [
+    {
+        tipo_luminaria: {type: Schema.ObjectId, ref: 'instalaciones', required: true}, // Referencia a otra tabla de luminarias
+        cantidad: {type: Number, required: true}, // Cantidad de cada tipo de luminaria
+        costo_total: {type: Number, required: false} //precio x cantidad
+    }
+  ],
   Materiales: { type: String, required: true },
   Costo_Materiales: { type: Number, required: true },
-  Costo_Transporte: { type: Number, required: true }, 
-  Costo_Total: { type: Number, required: false }, 
+  Costo_Transporte: { type: Number, required: true },
+  Sub_Neto: {type: Number, required: false}, 
+  Pago_Total: { type: Number, required: false }, 
   createdAt: { type: Date, default: Date.now, required: true }
 });
-
-PresupuestoSchema.pre('save', function(next) {
-  this.Costo_Total = this.Costo_Transporte + this.Costo_Materiales;
-  next();
-});
-
 module.exports = mongoose.model('presupuesto', PresupuestoSchema);
 
