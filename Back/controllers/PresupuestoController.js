@@ -3,39 +3,41 @@
 const Presupuesto = require('../models/presupuesto');
 const Solicitud = require('../models/solicitud');
 
-// Registro de presupuesto
+
 const registro_presupuesto = async function(req, res) {
     try {
         var data = req.body;
 
-        // Verificar si ya existe un presupuesto para la solicitud
+       
         var solicitud = await Solicitud.findById({_id: data.ID_Solicitud_Presupuesto});
         if (!solicitud) {
             return res.status(404).send({message: 'Solicitud no encontrada'});
         }
 
+      
         var presupuestoExistente = await Presupuesto.findOne({ ID_Solicitud_Presupuesto: data.ID_Solicitud_Presupuesto });
         if (presupuestoExistente) {
             return res.status(400).send({message: 'Ya existe un presupuesto para esta solicitud', data: undefined});
         }
 
-        // Crear nuevo presupuesto
-        var reg = await Presupuesto.create({
+    
+        var presupuesto = await Presupuesto.create({
             ID_Solicitud_Presupuesto: data.ID_Solicitud_Presupuesto,
-            IGV: data.IGV,
+            IGV: data.IGV || 18, 
             Tiempo: data.Tiempo,
             Transporte_Personal: data.Transporte_Personal,
             Materiales: data.Materiales,
-            Costo_Materiales: data.Costo_Materiales
+            Costo_Materiales: data.Costo_Materiales,
+            Costo_Transporte: data.Costo_Transporte
         });
 
-        res.status(200).send({data: reg});
+        res.status(200).send({data: presupuesto});
     } catch (error) {
         res.status(500).send({message: 'Error al registrar el presupuesto', error});
     }
 };
 
-// Obtener presupuesto por ID de la solicitud
+
 const obtener_presupuesto_por_solicitud = async function(req, res) {
     const solicitudId = req.params['id'];
     try {
@@ -50,26 +52,45 @@ const obtener_presupuesto_por_solicitud = async function(req, res) {
     }
 };
 
-// Editar presupuesto
+
 const editar_presupuesto = async function(req, res) {
     const id = req.params['id'];
     try {
         const data = req.body;
         const presupuesto = await Presupuesto.findByIdAndUpdate({_id: id}, {
-            IGV: data.IGV,
+            IGV: data.IGV || 18, 
             Tiempo: data.Tiempo,
             Transporte_Personal: data.Transporte_Personal,
             Materiales: data.Materiales,
-            Costo_Materiales: data.Costo_Materiales
+            Costo_Materiales: data.Costo_Materiales,
+            Costo_Transporte: data.Costo_Transporte
         }, {new: true});
+
         res.status(200).send({data: presupuesto});
     } catch (error) {
         res.status(500).send({message: 'Error al editar el presupuesto', error});
     }
 };
 
+
+const eliminar_presupuesto = async function(req, res) {
+    const id = req.params['id'];
+    try {
+      
+        const presupuesto = await Presupuesto.findByIdAndDelete({_id: id});
+        if (presupuesto) {
+            res.status(200).send({message: 'Presupuesto eliminado con éxito', data: presupuesto});
+        } else {
+            res.status(404).send({message: 'Presupuesto no encontrado'});
+        }
+    } catch (error) {
+        res.status(500).send({message: 'Error al eliminar el presupuesto', error});
+    }
+};
+
 module.exports = {
     registro_presupuesto,
     obtener_presupuesto_por_solicitud,
-    editar_presupuesto
+    editar_presupuesto,
+    eliminar_presupuesto 
 };
