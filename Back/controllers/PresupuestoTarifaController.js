@@ -1,16 +1,33 @@
 'use strict';
 
 var PresupuestoTarifa = require('../models/presupuesto_tarifa');
+var Instalacion = require('../models/instalacion');  
+
 
 const registrar_presupuesto_tarifa = async function(req, res) {
   try {
     var data = req.body;
-    var presupuesto_tarifa = await PresupuestoTarifa.create(data);
+
+ 
+    var instalacion = await Instalacion.findById(data.ID_instalacion); 
+    if (!instalacion) {
+      return res.status(404).send({ message: 'Instalación no encontrada' });
+    }
+
+  
+    var presupuesto_tarifa = await PresupuestoTarifa.create({
+      ID_Presupuesto: data.ID_Presupuesto,
+      ID_tarifa: instalacion._id, 
+      Cantidad: data.Cantidad,
+      Costo_Total: data.Costo_Total
+    });
+
     res.status(200).send({ data: presupuesto_tarifa });
   } catch (error) {
     res.status(500).send({ message: 'Error al registrar el Presupuesto_Tarifa', error });
   }
 };
+
 
 const listar_presupuestos_tarifa_por_presupuesto = async function(req, res) {
   try {
@@ -22,28 +39,36 @@ const listar_presupuestos_tarifa_por_presupuesto = async function(req, res) {
   }
 };
 
-const listar_presupuestos_tarifa_por_tarifa = async function(req, res) {
+
+const listar_presupuestos_tarifa_por_instalacion = async function(req, res) {
   try {
-    var id_tarifa = req.params['id'];
-    var registros = await PresupuestoTarifa.find({ ID_tarifa: id_tarifa }).populate('ID_Presupuesto');
+    var id_instalacion = req.params['id'];
+    var registros = await PresupuestoTarifa.find({ ID_tarifa: id_instalacion }).populate('ID_Presupuesto');
     res.status(200).send({ data: registros });
   } catch (error) {
-    res.status(500).send({ message: 'Error al listar Presupuestos_Tarifa por tarifa', error });
+    res.status(500).send({ message: 'Error al listar Presupuestos_Tarifa por instalación', error });
   }
 };
+
 
 const editar_presupuesto_tarifa = async function(req, res) {
   try {
     var id = req.params['id'];
     var data = req.body;
 
-    // Actualiza el registro de Presupuesto_Tarifa
+    
+    var instalacion = await Instalacion.findById(data.ID_instalacion);
+    if (!instalacion) {
+      return res.status(404).send({ message: 'Instalación no encontrada' });
+    }
+
+  
     var updatedRecord = await PresupuestoTarifa.findByIdAndUpdate(id, {
       ID_Presupuesto: data.ID_Presupuesto,
-      ID_tarifa: data.ID_tarifa,
+      ID_tarifa: instalacion._id,  // Usar _id de instalación
       Cantidad: data.Cantidad,
       Costo_Total: data.Costo_Total
-    }, { new: true }); // new: true devuelve el documento actualizado
+    }, { new: true }); 
 
     if (updatedRecord) {
       res.status(200).send({ data: updatedRecord });
@@ -58,6 +83,6 @@ const editar_presupuesto_tarifa = async function(req, res) {
 module.exports = {
   registrar_presupuesto_tarifa,
   listar_presupuestos_tarifa_por_presupuesto,
-  listar_presupuestos_tarifa_por_tarifa,
+  listar_presupuestos_tarifa_por_instalacion,  
   editar_presupuesto_tarifa, 
 };
