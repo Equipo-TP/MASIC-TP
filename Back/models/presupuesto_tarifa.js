@@ -1,12 +1,13 @@
 'use strict'
 
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PresupuestoTarifaSchema = Schema({
-    tarifa: {type: Schema.ObjectId, ref: 'instalacion', required: false},
-    cantidad: {type: Number, required: true},
-    costo_total: {type: Number, required: true},
+  ID_tarifa: { type: Schema.ObjectId, ref: 'instalacion', required: true },
+  Cantidad: { type: Number, required: true },
+  Costo_Total: { type: Number, required: false }
 });
+module.exports = mongoose.model('presupuesto_tarifa', PresupuestoTarifaSchema);
 
-module.exports = mongoose.model('PresupuestoTarifa', PresupuestoTarifaSchema);
