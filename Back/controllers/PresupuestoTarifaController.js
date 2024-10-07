@@ -5,17 +5,19 @@ var Instalacion = require('../models/instalacion');
 
 // Registrar Presupuesto_Tarifa
 const registrar_presupuesto_tarifa = async function(req, res) {
+  var data = req.body;
   try {
-    var data = req.body;
-
+    console.log(data);
  
-    var instalacion = await Instalacion.findById(data.ID_instalacion);
+    var instalacion = await Instalacion.findById(data.ID_tarifa);
     if (!instalacion) {
+      //console.log(data.ID_instalacion);
+      
       return res.status(404).send({ message: 'Instalación no encontrada' });
     }
-
+    console.log(instalacion.precio);
  
-    var costoTotal = data.Cantidad * instalacion.Precio;
+    let costoTotal = data.Cantidad * instalacion.precio;
 
  
     var presupuesto_tarifa = await PresupuestoTarifa.create({

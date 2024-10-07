@@ -9,18 +9,21 @@ const registro_presupuesto = async function(req, res) {
         var data = req.body;
 
        
-        var solicitud = await Solicitud.findById({_id: data.ID_Solicitud_Presupuesto});
+        var solicitud = await Solicitud.findById( data.ID_Solicitud_Presupuesto);
         if (!solicitud) {
             return res.status(404).send({message: 'Solicitud no encontrada'});
         }
-
-      
+        console.log(solicitud);
+        
         var presupuestoExistente = await Presupuesto.findOne({ ID_Solicitud_Presupuesto: data.ID_Solicitud_Presupuesto });
         if (presupuestoExistente) {
             return res.status(400).send({message: 'Ya existe un presupuesto para esta solicitud', data: undefined});
+        } else {
+            console.log('hola');
+            var presupuesto = await Presupuesto.create(data);
+            res.status(200).send({data:reg.toJSON()});
         }
-
-    
+        
         var presupuesto = await Presupuesto.create({
             ID_Solicitud_Presupuesto: data.ID_Solicitud_Presupuesto,
             IGV: data.IGV || 18, 
@@ -30,7 +33,7 @@ const registro_presupuesto = async function(req, res) {
             Costo_Materiales: data.Costo_Materiales,
             Costo_Transporte: data.Costo_Transporte
         });
-
+        console.log(presupuesto);
         res.status(200).send({data: presupuesto});
     } catch (error) {
         res.status(500).send({message: 'Error al registrar el presupuesto', error});
