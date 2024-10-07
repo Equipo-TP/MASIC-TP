@@ -87,10 +87,41 @@ const eliminar_presupuesto = async function(req, res) {
         res.status(500).send({message: 'Error al eliminar el presupuesto', error});
     }
 };
+const listar_presupuestos = async function(req, res) {
+    try {
+        const presupuestos = await Presupuesto.find();
+        res.status(200).send({data: presupuestos});
+    } catch (error) {
+        res.status(500).send({message: 'Error al listar presupuestos', error});
+    }
+};
 
+const listar_presupuestos_vendedora = async function(req, res) {
+    const vendedoraId = req.params['id'];  // 
+    try {
+       
+        const solicitudes = await Solicitud.find({ ID_Vendedora: vendedoraId });
+
+        if (!solicitudes.length) {
+            return res.status(404).send({ message: 'No se encontraron solicitudes para esta vendedora' });
+        }
+
+       
+        const solicitudIds = solicitudes.map(solicitud => solicitud._id);
+
+       
+        const presupuestos = await Presupuesto.find({ ID_Solicitud_Presupuesto: { $in: solicitudIds } });
+
+        res.status(200).send({ data: presupuestos });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al listar presupuestos por vendedora', error });
+    }
+};
 module.exports = {
     registro_presupuesto,
     obtener_presupuesto_por_solicitud,
     editar_presupuesto,
-    eliminar_presupuesto 
+    eliminar_presupuesto,
+    listar_presupuestos,
+    listar_presupuestos_vendedora,
 };

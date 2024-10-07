@@ -14,7 +14,7 @@ var cliente_route = require('./routes/cliente');
 var instalacion_route = require('./routes/instalacion');
 var presupuesto_route = require('./routes/presupuesto');
 var tarifa_route = require('./routes/tarifa');
-
+var presupuesto_tarifa_route = require('./routes/presupuesto_tarifa');
 //llamamos a la variable mongoose para que se conecte con mongodb al puerto 27017
 mongoose.connect('mongodb+srv://valery:proyectotp24@masic.xd5ik.mongodb.net/Masic', {useUnifiedTopology: true, useNewUrlParser: true})
   //Uso de la función flecha (then y catch) para el manejo de respuestas y errores
@@ -52,6 +52,6 @@ app.use('/api', cliente_route);
 app.use('/api', instalacion_route);
 app.use('/api', presupuesto_route);
 app.use('/api', tarifa_route);
-
+app.use('/api', presupuesto_tarifa_route);
 //Exportación del módulo app para que se puedan comunicar entre sí
 module.exports = app;
