@@ -66,6 +66,8 @@ const registro_presupuesto = async function(req, res) {
                 Costo_Transporte: data.Costo_Transporte,
                 Sub_Neto: data.sub_neto,
                 Pago_Total: data.Pago_Total,
+                estado_1: data.estado_1,
+                estado_2: data.estado_2,
 
             });
             res.status(200).send({data:reg.toJSON()});

@@ -15,6 +15,7 @@ const GestionarPresupuestos = () => {
   const [Solicitud, setSolicitud] = useState([]);
   const [cliente, setCliente] = useState([]);
   const { name } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 5; // Número máximo de presupuestos por página
 
   useEffect(() => {
@@ -27,7 +28,8 @@ const GestionarPresupuestos = () => {
         };
         const response = await listarPresupuestosVendedoraRequest(headers); //const response = await listarPresupuestosRequest(headers);
         setPresupuestos(response.data.data);
-        console.log(presupuestos)
+        console.log(presupuestos);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error al listar los presupuestos:', error.response ? error.response.data : error.message);
       }
@@ -40,16 +42,20 @@ const GestionarPresupuestos = () => {
   useEffect(() => {
     const fetchSolicitud = async () => {
         try {
-          // Iterar sobre cada presupuesto y obtener su ID_Solicitud_Presupuesto
-          presupuestos.forEach(async (presupuesto) => {
-            const response = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto);
-            setSolicitud( response.data );
-            console.log(response.data)
-          });
+          const solicitudes = await Promise.all(
+            presupuestos.map(async (presupuesto) => {
+              const response = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto);
+              console.log(response.data.data);
+              return response.data.data; // Devuelve la solicitud completa
+            })
+          );
+          setSolicitud(solicitudes);
+          setIsLoading(false);
         } catch (error) {
           console.error('Error al obtener la solicitud:', error);
         }
       };
+      console.log(Solicitud.cliente);
     
       if (presupuestos.length > 0) {
         fetchSolicitud();
@@ -58,28 +64,33 @@ const GestionarPresupuestos = () => {
 
 
 useEffect(() => {
-    const fetchCliente = async () => {
-        try {
-          // Iterar sobre cada presupuesto y obtener su ID_Solicitud_Presupuesto
-          Solicitud.forEach(async (solicitud) => {
-            const response = await obtenerClientePorIdRequest(solicitud.cliente);
-            setCliente((prevClientes) => ({
-              ...prevClientes,
-              [solicitud.cliente]: response.data.data, 
-            }));
-            console.log(response.data.data)
-            
-          });
-          console.log("Hola")
-        } catch (error) {
-          console.error('Error al obtener al cliente:', error);
-        }
-      };
-    
-      if (Solicitud.length > 0) {
-        fetchCliente();
+  const fetchCliente = async () => {
+    console.log("hola")
+      try {
+        const fetchedClientes = {};
+        await Promise.all(
+          Solicitud.map(async (solicitud) => {
+            if (solicitud && solicitud.cliente && solicitud.cliente._id) {
+              console.log("Obteniendo cliente con ID:", solicitud.cliente._id);
+              const response = await obtenerClientePorIdRequest(solicitud.cliente._id);
+              fetchedClientes[solicitud.cliente._id] = response.data.data;
+              console.log("Cliente obtenido:", response.data.data);
+            } else {
+              console.log("Cliente no disponible para la solicitud:", solicitud);
+            }
+          })
+        );
+        setCliente(fetchedClientes);
+        setIsLoading(false);
+        console.log("Clientes cargados:", fetchedClientes);
+      } catch (error) {
+        console.error('Error al obtener los clientes:', error);
       }
-    }, [Solicitud]);
+    };
+    if (Solicitud.length > 0) {
+      fetchCliente();
+    }
+  }, [Solicitud]);
 
 
   // Calcular los presupuestos que se mostrarán en la página actual
@@ -117,10 +128,21 @@ useEffect(() => {
                 </tr>
               </thead>
               <tbody>
-                {currentPresupuestos.map((presupuesto, solicitud) => (
+                {currentPresupuestos.map((presupuesto) => {
+                // Busca la solicitud correspondiente
+                const solicitud = Solicitud.find(s => s && s._id === presupuesto.ID_Solicitud_Presupuesto);
+                
+                console.log("Presupuesto actual:", presupuesto);
+                console.log("Solicitud para presupuesto:", solicitud);
+
+                // Obtiene el cliente si la solicitud es válida
+                const clientes = solicitud && solicitud.cliente ? cliente[solicitud.cliente._id] : null;
+
+                console.log("Cliente asociado:", clientes);
+                return (
                   <tr key={presupuesto._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.ID_Presupuesto}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{solicitud.cliente.nombre}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{clientes ? `${clientes.nombre} ${clientes.apellidos}` : "Cargando cliente..."}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {presupuesto.Transporte_Personal} </td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Pago_Total}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
@@ -129,7 +151,7 @@ useEffect(() => {
                       </Link>
                     </td>
                   </tr>
-                ))}
+                )})}
               </tbody>
             </table>
             {/* Paginación */}
