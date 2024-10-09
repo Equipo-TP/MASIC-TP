@@ -137,10 +137,9 @@ const listar_presupuestos = async function(req, res) {
 };
 
 const listar_presupuestos_vendedora = async function(req, res) {
-    const vendedoraId = req.params['id'];  // 
     try {
        
-        const solicitudes = await Solicitud.find({ ID_Vendedora: vendedoraId });
+        const solicitudes = await Solicitud.find({ vendedor: req.user._id });
 
         if (!solicitudes.length) {
             return res.status(404).send({ message: 'No se encontraron solicitudes para esta vendedora' });
@@ -157,6 +156,7 @@ const listar_presupuestos_vendedora = async function(req, res) {
         res.status(500).send({ message: 'Error al listar presupuestos por vendedora', error });
     }
 };
+
 module.exports = {
     registro_presupuesto,
     obtener_presupuesto_por_solicitud,
