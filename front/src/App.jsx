@@ -24,6 +24,8 @@ import RegistrarTarifa from './pages/Administrador/RegistrarTarifa';
 import GestionarTarifas from './pages/Administrador/GestionarTarifa';
 import EditTarifaPage from './pages/Administrador/EditTarifaPage';
 
+import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuestos'; 
+import RegistroPresupuestos from './pages/Vendedor/CrearPresupuesto'; 
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -51,6 +53,9 @@ function App() {
         <Route path='/registrar_tarifa' element={<RegistrarTarifa />} />
         <Route path='/gestionar_tarifas' element={<GestionarTarifas />} />
         <Route path='/editar_tarifa/:id' element={<EditTarifaPage />} /> 
+
+        <Route path='/gestionar_presupuestos' element={<GestionarPresupuestos/>}/>
+        <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>

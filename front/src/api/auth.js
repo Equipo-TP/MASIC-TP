@@ -32,18 +32,24 @@ export const eliminarTarifaRequest = async (id) => axios.delete(`${API}/eliminar
 export const obtenerTarifaRequest = async (id) => axios.get(`${API}/obtener_tarifa_por_id/${id}`);
 export const editarTarifaRequest = async (id, tarifa) => axios.put(`${API}/editar_tarifa/${id}`, tarifa);
 
-export const obtener_cliente_por_idRequest = async (id) => { return await axios.post(`${API}/obtener_cliente_por_id/${id}`); };
+/*export const obtener_cliente_por_idRequest = async (id) => { return await axios.post(`${API}/obtener_cliente_por_id/${id}`); };
 export const listarSolicitudesRequest = async () => { return await axios.get(`${API}/listar_solicitudes_administrador`); };
 export const actualizarEstadoSolicitudRequest = async (id, estado_2) => { return await axios.put(`${API}/editar_solicitud/${id}`, { estado_2 }); };
 export const obtener_solicitud_por_idRequest = async (id) => { return await axios.post(`${API}/obtener_solicitud_por_id/${id}`); };
-
+*/
 
 export const registrarPresupuestoRequest = async (presupuesto) => axios.post(`${API}/registro_presupuesto`, presupuesto);
 export const obtenerPresupuestoRequest = async (id) => axios.get(`${API}/obtener_presupuesto_por_id_solicitud/${id}`);
 export const editarPresupuestoRequest = async (id, presupuesto) => axios.put(`${API}/editar_presupuesto/${id}`, presupuesto);
 
 
-export const listarPresupuestosRequest = async () => axios.get(`${API}/listar_presupuestos`);
+/*export const listarPresupuestosRequest = async () => axios.get(`${API}/listar_presupuestos`); */
+export const listarPresupuestosRequest = async (headers) => {
+  
+  return await axios.get('http://localhost:8000/API/listar_presupuestos', { 
+    headers, 
+  });
+};
 export const eliminarPresupuestoRequest = async (id) => axios.delete(`${API}/eliminar_presupuesto/${id}`);
 export const listarPresupuestosVendedoraRequest = async (id) => axios.get(`${API}/listar_presupuestos_vendedora/${id}`);
 
