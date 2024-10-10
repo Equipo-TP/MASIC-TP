@@ -96,24 +96,28 @@ const obtener_presupuesto_por_solicitud = async function(req, res) {
 
 
 const editar_presupuesto = async function(req, res) {
-    const id = req.params['id'];
+    const solicitudId = req.params['id'];
+    const id = await Presupuesto.findOne({ID_Solicitud_Presupuesto: solicitudId})
     try {
-        const data = req.body;
-        const presupuesto = await Presupuesto.findByIdAndUpdate({_id: id}, {
-            IGV: data.IGV || 18, 
-            Tiempo: data.Tiempo,
-            Transporte_Personal: data.Transporte_Personal,
-            Materiales: data.Materiales,
-            Costo_Materiales: data.Costo_Materiales,
-            Costo_Transporte: data.Costo_Transporte,
-            estado_1: data.estado_1,
-            estado_2: data.estado_2,
-
+        var data = req.body;
+        const presupuesto = await Presupuesto.findByIdAndUpdate({_id: id._id}, {
+                ID_Presupuesto: data.ID_Presupuesto,
+                ID_Solicitud_Presupuesto: data.ID_Solicitud_Presupuesto,
+                IGV: data.IGV,
+                Transporte_Personal: data.Transporte_Personal,
+                instalaciones: data.instalaciones,
+                Materiales: data.Materiales,
+                Costo_Materiales: data.Costo_Materiales,
+                Costo_Transporte: data.Costo_Transporte,
+                Sub_Neto: data.sub_neto,
+                Pago_Total: data.Pago_Total,
+                estado_1: data.estado_1,
+                estado_2: data.estado_2,
         }, {new: true});
-
+        console.log(presupuesto);
         res.status(200).send({data: presupuesto});
     } catch (error) {
-        res.status(500).send({message: 'Error al editar el presupuesto', error});
+        res.status(500).send({message: 'Error al editar el presupuesto', data:undefined,error});
     }
 };
 

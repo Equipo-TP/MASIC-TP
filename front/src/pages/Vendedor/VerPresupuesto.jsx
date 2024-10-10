@@ -20,6 +20,7 @@ const VerPresupuesto = () => {
                 };
                 const response = await obtenerPresupuestoRequest(id, headers);
                 setPresupuesto(response.data.data); 
+                console.log(id);
             } catch (error) {
                 console.error('Error al obtener el presupuesto:', error);
             }
@@ -36,6 +37,7 @@ const VerPresupuesto = () => {
                 'Content-Type': 'application/json',
             };
             const response = await editarPresupuestoRequest(id, { estado_2: nuevoEstado }, headers);
+            console.log(response)
             if (response.data && response.data.data) {
                 setPresupuesto(prev => ({
                     ...prev,
