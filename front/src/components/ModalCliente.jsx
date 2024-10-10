@@ -11,24 +11,24 @@ const ModalCliente = ({ cliente, solicitudes, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-2 text-gray-700">Detalles del Cliente</h1>
-        <p className="mb-1 text-gray-600"><strong>Nombre:</strong> {cliente.nombre}</p>
-        <p className="mb-1 text-gray-600"><strong>Apellidos:</strong> {cliente.apellidos}</p>
-        <p className="mb-1 text-gray-600"><strong>Email:</strong> {cliente.email}</p>
-        <p className="mb-1 text-gray-600"><strong>Teléfono:</strong> {cliente.telefono}</p>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
+      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg transform transition-all duration-300">
+        <h1 className="text-3xl font-bold mb-4 text-gray-800">Detalles del Cliente</h1>
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <p className="text-gray-700"><strong>Nombre:</strong> {cliente.nombre}</p>
+          <p className="text-gray-700"><strong>Apellidos:</strong> {cliente.apellidos}</p>
+          <p className="text-gray-700"><strong>Email:</strong> {cliente.email}</p>
+          <p className="text-gray-700"><strong>Teléfono:</strong> {cliente.telefono}</p>
+        </div>
         
         {/* Mostrar solicitudes */}
-        <div
-          className="mt-4 flex items-center cursor-pointer hover:text-blue-500 transition-colors"
-          onClick={toggleMenu}  // Al hacer clic alterna el menú
+        <div 
+          className="flex items-center cursor-pointer bg-sky-900 hover:bg-sky-800 transition-colors rounded-lg p-3 mb-4" 
+          onClick={toggleMenu}
         >
-          <h2 className="text-xl font-bold text-gray-700">
-            {menuAbierto ? "Ocultar solicitudes" : "Mostrar solicitudes"}
-          </h2>
+          <h2 className="text-lg font-semibold text-white flex-1">{menuAbierto ? "Ocultar Solicitudes" : "Solicitudes"}</h2>
           {/* Icono de flecha */}
-          <span className={`ml-2 transform ${menuAbierto ? "rotate-180" : "rotate-0"} transition-transform`}>
+          <span className={`ml-2 transform ${menuAbierto ? "rotate-180" : "rotate-0"} transition-transform text-white`}>
             ▼
           </span>
         </div>
@@ -38,16 +38,16 @@ const ModalCliente = ({ cliente, solicitudes, onClose }) => {
           <div className="mt-4 overflow-auto">
             <table className="min-w-full table-auto border-collapse border border-gray-300">
               <thead>
-                <tr className="bg-gray-200">
-                  <th className="border border-gray-300 p-2 text-left">ID</th>
-                  <th className="border border-gray-300 p-2 text-left">Descripción</th>
-                  <th className="border border-gray-300 p-2 text-left">Estado</th>
+                <tr className="bg-gray-100">
+                  <th className="border border-gray-300 p-2 text-left font-semibold text-gray-700">ID</th>
+                  <th className="border border-gray-300 p-2 text-left font-semibold text-gray-700">Descripción</th>
+                  <th className="border border-gray-300 p-2 text-left font-semibold text-gray-700">Estado</th>
                 </tr>
               </thead>
               <tbody>
                 {solicitudes.length > 0 ? (
                   solicitudes.map((solicitud) => (
-                    <tr key={solicitud._id} className="bg-white hover:bg-gray-100">
+                    <tr key={solicitud._id} className="bg-white hover:bg-gray-50">
                       <td className="border border-gray-300 p-2">{solicitud.id}</td>
                       <td className="border border-gray-300 p-2">{solicitud.descripcion_servicio}</td>
                       <td className="border border-gray-300 p-2">{solicitud.estado_2}</td>
@@ -67,7 +67,7 @@ const ModalCliente = ({ cliente, solicitudes, onClose }) => {
 
         <button 
           onClick={onClose} 
-          className="mt-6 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+          className="mt-6 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
         >
           Cerrar
         </button>

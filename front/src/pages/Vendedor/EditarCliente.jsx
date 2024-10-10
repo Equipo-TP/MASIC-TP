@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { obtenerClienteRequest, actualizarClienteRequest } from '../../api/auth'; // Asegúrate de que esta ruta sea correcta
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
+import {  Button } from '@mui/material';
 
 const EditarCliente = () => {
   const { id } = useParams(); // Obtenemos el id de la URL
@@ -46,12 +47,11 @@ const EditarCliente = () => {
 
   // Enviar los datos actualizados
   const onSubmit = async (data) => {
-  //  e.preventDefault(); // Evita que el formulario recargue la página
     try {
       const actualizado = await actualizarClienteRequest(id, data); // Llamada para actualizar el cliente
-     console.log(data);
-     console.log(actualizado);
-     navigate('/gestionar_clientes'); // Redirigir a la lista de clientes tras guardar
+      console.log(data);
+      console.log(actualizado);
+      navigate('/gestionar_clientes'); // Redirigir a la lista de clientes tras guardar
     } catch (error) {
       setError('Error al actualizar el cliente.');
       console.error('Error al actualizar el cliente:', error);
@@ -60,6 +60,14 @@ const EditarCliente = () => {
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen); // Alternar la visibilidad del sidebar
+  };
+
+  // Función para manejar el evento de cancelar
+  const handleCancel = () => {
+    const confirmCancel = window.confirm('¿Estás seguro de que deseas cancelar? Todos los cambios no guardados se perderán.');
+    if (confirmCancel) {
+      navigate('/gestionar_clientes');
+    }
   };
 
   return (
@@ -123,12 +131,19 @@ const EditarCliente = () => {
                 required
               />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <button
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
                 Guardar Cambios
+              </button>
+              <button
+                type="button" // Tipo button para no enviar el formulario
+                onClick={handleCancel} // Maneja el evento de cancelación
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-4"
+              >
+                Cancelar
               </button>
             </div>
           </form>

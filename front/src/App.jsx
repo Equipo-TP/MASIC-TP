@@ -13,6 +13,7 @@ import MiPerfil from './pages/Usuario/Miperfil';
 import GestionarClientes from './pages/Vendedor/GestionarClientes';
 import EditarCliente from './pages/Vendedor/EditarCliente';
 import VerCliente from './pages/Vendedor/VerCliente';
+import GestionarClientesA from './pages/Administrador/GestionarClientesA';
 
 function App() {
   //const { checkAuth } = useAuth();
@@ -33,6 +34,8 @@ function App() {
         <Route path='/gestionar_clientes' element={<GestionarClientes/>}/>
         <Route path='/editar_cliente/:id' element={<EditarCliente/>}/>
         <Route path='/ver_cliente/:id' element={<VerCliente/>}/>
+        <Route path='/visualizar_clientes' element={<GestionarClientesA/>}/>
+
         </Route>
       </Routes>
     </BrowserRouter>
