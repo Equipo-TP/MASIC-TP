@@ -22,6 +22,7 @@ const listar_clientes = async function(req, res) {
 }
 
 const obtener_cliente = async function(req, res) {
+  
     const Id = req.params['id'];
     try {
         const reg = await Cliente.findById({_id:Id});
@@ -35,6 +36,20 @@ const obtener_cliente = async function(req, res) {
     }
 };
 
+const obtener_cliente_por_id = async function(req, res) {
+    const id = req.params['id'];
+    try {
+       
+        let cliente = await Cliente.findById({_id:id});
+        if (cliente) {
+            res.status(200).send({ data: cliente });
+        } else {
+            res.status(404).send({ message: 'cliente no encontrado' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Error al obtener el cliente' + id, error });
+    }
+};
 
 const editar_cliente = async function(req, res) {
     var Id = req.params['id'];
@@ -92,6 +107,7 @@ module.exports = {
     listar_clientes,
     editar_cliente,
     obtener_cliente,
-    //eliminar_cliente,
-   // obtenerClienteConSolicitudes // Asegúrate de exportar la nueva función
-};
+    eliminar_cliente,
+    obtener_cliente_por_id,
+}
+

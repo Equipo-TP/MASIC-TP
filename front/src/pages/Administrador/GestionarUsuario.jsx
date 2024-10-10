@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { listarUsuariosRequest, eliminarUsuarioRequest } from '../../api/auth';
-import MenuSideBar from '../../components/MenuSideBar'; // Importa el Sidebar
-import NavBar from '../../components/NavBar'; // Importa el Navbar
+import MenuSideBar from '../../components/MenuSideBar';
+import NavBar from '../../components/NavBar';
 import { Link } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const GestionarUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
-  const [drawerOpen, setDrawerOpen] = useState(false); // Estado para controlar la apertura del sidebar
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Máximo de usuarios por página
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  // Paginación
+  const indexOfLastUser = currentPage * itemsPerPage;
+  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
+  const currentUsers = usuarios.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(usuarios.length / itemsPerPage);
 
   useEffect(() => {
     const fetchUsuarios = async () => {
@@ -24,7 +31,14 @@ const GestionarUsuarios = () => {
   }, []);
 
   const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen); // Alterna el estado del sidebar
+    setDrawerOpen(!drawerOpen);
+  };
+
+  //handle de paginación
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
   };
 
   const handleDelete = (id) => {
@@ -51,17 +65,20 @@ const GestionarUsuarios = () => {
     });
   };
 
+  
+
   return (
     <div className="flex">
-      <MenuSideBar open={drawerOpen} /> {/* Pasa el estado de apertura al Sidebar */}
+      <MenuSideBar open={drawerOpen} />
       <div className="flex-1">
-        <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} /> {/* Pasa la función y el estado al Navbar */}
+        <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
           <div className="relative overflow-x-auto sm:rounded-lg">
-            <h1 className="text-3xl font-bold mb-2">Gestor de Usuarios</h1>
-            <div className="flex justify-end mb-4">
+            
+            <div className="flex justify-between mb-4">
+              <h1 className="text-3xl font-bold mb-2">Gestor de Usuarios</h1>
               <Link to="/registro_user">
-                <button className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-500 font-medium rounded-lg text-sm px-4 py-2 ">
                   Crear Usuario
                 </button>
               </Link>
@@ -77,19 +94,19 @@ const GestionarUsuarios = () => {
                 </tr>
               </thead>
               <tbody>
-                {usuarios.map((usuario) => (
+                {currentUsers.map((usuario) => (
                   <tr key={usuario._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{usuario.nombre}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{usuario.apellidos}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{usuario.email}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{usuario.rol}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">
-                    <Link to={`/ver_usuario/${usuario._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
-                      Ver
-                    </Link>
-                    <Link to={`/editar_usuario/${usuario._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
-                      Editar
-                    </Link>
+                      <Link to={`/ver_usuario/${usuario._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                        Ver
+                      </Link>
+                      <Link to={`/editar_usuario/${usuario._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
+                        Editar
+                      </Link>
                       <button
                         onClick={() => handleDelete(usuario._id)}
                         className="font-medium text-red-600 dark:text-red-500 hover:underline"
@@ -101,6 +118,23 @@ const GestionarUsuarios = () => {
                 ))}
               </tbody>
             </table>
+
+            {/* Paginación */}
+            <div className="flex justify-center mt-4">
+              <button 
+                onClick={() => handlePageChange(currentPage - 1)} 
+                disabled={currentPage === 1}
+                className="px-4 py-2 border rounded-l-lg bg-gray-200 hover:bg-gray-300">
+                Anterior
+              </button>
+              <span className="px-4 py-2">{`Página ${currentPage} de ${totalPages}`}</span>
+              <button 
+                onClick={() => handlePageChange(currentPage + 1)} 
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 border rounded-r-lg bg-gray-200 hover:bg-gray-300">
+                Siguiente
+              </button>
+            </div>
           </div>
         </div>
       </div>

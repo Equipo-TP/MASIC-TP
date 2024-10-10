@@ -1,3 +1,4 @@
+import { colors } from "@mui/material";
 import {z}   from "zod";
 // Esquema para el inicio de sesión
 export const loginSchema = z.object({
