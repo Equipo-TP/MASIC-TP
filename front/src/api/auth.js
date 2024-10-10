@@ -47,13 +47,8 @@ export const listarPresupuestosRequest = async () => axios.get(`${API}/listar_pr
 export const eliminarPresupuestoRequest = async (id) => axios.delete(`${API}/eliminar_presupuesto/${id}`);
 export const listarPresupuestosVendedoraRequest = async (id) => axios.get(`${API}/listar_presupuestos_vendedora/${id}`);
 
-
-export const obtener_cliente_por_idRequest = async (id) => {return await axios.post(`${API}/obtener_cliente_por_id/${id}`);};
 export const obtenerUsuarioRequest = async (id) => {return await axios.get(`${API}/usuarios/${id}`);};
 export const obtener_usuario_por_idRequest = async (id) => {return await axios.post(`${API}/obtener_usuario_por_id/${id}`);};
-export const listarSolicitudesRequest = async () => {return await axios.get(`${API}/listar_solicitudes_administrador`);};
-export const actualizarEstadoSolicitudRequest = async (id, estado_2) => {return await axios.put(`${API}/editar_solicitud/${id}`,{estado_2});};
-export const obtener_solicitud_por_idRequest = async (id) => {return await axios.post(`${API}/obtener_solicitud_por_id/${id}`);};
 export const actualizarUsuarioRequest = async (id, data) => {return await axios.put(`/api/usuarios/${id}`, data);};
 
 
