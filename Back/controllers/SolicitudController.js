@@ -28,7 +28,7 @@ const registro_solicitud = async function(req, res) {
 }
 
 const listar_solicitudes_vendedora = async function(req, res) {
-    const { page = 1, limit = 10 } = req.query; // Recibe page y limit desde la query
+    const { page = 1, limit = 40 } = req.query; // Recibe page y limit desde la query
     const skip = (page - 1) * limit;
 
     try {
@@ -84,6 +84,8 @@ const editar_solicitud = async function(req, res) {
     var reg = await Solicitud.findByIdAndUpdate({_id:Id},{
         vendedor: data.vendedor,
         cliente: data.cliente,
+        direccion: data.direccion,
+        distrito: data.distrito,
         caracteristicas_obra: data.caracteristicas_obra,
         descripcion_servicio: data.descripcion_servicio,
         observaciones: data.observaciones,

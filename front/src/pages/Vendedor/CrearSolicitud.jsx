@@ -16,6 +16,8 @@ const SolicitudForm = () => {
         estado_1: 'Enviado',
         estado_2: 'Pendiente',
         presupuesto: '',
+        direccion: '',
+        distrito: '',
     });
 
     const [nuevoCliente, setNuevoCliente] = useState(false); // Para manejar la creación de un nuevo cliente
@@ -121,6 +123,7 @@ const SolicitudForm = () => {
             // Registrar la solicitud
             await registroSolicitudRequest(nuevaSolicitud);
             alert('Solicitud registrada');
+            navigate('/gestionar_solicitudes');
         } catch (error) {
             console.error('Error al registrar:', error);
             alert('Hubo un error al registrar la solicitud.');
@@ -131,7 +134,7 @@ const SolicitudForm = () => {
     return (
         <div className="bg-white border-4 rounded-lg shadow relative m-10">
             <div className="flex items-start justify-between p-5 border-b rounded-t">
-                <h3 className="text-xl font-semibold">Formulario de Solicitud</h3>
+                <h3 className="text-xl font-semibold">Formulario para Registrar Solicitud</h3>
                 <button
                     type="button"
                     onClick={() => {
@@ -293,6 +296,31 @@ const SolicitudForm = () => {
                         )}
 
                         <div className="col-span-6 sm:col-span-3">
+                            <label htmlFor="presupuesto" className="text-sm font-medium text-gray-900 block mb-2">
+                                Dirección
+                            </label>
+                            <input
+                                name="direccion"
+                                id="direccion"
+                                value={nuevaSolicitud.direccion}
+                                onChange={handleInputChange}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            />
+                        </div>
+                        <div className="col-span-6 sm:col-span-3">
+                            <label htmlFor="presupuesto" className="text-sm font-medium text-gray-900 block mb-2">
+                                Distrito
+                            </label>
+                            <input
+                                name="distrito"
+                                id="distrito"
+                                value={nuevaSolicitud.distrito}
+                                onChange={handleInputChange}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
                             <label htmlFor="caracteristicas_obra" className="text-sm font-medium text-gray-900 block mb-2">
                                 Características de la obra
                             </label>
@@ -328,20 +356,6 @@ const SolicitudForm = () => {
                                 name="observaciones"
                                 id="observaciones"
                                 value={nuevaSolicitud.observaciones}
-                                onChange={handleInputChange}
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                            />
-                        </div>
-
-                        <div className="col-span-6 sm:col-span-3">
-                            <label htmlFor="presupuesto" className="text-sm font-medium text-gray-900 block mb-2">
-                                Presupuesto
-                            </label>
-                            <input
-                                type="number"
-                                name="presupuesto"
-                                id="presupuesto"
-                                value={nuevaSolicitud.presupuesto}
                                 onChange={handleInputChange}
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             />

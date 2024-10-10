@@ -77,20 +77,13 @@ const GestionarClientes = () => {
               value={searchTerm}
               onChange={handleSearch}
               placeholder="Buscar cliente por nombre"
-              className="border rounded p-2"
+              className="border rounded p-2 w-56"
             />
           </div>
 
-          <button 
-            onClick={handleRefresh}
-            className="mb-4 bg-blue-500 text-white p-2 rounded"
-          >
-            Refrescar Lista
-          </button>
-
           <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead>
-              <tr className="w-full bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+              <tr className="w-full bg-gray-300 text-gray-700 uppercase text-sm leading-normal">
                 <th className="py-3 px-6 text-left">Nombre</th>
                 <th className="py-3 px-6 text-left">Apellidos</th>
                 <th className="py-3 px-6 text-left">Email</th>

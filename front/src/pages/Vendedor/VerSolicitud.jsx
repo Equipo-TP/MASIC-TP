@@ -86,6 +86,28 @@ const VerSolicitud = () => {
                             disabled // Solo lectura
                         />
                     </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Direccion
+                        </label>
+                        <input
+                            type="text"
+                            value={solicitud.direccion}
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                            disabled // Solo lectura
+                        />
+                    </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Distrito
+                        </label>
+                        <input
+                            type="text"
+                            value={solicitud.distrito}
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                            disabled // Solo lectura
+                        />
+                    </div>
 
                     <div className="col-span-6 sm:col-span-3">
                         <label className="text-sm font-medium text-gray-900 block mb-2">
