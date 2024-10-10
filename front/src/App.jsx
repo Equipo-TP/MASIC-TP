@@ -1,3 +1,4 @@
+import Chatbot from './components/Chatbot';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
@@ -30,6 +31,7 @@ function App() {
     <UserProvider>
       <BrowserRouter>
       <Routes>
+        <Route path='/logged_user' element={<><LoggedUsuario /><Chatbot /></>} />
         <Route path='/login_user' element={<LoginPage/>}/>       
         <Route element={<PrivateRoute />}>
         <Route path='/logged_user' element={<LoggedUsuario/>}/>

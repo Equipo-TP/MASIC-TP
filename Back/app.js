@@ -54,3 +54,7 @@ app.use('/api', instalacion_route);
 
 //Exportación del módulo app para que se puedan comunicar entre sí
 module.exports = app;
+
+const chatbotRoutes = require('./routes/chatbot');
+// Registrar las rutas del chatbot
+app.use('/api', chatbotRoutes);
