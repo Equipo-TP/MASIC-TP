@@ -11,11 +11,18 @@ import EditarUsuario from './pages/Usuario/editarUsuario';
 import EditUserPage from './pages/Administrador/EditUserPage';
 import LoggedUsuario from './pages/Usuario/LoggedUsuario';
 import MiPerfil from './pages/Usuario/Miperfil';
+
+import GestionarClientes from './pages/Vendedor/GestionarClientes';
+import EditarCliente from './pages/Vendedor/EditarCliente';
+import VerCliente from './pages/Vendedor/VerCliente';
+import GestionarClientesA from './pages/Administrador/GestionarClientesA';
+
 import GestionarSolicitudes from './pages/Vendedor/GestionarSolicitudes';
 import RegistroSolicitud from './pages/Vendedor/CrearSolicitud';
 import VerSolicitud from './pages/Vendedor/VerSolicitud';
 import EditarSolicitud from './pages/Vendedor/EditarSolicitud';
 import VerUsuarioPage from './pages/Administrador/VerUsuario';
+
 
 import GestionSolicitud from './pages/Administrador/GestionSolicitud'; 
 import InfoSolicitud from './pages/Administrador/InfoSolicitud'
@@ -30,7 +37,7 @@ function App() {
     <UserProvider>
       <BrowserRouter>
       <Routes>
-        <Route path='/login_user' element={<LoginPage/>}/>       
+        <Route path='/login_user' element={<LoginPage/>}/>
         <Route element={<PrivateRoute />}>
         <Route path='/logged_user' element={<LoggedUsuario/>}/>
         <Route path='/mi_perfil' element={<MiPerfil/>} />
@@ -39,6 +46,11 @@ function App() {
         <Route path='/editar_usuario/:id' element={<EditUserPage/>}/>
         <Route path='/registro_user' element={<RegistrarUsuario/>}/>
         <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
+
+        <Route path='/gestionar_clientes' element={<GestionarClientes/>}/>
+        <Route path='/editar_cliente/:id' element={<EditarCliente/>}/>
+        <Route path='/ver_cliente/:id' element={<VerCliente/>}/>
+        <Route path='/visualizar_clientes' element={<GestionarClientesA/>}/>
 
         <Route path='/ver_usuario/:id' element={<VerUsuarioPage/>}/>
         <Route path='/gestionar_solicitudes' element={<GestionarSolicitudes/>}/>
@@ -59,3 +71,4 @@ function App() {
 }
 
 export default App;
+

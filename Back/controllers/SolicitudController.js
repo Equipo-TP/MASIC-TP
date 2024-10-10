@@ -97,11 +97,31 @@ const editar_solicitud = async function(req, res) {
     }
 };
 
+// Nueva función para obtener un cliente junto con sus solicitudes
+const obtenerSolicitudesPorCliente = async function(req, res) {
+    const clienteId = req.params.id;
+    try {
+        const reg = await Solicitud.find({cliente:clienteId});
+        if (!reg) {
+            return res.status(404).send({ message: 'No hay solicitudes' });
+        }
+        else {
+            // Obtener las solicitudes del cliente
+
+            res.status(200).send({ data:reg });
+        }
+        
+    } catch (error) {
+        res.status(500).send({ message: 'Error al obtener el cliente y sus solicitudes', error });
+    }
+};
+
 module.exports = {
     registro_solicitud,
     listar_solicitudes_vendedora,
     listar_solicitudes_administrador,
     obtener_solicitud_por_id,
     editar_solicitud,
+    obtenerSolicitudesPorCliente,
     listar_solicitudes_aprobadas,
 }
