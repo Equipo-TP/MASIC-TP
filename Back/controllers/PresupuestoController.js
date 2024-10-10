@@ -105,7 +105,10 @@ const editar_presupuesto = async function(req, res) {
             Transporte_Personal: data.Transporte_Personal,
             Materiales: data.Materiales,
             Costo_Materiales: data.Costo_Materiales,
-            Costo_Transporte: data.Costo_Transporte
+            Costo_Transporte: data.Costo_Transporte,
+            estado_1: data.estado_1,
+            estado_2: data.estado_2,
+
         }, {new: true});
 
         res.status(200).send({data: presupuesto});

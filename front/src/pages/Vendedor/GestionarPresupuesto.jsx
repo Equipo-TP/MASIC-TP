@@ -28,7 +28,6 @@ const GestionarPresupuestos = () => {
         };
         const response = await listarPresupuestosVendedoraRequest(headers); //const response = await listarPresupuestosRequest(headers);
         setPresupuestos(response.data.data);
-        console.log(presupuestos);
         setIsLoading(false);
       } catch (error) {
         console.error('Error al listar los presupuestos:', error.response ? error.response.data : error.message);
@@ -45,7 +44,6 @@ const GestionarPresupuestos = () => {
           const solicitudes = await Promise.all(
             presupuestos.map(async (presupuesto) => {
               const response = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto);
-              console.log(response.data.data);
               return response.data.data; // Devuelve la solicitud completa
             })
           );
@@ -55,7 +53,6 @@ const GestionarPresupuestos = () => {
           console.error('Error al obtener la solicitud:', error);
         }
       };
-      console.log(Solicitud.cliente);
     
       if (presupuestos.length > 0) {
         fetchSolicitud();
@@ -65,24 +62,20 @@ const GestionarPresupuestos = () => {
 
 useEffect(() => {
   const fetchCliente = async () => {
-    console.log("hola")
+
       try {
         const fetchedClientes = {};
         await Promise.all(
           Solicitud.map(async (solicitud) => {
             if (solicitud && solicitud.cliente && solicitud.cliente._id) {
-              console.log("Obteniendo cliente con ID:", solicitud.cliente._id);
               const response = await obtenerClientePorIdRequest(solicitud.cliente._id);
               fetchedClientes[solicitud.cliente._id] = response.data.data;
-              console.log("Cliente obtenido:", response.data.data);
             } else {
-              console.log("Cliente no disponible para la solicitud:", solicitud);
             }
           })
         );
         setCliente(fetchedClientes);
         setIsLoading(false);
-        console.log("Clientes cargados:", fetchedClientes);
       } catch (error) {
         console.error('Error al obtener los clientes:', error);
       }
@@ -132,13 +125,9 @@ useEffect(() => {
                 // Busca la solicitud correspondiente
                 const solicitud = Solicitud.find(s => s && s._id === presupuesto.ID_Solicitud_Presupuesto);
                 
-                console.log("Presupuesto actual:", presupuesto);
-                console.log("Solicitud para presupuesto:", solicitud);
-
                 // Obtiene el cliente si la solicitud es válida
                 const clientes = solicitud && solicitud.cliente ? cliente[solicitud.cliente._id] : null;
 
-                console.log("Cliente asociado:", clientes);
                 return (
                   <tr key={presupuesto._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.ID_Presupuesto}</td>
@@ -146,7 +135,7 @@ useEffect(() => {
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {presupuesto.Transporte_Personal} </td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Pago_Total}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
-                      <Link to={`/ver_presupuesto/${presupuesto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                      <Link to={`/ver_presupuesto/${presupuesto.ID_Solicitud_Presupuesto}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Ver
                       </Link>
                     </td>

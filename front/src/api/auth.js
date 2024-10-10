@@ -33,8 +33,8 @@ export const obtenerTarifaRequest = async (id) => axios.get(`${API}/obtener_tari
 export const editarTarifaRequest = async (id, tarifa) => axios.put(`${API}/editar_tarifa/${id}`, tarifa);
 
 export const registrarPresupuestoRequest = async (presupuesto) => axios.post(`${API}/registro_presupuesto`, presupuesto);
-export const obtenerPresupuestoRequest = async (id) => axios.get(`${API}/obtener_presupuesto_por_id_solicitud/${id}`);
-export const editarPresupuestoRequest = async (id, presupuesto) => axios.put(`${API}/editar_presupuesto/${id}`, presupuesto);
+export const obtenerPresupuestoRequest = async (id,headers) => axios.get(`${API}/obtener_presupuesto_por_id_solicitud/${id}`, { headers });
+export const editarPresupuestoRequest = async (id, presupuesto, headers) => axios.put(`${API}/editar_presupuesto/${id}`, presupuesto, { headers });
 
 
 export const listarPresupuestosRequest = async () => axios.get(`${API}/listar_presupuestos`);
