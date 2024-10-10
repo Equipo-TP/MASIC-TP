@@ -6,7 +6,7 @@ import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
 
 const RegistrarUsuario = () => {
-  const navigate = useNavigate(); // Hook de navegación
+  const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [formData, setFormData] = useState({
     nombre: '',
@@ -30,9 +30,9 @@ const RegistrarUsuario = () => {
     rol: ''
   });
 
-  const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para controlar el Snackbar
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // Mensaje del Snackbar
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // Severidad del Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -89,11 +89,9 @@ const RegistrarUsuario = () => {
         });
         break;
       case 'password':
-        const passwordValid = /^\d{6}$/.test(value);
-
         setErrors({
           ...errors,
-          password: passwordValid ? '' : 'La contraseña debe tener al menos 6 caracteres'
+          password: value.length >= 6 ? '' : 'La contraseña debe tener al menos 6 caracteres'
         });
         break;
       case 'confirmPassword':
@@ -115,10 +113,25 @@ const RegistrarUsuario = () => {
 
   const validateForm = () => {
     let valid = true;
+    let newErrors = {};
+    
+    // Validar cada campo si está vacío
+    Object.keys(formData).forEach(field => {
+      if (formData[field].trim() === '') {
+        newErrors[field] = 'Campo requerido';
+        valid = false;
+      } else {
+        newErrors[field] = '';
+      }
+    });
+
+    // Validar los campos existentes (como email o contraseñas)
     Object.keys(formData).forEach(field => {
       validateField(field, formData[field]);
+      if (errors[field]) valid = false; // Si hay errores, no es válido
     });
-    valid = Object.values(errors).every(error => error === '');
+
+    setErrors(newErrors); // Actualizar los errores en el estado
     return valid;
   };
 
@@ -128,11 +141,11 @@ const RegistrarUsuario = () => {
       try {
         const response = await axios.post('http://localhost:8000/api/registro_usuario', formData);
         console.log('Usuario registrado con éxito:', response.data);
-        if(response.data.data){
-        setSnackbarMessage('Usuario registrado con éxito!');
-        setSnackbarSeverity('success');
-        navigate('/gestionar_usuarios')}
-        else{
+        if (response.data.data) {
+          setSnackbarMessage('Usuario registrado con éxito!');
+          setSnackbarSeverity('success');
+          navigate('/gestionar_usuarios');
+        } else {
           alert('Ya existe un usuario registrado con los mismos datos');
         }
       } catch (error) {
@@ -140,7 +153,7 @@ const RegistrarUsuario = () => {
         setSnackbarMessage('Error al registrar el usuario.');
         setSnackbarSeverity('error');
       } finally {
-        setOpenSnackbar(true); // Mostrar el Snackbar en caso de éxito o error
+        setOpenSnackbar(true); 
       }
     }
   };
@@ -158,7 +171,7 @@ const RegistrarUsuario = () => {
         confirmPassword: '',
         rol: ''
       });
-      navigate('/gestionar_usuarios'); // Redirige al enlace deseado
+      navigate('/gestionar_usuarios');
     }
   };
 
@@ -186,9 +199,9 @@ const RegistrarUsuario = () => {
         <Box
           sx={{
             mt: 4,
-            maxWidth: '1000px', // Aumentado para mayor tamaño
+            maxWidth: '1000px',
             width: '100%',
-            p: 3, // Añadido para mayor relleno
+            p: 3,
             overflowX: 'hidden',
           }}
         >
@@ -274,13 +287,17 @@ const RegistrarUsuario = () => {
                       onChange={handleRoleChange}
                     >
                       <MenuItem value="" disabled>
-                       
+                        Selecciona un rol
                       </MenuItem>
-                      <MenuItem value="Administrador">Administrador</MenuItem>
-                      <MenuItem value="Vendedor">Vendedor</MenuItem>
-                      <MenuItem value="Tecnico">Tecnico</MenuItem>
+                      <MenuItem value="usuario">Usuario</MenuItem>
+                      <MenuItem value="administrador">Administrador</MenuItem>
+                      <MenuItem value="tecnico">Técnico</MenuItem>
                     </Select>
-                    {errors.rol && <Typography color="error">{errors.rol}</Typography>}
+                    {errors.rol && (
+                      <Typography variant="caption" color="error">
+                        {errors.rol}
+                      </Typography>
+                    )}
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -307,29 +324,22 @@ const RegistrarUsuario = () => {
                     helperText={errors.confirmPassword}
                   />
                 </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                  <Button variant="contained" color="primary" type="submit">
-                    Registrar
-                  </Button>
-                  <Button variant="outlined" color="secondary" onClick={handleCancel}>
-                    Cancelar
-                  </Button>
-                </Grid>
               </Grid>
+              <Box mt={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}> 
+                <Button type="submit" variant="contained" color="primary">
+                  Registrar
+                </Button>
+                <Button onClick={handleCancel} variant="outlined" color="secondary" sx={{ ml: 2 }}>
+                  Cancelar
+                </Button>
+              </Box>
             </form>
           </Paper>
         </Box>
       </Box>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
+
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>
