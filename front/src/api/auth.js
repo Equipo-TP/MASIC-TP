@@ -20,8 +20,6 @@ export const eliminarUsuarioRequest = async (id) => axios.delete(`${API}/elimina
 // Función para registrar una solicitud de cliente
 export const registrarClienteRequest = async (cliente) => axios.post(`${API}/registro_cliente`, cliente);
 
-// Función para listar todos los clientes (que se registraron a través de "Gestionar Solicitud")
-export const listarClientesRequest = async () => axios.get(`${API}/listar_clientes`);
 export const obtenerClienteConSolicitudesRequest = async (id) => axios.post(`${API}/obtenerSolicitudesPorCliente/${id}`);
 
 // Función para obtener un cliente específico por ID
