@@ -28,7 +28,7 @@ const registro_solicitud = async function(req, res) {
 }
 
 const listar_solicitudes_vendedora = async function(req, res) {
-    const { page = 1, limit = 10 } = req.query; // Recibe page y limit desde la query
+    const { page = 1, limit = 40 } = req.query; // Recibe page y limit desde la query
     const skip = (page - 1) * limit;
 
     try {
@@ -84,6 +84,8 @@ const editar_solicitud = async function(req, res) {
     var reg = await Solicitud.findByIdAndUpdate({_id:Id},{
         vendedor: data.vendedor,
         cliente: data.cliente,
+        direccion: data.direccion,
+        distrito: data.distrito,
         caracteristicas_obra: data.caracteristicas_obra,
         descripcion_servicio: data.descripcion_servicio,
         observaciones: data.observaciones,
@@ -97,11 +99,31 @@ const editar_solicitud = async function(req, res) {
     }
 };
 
+// Nueva función para obtener un cliente junto con sus solicitudes
+const obtenerSolicitudesPorCliente = async function(req, res) {
+    const clienteId = req.params.id;
+    try {
+        const reg = await Solicitud.find({cliente:clienteId});
+        if (!reg) {
+            return res.status(404).send({ message: 'No hay solicitudes' });
+        }
+        else {
+            // Obtener las solicitudes del cliente
+
+            res.status(200).send({ data:reg });
+        }
+        
+    } catch (error) {
+        res.status(500).send({ message: 'Error al obtener el cliente y sus solicitudes', error });
+    }
+};
+
 module.exports = {
     registro_solicitud,
     listar_solicitudes_vendedora,
     listar_solicitudes_administrador,
     obtener_solicitud_por_id,
     editar_solicitud,
+    obtenerSolicitudesPorCliente,
     listar_solicitudes_aprobadas,
 }

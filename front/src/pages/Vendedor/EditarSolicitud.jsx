@@ -111,6 +111,29 @@ const EditarSolicitud = () => {
 
                 <div className="col-span-6 sm:col-span-3">
                     <label className="text-sm font-medium text-gray-900 block mb-2">
+                        Dirección
+                    </label>
+                    <input
+                        name="direccion"
+                        value={solicitud.direccion}
+                        onChange={handleChange} // Llama a handleChange
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                    />
+                </div>
+                <div className="col-span-6 sm:col-span-3">
+                    <label className="text-sm font-medium text-gray-900 block mb-2">
+                        Distrito
+                    </label>
+                    <input
+                        name="distrito"
+                        value={solicitud.distrito}
+                        onChange={handleChange} // Llama a handleChange
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                    />
+                </div>
+
+                <div className="col-span-6 sm:col-span-3">
+                    <label className="text-sm font-medium text-gray-900 block mb-2">
                         Características de la obra
                     </label>
                     <textarea
@@ -140,19 +163,6 @@ const EditarSolicitud = () => {
                     <textarea
                         name="observaciones"
                         value={solicitud.observaciones}
-                        onChange={handleChange} // Llama a handleChange
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                    />
-                </div>
-
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Presupuesto
-                    </label>
-                    <input
-                        type="number"
-                        name="presupuesto"
-                        value={solicitud.presupuesto}
                         onChange={handleChange} // Llama a handleChange
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                     />

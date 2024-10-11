@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 const GestionSolicitud = () => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5; // Número máximo de solicitudes por página
     const navigate = useNavigate();
     useEffect(() => {
         const fetchSolicitudes = async () => {
@@ -38,6 +40,16 @@ const GestionSolicitud = () => {
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
     };
+
+          // Calcular las solicitudes que se mostrarán en la página actual
+  const indexOfLastSolicitud = currentPage * itemsPerPage;
+  const indexOfFirstSolicitud = indexOfLastSolicitud - itemsPerPage;
+  const currentSolicitudes = solicitudes.slice(indexOfFirstSolicitud, indexOfLastSolicitud);
+  const totalPages = Math.ceil(solicitudes.length / itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
     const renderSolicitudes = () => {
       if (solicitudes == null) {
@@ -70,7 +82,7 @@ const GestionSolicitud = () => {
               </tr>
             </thead>
             <tbody>
-              {solicitudes.map((solicitud) => (
+              {currentSolicitudes.map((solicitud) => (
                 <tr key={solicitud._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <td className="px-6 py-4">{solicitud.id}</td>
                   <td className="px-6 py-4">{solicitud.caracteristicas_obra}</td>
@@ -91,6 +103,7 @@ const GestionSolicitud = () => {
         );
       }
     };
+
   
     return (
       <div className="flex">
@@ -99,10 +112,26 @@ const GestionSolicitud = () => {
           <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
           <div className="p-6">
         
-            <h1 className="text-3xl font-bold mb-2">Gestión de Solicitud</h1>
+            <h1 className="text-3xl font-bold mb-6">Gestión de Solicitud</h1>
             {/* Renderizar las solicitudes o mensaje */}
             {renderSolicitudes()}
           
+           {/* Paginación */}
+           <div className="flex justify-center mt-4">
+              <button 
+                onClick={() => handlePageChange(currentPage - 1)} 
+                disabled={currentPage === 1}
+                className="px-4 py-2 border rounded-l-lg bg-gray-200 hover:bg-gray-300">
+                Anterior
+              </button>
+              <span className="px-4 py-2">{`Página ${currentPage} de ${totalPages}`}</span>
+              <button 
+                onClick={() => handlePageChange(currentPage + 1)} 
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 border rounded-r-lg bg-gray-200 hover:bg-gray-300">
+                Siguiente
+              </button>
+            </div>
           </div>
         </div>
       </div>

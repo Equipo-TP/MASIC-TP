@@ -67,8 +67,8 @@ const GestionarSolicitudes = () => {
                   <th scope="col" className="px-6 py-3">ID</th>
                   <th scope="col" className="px-6 py-3">Cliente</th>
                   <th scope="col" className="px-6 py-3">Descripción</th>
+                  <th scope="col" className="px-6 py-3">Envío</th>
                   <th scope="col" className="px-6 py-3">Estado</th>
-                  <th scope="col" className="px-6 py-3">Estado #2</th>
                   <th scope="col" className="px-6 py-3">Acciones</th>
                 </tr>
               </thead>
