@@ -8,6 +8,9 @@ const GestionarPresupuestos = () => {
   const [presupuestos, setPresupuestos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [nombreCliente, setNombreCliente] = useState('');
+  const [nombreVendedor, setNombreVendedor] = useState('');
+  const [solicitud, setSolicitud] = useState([]);
   const itemsPerPage = 5; // Número máximo de presupuestos por página
 
   useEffect(() => {
@@ -27,7 +30,46 @@ const GestionarPresupuestos = () => {
 
     fetchPresupuestos();
   }, []);
+  useEffect(() => {
+    if (presupuestos) {
+      const setSolicitudes = async () => {
+        try {
+          const solicitudResponse = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto);
+          setSolicitud(solicitudResponse.data.data);
+          console.log(solicitudResponse.data);
 
+        
+        } catch (error) {
+          console.error('Error al obtener los datos del cliente o vendedor:', error);
+          console.log(presupuesto.ID_Solicitud_Presupuesto);
+          console.log(solicitud);
+          
+        }
+      };
+      setSolicitudes();
+    }
+  }, [presupuestos]);
+  
+  useEffect(() => {
+    if (solicitud) {
+      const setClienteYVendedor = async () => {
+        try {
+          const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente._id);
+          setNombreCliente(clienteResponse.data.data);
+          console.log(clienteResponse.data);
+
+          const vendedorResponse = await obtener_usuario_por_idRequest(solicitud.vendedor);
+          setNombreVendedor(vendedorResponse.data.data);
+        } catch (error) {
+          console.error('Error al obtener los datos del cliente o vendedor:', error);
+          console.log(solicitud.cliente);
+          console.log(nombreCliente);
+          console.log(nombreVendedor);
+        }
+      };
+      setClienteYVendedor();
+    }
+  }, [solicitud]);
   // Calcular los presupuestos que se mostrarán en la página actual
   const indexOfLastPresupuesto = currentPage * itemsPerPage;
   const indexOfFirstPresupuesto = indexOfLastPresupuesto - itemsPerPage;
@@ -62,21 +104,21 @@ const GestionarPresupuestos = () => {
             <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-6 py-3">ID</th>
-                  <th scope="col" className="px-6 py-3">Solicitud</th>
-                  <th scope="col" className="px-6 py-3">IGV</th>
-                  <th scope="col" className="px-6 py-3">Tiempo</th>
+                  
+                  <th scope="col" className="px-6 py-3">ID Solicitud</th>
+                  <th scope="col" className="px-6 py-3">Nombre del cliente</th>
+                  <th scope="col" className="px-6 py-3">Nombre del vendedor</th>
                   <th scope="col" className="px-6 py-3">Costo Materiales</th>
                   <th scope="col" className="px-6 py-3">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {currentPresupuestos.map((presupuesto) => (
+                {currentPresupuestos.map((presupuesto,nombreCliente,nombreVendedor) => (
                   <tr key={presupuesto._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.id}</td>
+                    
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.ID_Solicitud_Presupuesto}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.IGV}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Tiempo}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{nombreCliente.nombre}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{nombreVendedor.nombre}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Costo_Materiales}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
                       <Link to={`/ver_presupuesto/${presupuesto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">

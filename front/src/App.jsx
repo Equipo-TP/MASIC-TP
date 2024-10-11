@@ -31,6 +31,7 @@ import RegistrarTarifa from './pages/Administrador/RegistrarTarifa';
 import GestionarTarifas from './pages/Administrador/GestionarTarifa';
 import EditTarifaPage from './pages/Administrador/EditTarifaPage';
 
+
 import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuestos'; 
 import RegistroPresupuestos from './pages/Vendedor/CrearPresupuesto'; 
 function App() {

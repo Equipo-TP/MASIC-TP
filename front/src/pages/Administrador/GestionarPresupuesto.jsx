@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { listarPresupuestosRequest, eliminarPresupuestoRequest } from '../../api/auth';
+import { listarPresupuestosRequest, eliminarPresupuestoRequest, obtenerSolicitudPorIdRequest, obtener_cliente_por_idRequest, obtener_usuario_por_idRequest } from '../../api/auth';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 const GestionarPresupuesto = () => {
   const [presupuestos, setPresupuestos] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
+  /*const [nombreCliente, setNombreCliente] = useState('');
+  const [nombreVendedor, setNombreVendedor] = useState(''); */
+  const [solicitud, setSolicitud] = useState([]);
   useEffect(() => {
     const fetchPresupuestos = async () => {
       try {
@@ -22,6 +24,47 @@ const GestionarPresupuesto = () => {
 
     fetchPresupuestos();
   }, []);
+/*
+  useEffect(() => {
+    if (presupuestos) {
+      const setSolicitudes = async () => {
+        try {
+          const solicitudResponse = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto);
+          setSolicitud(solicitudResponse.data.data);
+          console.log(solicitudResponse.data);
+
+        
+        } catch (error) {
+          console.error('Error al obtener los datos del cliente o vendedor:', error);
+          console.log(presupuesto.ID_Solicitud_Presupuesto);
+          console.log(solicitud);
+          
+        }
+      };
+      setSolicitudes();
+    }
+  }, [presupuestos]);
+  
+  useEffect(() => {
+    if (solicitud) {
+      const setClienteYVendedor = async () => {
+        try {
+          const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente._id);
+          setNombreCliente(clienteResponse.data.data);
+          console.log(clienteResponse.data);
+
+          const vendedorResponse = await obtener_usuario_por_idRequest(solicitud.vendedor);
+          setNombreVendedor(vendedorResponse.data.data);
+        } catch (error) {
+          console.error('Error al obtener los datos del cliente o vendedor:', error);
+          console.log(solicitud.cliente);
+          console.log(nombreCliente);
+          console.log(nombreVendedor);
+        }
+      };
+      setClienteYVendedor();
+    }
+  }, [solicitud]); */
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
