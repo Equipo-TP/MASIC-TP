@@ -255,35 +255,7 @@ const SolicitudForm = () => {
                                         required
                                     />
                                 </div>
-
-                                <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="tipoCliente" className="text-sm font-medium text-gray-900 block mb-2">
-                                        Tipo de Cliente
-                                    </label>
-                                    <select
-                                        name="tipo"
-                                        id="tipoCliente"
-                                        value={datosNuevoCliente.tipo}
-                                        onChange={handleInputChange}
-                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                    >
-                                        <option value="Persona Natural">Persona Natural</option>
-                                        <option value="Empresa">Empresa</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="ruc" className="block mb-2 text-sm font-medium text-gray-900">
-                                        RUC
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="ruc"
-                                        value={datosNuevoCliente.ruc}
-                                        onChange={(e) => setDatosNuevoCliente({ ...datosNuevoCliente, ruc: e.target.value })}
-                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                        required
-                                    />
-                                </div>
+                                
                                 <button
                                     type="button"
                                     onClick={handleNuevoClienteSubmit}

@@ -6,7 +6,7 @@ var Solicitud = require('../models/solicitud'); // Asegúrate de importar el mod
 const registro_cliente = async function(req, res) {
     var data = req.body;
     var cliente_arr = [];
-    cliente_arr = await Cliente.find({ email: data.email }, { telefono: data.telefono });
+    cliente_arr = await Cliente.find({ email: data.email });
     if (cliente_arr.length == 0) {
         // Registrando
         var reg = await Cliente.create(data);
