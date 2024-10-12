@@ -48,8 +48,13 @@ export const listarSolicitudesVendedoraRequest = async (headers) => {
       headers, 
     });
   };
+  export const obtenerSolicitudPorIdRequest = async (headers) => {
   
-export const obtenerSolicitudPorIdRequest = async (id) => axios.post(`${API}/obtener_solicitud_por_id/${id}`);
+    return await axios.get('http://localhost:8000/API//obtener_solicitud_por_id/${id}', { 
+      headers, 
+    });
+  };
+//export const obtenerSolicitudPorIdRequest = async (id) => axios.post(`${API}/obtener_solicitud_por_id/${id}`);
 export const editarSolicitudRequest = async (id, data) => axios.put(`${API}/editar_solicitud/${id}`, data);
 
 export const registroClienteRequest = async (data) => axios.post(`${API}/registro_cliente`, data);

@@ -32,8 +32,8 @@ import GestionarTarifas from './pages/Administrador/GestionarTarifa';
 import EditTarifaPage from './pages/Administrador/EditTarifaPage';
 
 
-import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuestos'; 
-import RegistroPresupuestos from './pages/Vendedor/CrearPresupuesto'; 
+import GestionarPresupuestos from './pages/Administrador/GestionarPresupuestos'; 
+import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto'; 
 function App() {
     //const { checkAuth } = useAuth();
   return (

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { listarPresupuestosRequest } from '../../api/auth'; // Asegúrate de que este request esté en auth.js
+import {listarPresupuestosRequest, obtenerSolicitudPorIdRequest, obtener_cliente_por_idRequest, obtener_usuario_por_idRequest } from '../../api/auth'; // Asegúrate de que este request esté en auth.js
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
 import { Link } from 'react-router-dom';
 
 const GestionarPresupuestos = () => {
   const [presupuestos, setPresupuestos] = useState([]);
+  const [presupuestos2, setPresupuestos2] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [nombreCliente, setNombreCliente] = useState('');
   const [nombreVendedor, setNombreVendedor] = useState('');
-  const [solicitud, setSolicitud] = useState([]);
+  const [solicitud, setSolicitud] = useState(null);
   const itemsPerPage = 5; // Número máximo de presupuestos por página
 
   useEffect(() => {
@@ -23,6 +24,8 @@ const GestionarPresupuestos = () => {
         };
         const response = await listarPresupuestosRequest(headers);
         setPresupuestos(response.data.data);
+        
+        setPresupuestos2(response.data.data);
       } catch (error) {
         console.error('Error al listar los presupuestos:', error.response ? error.response.data : error.message);
       }
@@ -31,30 +34,30 @@ const GestionarPresupuestos = () => {
     fetchPresupuestos();
   }, []);
   useEffect(() => {
-    if (presupuestos) {
+    if (presupuestos2) {
       const setSolicitudes = async () => {
         try {
-          const solicitudResponse = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto);
+          const solicitudResponse = await obtenerSolicitudPorIdRequest(presupuestos2.ID_Solicitud_Presupuesto);
           setSolicitud(solicitudResponse.data.data);
           console.log(solicitudResponse.data);
 
         
         } catch (error) {
           console.error('Error al obtener los datos del cliente o vendedor:', error);
-          console.log(presupuesto.ID_Solicitud_Presupuesto);
+          console.log(presupuestos2.ID_Solicitud_Presupuesto);
           console.log(solicitud);
           
         }
       };
       setSolicitudes();
     }
-  }, [presupuestos]);
+  }, [presupuestos2]);
   
   useEffect(() => {
     if (solicitud) {
       const setClienteYVendedor = async () => {
         try {
-          const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente._id);
+          const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente);
           setNombreCliente(clienteResponse.data.data);
           console.log(clienteResponse.data);
 
@@ -113,18 +116,18 @@ const GestionarPresupuestos = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentPresupuestos.map((presupuesto,nombreCliente,nombreVendedor) => (
-                  <tr key={presupuesto._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                {currentPresupuestos.map((presupuestos,nombreCliente,nombreVendedor) => (
+                  <tr key={presupuestos._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.ID_Solicitud_Presupuesto}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos.ID_Solicitud_Presupuesto}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{nombreCliente.nombre}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{nombreVendedor.nombre}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Costo_Materiales}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos.Costo_Materiales}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
-                      <Link to={`/ver_presupuesto/${presupuesto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                      <Link to={`/ver_presupuesto/${presupuestos._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Ver
                       </Link>
-                      <Link to={`/editar_presupuesto/${presupuesto._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
+                      <Link to={`/editar_presupuesto/${presupuestos._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
                         Editar
                       </Link>
                     </td>
