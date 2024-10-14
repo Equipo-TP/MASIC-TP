@@ -79,6 +79,23 @@ const registro_presupuesto = async function(req, res) {
     }
 };
 
+const ver_presupuesto_id = async function(req, res) {
+    const id = req.params['id'];
+    try {
+        // Usamos .populate para popular el campo tipo_luminaria de la colección Instalaciones
+        let presupuesto = await Presupuesto.findOne({_id: id})
+        .populate('instalaciones.tipo_luminaria')
+        .populate('ID_Solicitud_Presupuesto');
+        if (presupuesto) {
+            res.status(200).send({data: presupuesto});
+        } else {
+            res.status(404).send({message: 'Presupuesto no encontrado'});
+        }
+    } catch (error) {
+        res.status(500).send({message: 'Error al obtener el presupuesto', error});
+    }
+};
+
 
 const obtener_presupuesto_por_solicitud = async function(req, res) {
     const solicitudId = req.params['id'];
@@ -96,11 +113,10 @@ const obtener_presupuesto_por_solicitud = async function(req, res) {
 
 
 const editar_presupuesto = async function(req, res) {
-    const solicitudId = req.params['id'];
-    const id = await Presupuesto.findOne({ID_Solicitud_Presupuesto: solicitudId})
+    const id = req.params['id'];
     try {
         var data = req.body;
-        const presupuesto = await Presupuesto.findByIdAndUpdate({_id: id._id}, {
+        const presupuesto = await Presupuesto.findByIdAndUpdate({_id: id}, {
                 ID_Presupuesto: data.ID_Presupuesto,
                 ID_Solicitud_Presupuesto: data.ID_Solicitud_Presupuesto,
                 IGV: data.IGV,
@@ -168,6 +184,7 @@ const listar_presupuestos_vendedora = async function(req, res) {
 
 module.exports = {
     registro_presupuesto,
+    ver_presupuesto_id,
     obtener_presupuesto_por_solicitud,
     editar_presupuesto,
     eliminar_presupuesto,

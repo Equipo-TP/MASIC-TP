@@ -9,6 +9,7 @@ var auth = require('../middlewares/authenticate').auth;
 
 api.post('/registro_presupuesto', presupuestoController.registro_presupuesto);
 api.get('/obtener_presupuesto_por_id_solicitud/:id', auth, presupuestoController.obtener_presupuesto_por_solicitud);
+api.get('/ver_presupuesto_id/:id', auth, presupuestoController.ver_presupuesto_id);
 api.put('/editar_presupuesto/:id', auth, presupuestoController.editar_presupuesto);
 api.delete('/eliminar_presupuesto/:id', auth, presupuestoController.eliminar_presupuesto);
 api.get('/listar_presupuestos_vendedora', auth, presupuestoController.listar_presupuestos_vendedora);

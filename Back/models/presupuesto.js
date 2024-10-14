@@ -11,7 +11,7 @@ var PresupuestoSchema = Schema({
   Transporte_Personal: { type: String, required: true },
   instalaciones: [
     {
-        tipo_luminaria: {type: Schema.ObjectId, ref: 'instalaciones', required: true}, // Referencia a otra tabla de luminarias
+        tipo_luminaria: {type: Schema.ObjectId, ref: 'instalacion', required: true}, // Referencia a otra tabla de luminarias
         cantidad: {type: Number, required: true}, // Cantidad de cada tipo de luminaria
         costo_total: {type: Number, required: false} //precio x cantidad
     }

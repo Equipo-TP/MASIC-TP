@@ -118,6 +118,7 @@ useEffect(() => {
                   <th scope="col" className="px-6 py-3">Transporte Personal</th>
                   <th scope="col" className="px-6 py-3">Pago Total</th>
                   <th scope="col" className="px-6 py-3">Estado</th>
+                  <th scope="col" className="px-6 py-3">Acción</th>
                 </tr>
               </thead>
               <tbody>
@@ -134,8 +135,9 @@ useEffect(() => {
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{clientes ? `${clientes.nombre} ${clientes.apellidos}` : "Cargando cliente..."}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {presupuesto.Transporte_Personal} </td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Pago_Total}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.estado_2}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
-                      <Link to={`/ver_presupuesto/${presupuesto.ID_Solicitud_Presupuesto}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                      <Link to={`/ver_presupuesto/${presupuesto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Ver
                       </Link>
                     </td>
