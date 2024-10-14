@@ -66,6 +66,7 @@ const InfoSolicitud = () => {
         };
 
         const response = await actualizarEstadoSolicitudRequest(id, nuevoEstado);
+        console.log(response);
 
         if (response.status === 200) {
           setSolicitud(response.data.data);  // Actualiza el estado en el frontend
