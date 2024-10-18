@@ -14,6 +14,8 @@ const registro_presupuesto = async function(req, res) {
             return res.status(404).send({message: 'Solicitud no encontrada'});
         }
         console.log(solicitud);
+        console.log('Hola');
+        console.log(data.instalaciones);
 
         for (const instalacionData of data.instalaciones) {
             console.log(instalacionData.tipo_luminaria);
@@ -21,6 +23,7 @@ const registro_presupuesto = async function(req, res) {
         if (!instalacion) {
           return res.status(404).send({ message: 'Instalación no encontrada' });
         }
+        //console.log('Hola');
         console.log(instalacion);
  
         instalacionData.costo_total = instalacionData.cantidad * instalacion.precio; 
@@ -129,7 +132,17 @@ const eliminar_presupuesto = async function(req, res) {
 };
 const listar_presupuestos = async function(req, res) {
     try {
-        const presupuestos = await Presupuesto.find();
+        const presupuestos = await Presupuesto.find().populate({
+            path: 'ID_Solicitud_Presupuesto',
+            populate: [
+              {
+                path: 'cliente', // Asegúrate de que este es el campo dentro de ID_Solicitud_Presupuesto que guarda el cliente
+              },
+              {
+                path: 'vendedor', // Asegúrate de que este es el campo dentro de ID_Solicitud_Presupuesto que guarda el vendedor
+              }
+            ]
+          });
         res.status(200).send({data: presupuestos});
     } catch (error) {
         res.status(500).send({message: 'Error al listar presupuestos', error});

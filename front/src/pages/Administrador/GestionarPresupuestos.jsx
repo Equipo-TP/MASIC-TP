@@ -6,12 +6,13 @@ import { Link } from 'react-router-dom';
 
 const GestionarPresupuestos = () => {
   const [presupuestos, setPresupuestos] = useState([]);
-  const [presupuestos2, setPresupuestos2] = useState(null);
+  const [presupuestos2, setPresupuestos2] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [nombreCliente, setNombreCliente] = useState('');
+  const [cliente, setCliente] = useState('');
   const [nombreVendedor, setNombreVendedor] = useState('');
-  const [solicitud, setSolicitud] = useState(null);
+  const [Solicitud, setSolicitudes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 5; // Número máximo de presupuestos por página
 
   useEffect(() => {
@@ -23,9 +24,23 @@ const GestionarPresupuestos = () => {
           'Content-Type': 'application/json',
         };
         const response = await listarPresupuestosRequest(headers);
+       // const prep = response.data.data;
+        console.log(response.data.data);
+      /*  const solicitudes = await Promise.all(
+          prep.map(async (presupuesto) => {
+            const solicitudRes = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto._id);
+            const solicitud = solicitudRes.data.data;
+            console.log(solicitudRes.data.data)
+            const clienteRes = await obtener_cliente_por_idRequest(solicitudRes.data.data.cliente._id);
+            const cliente = clienteRes.data.data;
+            const vendedorRes = await obtener_cliente_por_idRequest(solicitudRes.data.data.cliente._id);
+            const vendedor = clienteRes.data.data;
+            return { solicitud, cliente, vendedor };
+          })
+        );*/
         setPresupuestos(response.data.data);
-        
-        setPresupuestos2(response.data.data);
+        //setSolicitudes(solicitudes);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error al listar los presupuestos:', error.response ? error.response.data : error.message);
       }
@@ -33,46 +48,32 @@ const GestionarPresupuestos = () => {
 
     fetchPresupuestos();
   }, []);
-  useEffect(() => {
-    if (presupuestos2) {
-      const setSolicitudes = async () => {
-        try {
-          const solicitudResponse = await obtenerSolicitudPorIdRequest(presupuestos2.ID_Solicitud_Presupuesto);
-          setSolicitud(solicitudResponse.data.data);
-          console.log(solicitudResponse.data);
-
-        
-        } catch (error) {
-          console.error('Error al obtener los datos del cliente o vendedor:', error);
-          console.log(presupuestos2.ID_Solicitud_Presupuesto);
-          console.log(solicitud);
-          
-        }
-      };
-      setSolicitudes();
-    }
-  }, [presupuestos2]);
+ /* useEffect(() => {
+    const fetchSolicitudes = async () => {
+      try {
+        const solicitudes = await Promise.all(
+          presupuestos.map(async (presupuesto) => {
+            const solicitudRes = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto);
+            const solicitud = solicitudRes.data.data;
+            const clienteRes = await obtener_cliente_por_idRequest(solicitud.cliente._id);
+            const cliente = clienteRes.data.data;
+            return { solicitud, cliente };
+          })
+        );
+        setSolicitudes(solicitudes);
+        console.log(presupuestos)
+        console.log(Solicitud)
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error al obtener la solicitud:', error);
+      }
+    };
   
-  useEffect(() => {
-    if (solicitud) {
-      const setClienteYVendedor = async () => {
-        try {
-          const clienteResponse = await obtener_cliente_por_idRequest(solicitud.cliente);
-          setNombreCliente(clienteResponse.data.data);
-          console.log(clienteResponse.data);
-
-          const vendedorResponse = await obtener_usuario_por_idRequest(solicitud.vendedor);
-          setNombreVendedor(vendedorResponse.data.data);
-        } catch (error) {
-          console.error('Error al obtener los datos del cliente o vendedor:', error);
-          console.log(solicitud.cliente);
-          console.log(nombreCliente);
-          console.log(nombreVendedor);
-        }
-      };
-      setClienteYVendedor();
+    if (presupuestos2.length > 0) {
+      fetchSolicitudes();
     }
-  }, [solicitud]);
+  }, [presupuestos2]); */
+  
   // Calcular los presupuestos que se mostrarán en la página actual
   const indexOfLastPresupuesto = currentPage * itemsPerPage;
   const indexOfFirstPresupuesto = indexOfLastPresupuesto - itemsPerPage;
@@ -116,13 +117,17 @@ const GestionarPresupuestos = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentPresupuestos.map((presupuestos,nombreCliente,nombreVendedor) => (
+                {currentPresupuestos.map((presupuestos, index) =>{ 
+                
+                // Obtiene el cliente si la solicitud es válida
+               // const clientes = solicitud && solicitud.cliente ? cliente[solicitud.cliente._id] : null;
+
+                  return(
                   <tr key={presupuestos._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos.ID_Solicitud_Presupuesto}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{nombreCliente.nombre}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{nombreVendedor.nombre}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos.Costo_Materiales}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos.ID_Solicitud_Presupuesto?.id}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos.ID_Solicitud_Presupuesto?.cliente.nombre} {presupuestos.ID_Solicitud_Presupuesto?.cliente.apellidos}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos.ID_Solicitud_Presupuesto.vendedor.nombre} {presupuestos.ID_Solicitud_Presupuesto.vendedor.apellidos}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos?.Costo_Materiales}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
                       <Link to={`/ver_presupuesto/${presupuestos._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Ver
@@ -131,8 +136,8 @@ const GestionarPresupuestos = () => {
                         Editar
                       </Link>
                     </td>
-                  </tr>
-                ))}
+                  </tr> 
+                )})}
               </tbody>
             </table>
             {/* Paginación */}

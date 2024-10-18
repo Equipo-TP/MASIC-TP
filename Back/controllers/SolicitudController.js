@@ -3,6 +3,7 @@
 //const cliente = require('../models/cliente');
 var Solicitud = require('../models/solicitud');
 const Contador = require('../models/contador'); 
+const Presupuesto = require('../models/presupuesto');
 
 async function obtenerProximoId(nombreContador) {
     const contador = await Contador.findOneAndUpdate(
@@ -59,13 +60,28 @@ const listar_solicitudes_aprobadas = async function(req,res) {
     var reg = await Solicitud.find({estado_2: 'Aprobado'}).sort({createdAt:-1});
     res.status(200).send({data: reg});
 };
+const listar_solicitudes_aprobadas_para_presupuesto = async function(req,res) {
+    // Buscar todos los presupuestos y obtener la lista de IDs de solicitudes
+    var presupuestos = await Presupuesto.find().select('ID_Solicitud_Presupuesto');
+    var id_solicitudes_excluidas = presupuestos.map(presupuesto => presupuesto.ID_Solicitud_Presupuesto);
+
+    // Buscar solicitudes aprobadas cuyo _id no esté en la lista de id_solicitudes_excluidas
+    var reg = await Solicitud.find({
+        estado_1: 'Enviado',
+        estado_2: 'Aprobado',
+        _id: { $nin: id_solicitudes_excluidas }
+    }).sort({ createdAt: -1 }).populate('cliente').populate('vendedor');
+
+    res.status(200).send({ data: reg });
+
+};
 
 //obtener solicitud por ID 
 const obtener_solicitud_por_id = async function(req, res) {
     const id = req.params['id'];
     try {
         // Buscar la solicitud por ID y hacer populate en 'cliente'
-        let solicitud = await Solicitud.findById(id).populate('cliente'); // Aquí se aplica el populate
+        let solicitud = await Solicitud.findById(id).populate('cliente').populate('vendedor'); // Aquí se aplica el populate
         if (solicitud) {
             res.status(200).send({ data: solicitud });
         } else {
@@ -126,4 +142,5 @@ module.exports = {
     editar_solicitud,
     obtenerSolicitudesPorCliente,
     listar_solicitudes_aprobadas,
+    listar_solicitudes_aprobadas_para_presupuesto
 }
