@@ -69,6 +69,8 @@ const registro_presupuesto = async function(req, res) {
                 Costo_Transporte: data.Costo_Transporte,
                 Sub_Neto: data.sub_neto,
                 Pago_Total: data.Pago_Total,
+                estado_1: data.estado_1,
+                estado_2: data.estado_2,
 
             });
             res.status(200).send({data:reg.toJSON()});
@@ -77,6 +79,23 @@ const registro_presupuesto = async function(req, res) {
         }
     } catch (error) {
         res.status(500).send({message: 'Error al registrar el presupuesto', error});
+    }
+};
+
+const ver_presupuesto_id = async function(req, res) {
+    const id = req.params['id'];
+    try {
+        // Usamos .populate para popular el campo tipo_luminaria de la colección Instalaciones
+        let presupuesto = await Presupuesto.findOne({_id: id})
+        .populate('instalaciones.tipo_luminaria')
+        .populate('ID_Solicitud_Presupuesto');
+        if (presupuesto) {
+            res.status(200).send({data: presupuesto});
+        } else {
+            res.status(404).send({message: 'Presupuesto no encontrado'});
+        }
+    } catch (error) {
+        res.status(500).send({message: 'Error al obtener el presupuesto', error});
     }
 };
 
@@ -99,19 +118,25 @@ const obtener_presupuesto_por_solicitud = async function(req, res) {
 const editar_presupuesto = async function(req, res) {
     const id = req.params['id'];
     try {
-        const data = req.body;
+        var data = req.body;
         const presupuesto = await Presupuesto.findByIdAndUpdate({_id: id}, {
-            IGV: data.IGV || 18, 
-            Tiempo: data.Tiempo,
-            Transporte_Personal: data.Transporte_Personal,
-            Materiales: data.Materiales,
-            Costo_Materiales: data.Costo_Materiales,
-            Costo_Transporte: data.Costo_Transporte
+                ID_Presupuesto: data.ID_Presupuesto,
+                ID_Solicitud_Presupuesto: data.ID_Solicitud_Presupuesto,
+                IGV: data.IGV,
+                Transporte_Personal: data.Transporte_Personal,
+                instalaciones: data.instalaciones,
+                Materiales: data.Materiales,
+                Costo_Materiales: data.Costo_Materiales,
+                Costo_Transporte: data.Costo_Transporte,
+                Sub_Neto: data.sub_neto,
+                Pago_Total: data.Pago_Total,
+                estado_1: data.estado_1,
+                estado_2: data.estado_2,
         }, {new: true});
-
+        console.log(presupuesto);
         res.status(200).send({data: presupuesto});
     } catch (error) {
-        res.status(500).send({message: 'Error al editar el presupuesto', error});
+        res.status(500).send({message: 'Error al editar el presupuesto', data:undefined,error});
     }
 };
 
@@ -150,10 +175,9 @@ const listar_presupuestos = async function(req, res) {
 };
 
 const listar_presupuestos_vendedora = async function(req, res) {
-    const vendedoraId = req.params['id'];  // 
     try {
        
-        const solicitudes = await Solicitud.find({ ID_Vendedora: vendedoraId });
+        const solicitudes = await Solicitud.find({ vendedor: req.user._id });
 
         if (!solicitudes.length) {
             return res.status(404).send({ message: 'No se encontraron solicitudes para esta vendedora' });
@@ -170,8 +194,10 @@ const listar_presupuestos_vendedora = async function(req, res) {
         res.status(500).send({ message: 'Error al listar presupuestos por vendedora', error });
     }
 };
+
 module.exports = {
     registro_presupuesto,
+    ver_presupuesto_id,
     obtener_presupuesto_por_solicitud,
     editar_presupuesto,
     eliminar_presupuesto,

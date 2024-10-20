@@ -31,6 +31,9 @@ import RegistrarTarifa from './pages/Administrador/RegistrarTarifa';
 import GestionarTarifas from './pages/Administrador/GestionarTarifa';
 import EditTarifaPage from './pages/Administrador/EditTarifaPage';
 
+import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuesto';
+import VerPresupuesto from './pages/Vendedor/VerPresupuesto';
+
 
 import GestionarPresupuestos from './pages/Administrador/GestionarPresupuestos'; 
 import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto'; 
@@ -40,7 +43,9 @@ function App() {
     <UserProvider>
       <BrowserRouter>
       <Routes>
-        <Route path='/login_user' element={<LoginPage/>}/>
+
+        <Route path='/' element={<LoginPage/>}/>
+        <Route path='/login_user' element={<LoginPage/>}/>       
         <Route element={<PrivateRoute />}>
         <Route path='/logged_user' element={<LoggedUsuario/>}/>
         <Route path='/mi_perfil' element={<MiPerfil/>} />
@@ -66,6 +71,9 @@ function App() {
         <Route path='/registrar_tarifa' element={<RegistrarTarifa />} />
         <Route path='/gestionar_tarifas' element={<GestionarTarifas />} />
         <Route path='/editar_tarifa/:id' element={<EditTarifaPage />} /> 
+
+   
+        <Route path='/ver_presupuesto/:id' element={<VerPresupuesto />} />  
 
         <Route path='/gestionar_presupuestos' element={<GestionarPresupuestos/>}/>
         <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
