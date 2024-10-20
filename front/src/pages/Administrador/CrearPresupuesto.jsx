@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { obtenerSolicitudPorIdRequest, listarSolicitudesRequest, registrarPresupuestoRequest, listarTarifasRequest } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddIcon from '@mui/icons-material/Add';
 
 

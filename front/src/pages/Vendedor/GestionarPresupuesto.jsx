@@ -140,6 +140,9 @@ useEffect(() => {
                       <Link to={`/ver_presupuesto/${presupuesto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Ver
                       </Link>
+                      <Link to={`/editar_presupuesto/${presupuesto._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
+                        Editar
+                      </Link>
                     </td>
                   </tr>
                 )})}

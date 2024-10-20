@@ -33,9 +33,9 @@ import EditTarifaPage from './pages/Administrador/EditTarifaPage';
 
 import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuesto';
 import VerPresupuesto from './pages/Vendedor/VerPresupuesto';
+import EditarPresupuesto from './pages/Vendedor/EditarPresupuesto';
 
-
-import GestionarPresupuestos from './pages/Administrador/GestionarPresupuestos'; 
+//import GestionarPresupuestos from './pages/Administrador/GestionarPresupuesto'; 
 import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto'; 
 function App() {
     //const { checkAuth } = useAuth();
@@ -74,7 +74,7 @@ function App() {
 
    
         <Route path='/ver_presupuesto/:id' element={<VerPresupuesto />} />  
-
+        <Route path='/editar_presupuesto/:id' element={<EditarPresupuesto />} />
         <Route path='/gestionar_presupuestos' element={<GestionarPresupuestos/>}/>
         <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
         </Route>     
