@@ -17,4 +17,5 @@ var SolicitudSchema = Schema({
  createdAt: {type: Date, default: Date.now, required: true}
 });
 
+   
 module.exports = mongoose.model('solicitud', SolicitudSchema ); 

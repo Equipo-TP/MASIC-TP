@@ -15,6 +15,7 @@ api.post('/obtenerSolicitudesPorCliente/:id', solicitudController.obtenerSolicit
 
 api.post('/obtener_solicitud_por_id/:id', solicitudController.obtener_solicitud_por_id);
 api.get('/listar_solicitudes_aprobadas', solicitudController.listar_solicitudes_aprobadas);
+api.get('/listar_solicitudes_aprobadas_para_presupuesto', solicitudController.listar_solicitudes_aprobadas_para_presupuesto);
 
 
 module.exports = api;
