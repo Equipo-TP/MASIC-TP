@@ -3,8 +3,8 @@ import { obtenerPresupuestoIDRequest, editarPresupuestoRequest, obtener_solicitu
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { confirmAlert } from 'react-confirm-alert';
-import { useForm } from 'react-hook-form';
-const EditarPresupuesto = () => {
+
+const VerPresupuestoA = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const { name } = useAuth();
@@ -12,10 +12,7 @@ const EditarPresupuesto = () => {
     const [solicitud, setSolicitud] = useState(null);
     const [nombreCliente, setNombreCliente] = useState('');
 
-    const { register, formState: { errors } } = useForm({
-        defaultValues: presupuesto,
-      });
-      
+
     useEffect(() => {
         const fetchPresupuesto = async () => {
             try {
@@ -24,7 +21,7 @@ const EditarPresupuesto = () => {
                 const headers = {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
-                }; 
+                };
                 //llama obtener presupuesto por ID
                 const response = await obtenerPresupuestoIDRequest(id, headers);
                 setPresupuesto(response.data.data);
@@ -44,28 +41,7 @@ const EditarPresupuesto = () => {
         };
         fetchPresupuesto();
     }, [id]);
-    const actualizarPresupuesto = async (nuevoEstado) => {
-        try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            };
-            const response = await editarPresupuestoRequest(id, { estado_2: nuevoEstado }, headers);
-            console.log(response);
-            if (response.data && response.data.data) {
-                setPresupuesto(prev => ({
-                    ...prev,
-                    estado_2: response.data.data.estado_2 || nuevoEstado
-                }));
-            } else {
-                console.error('No se recibió una respuesta válida de la API:', response);
-            }
-        } catch (error) {
-            console.error('Error al actualizar el estado del presupuesto:', error);
-        }
-    };
-    
+
     //metodo para actualizar el estado del presupuesto
     const actualizarEstado = async (nuevoEstado) => {
         try {
@@ -105,24 +81,9 @@ const EditarPresupuesto = () => {
     if (!presupuesto) {
         return <div>Cargando presupuesto...</div>;
     }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            };
 
-            await editarPresupuestoRequest(id, solicitud, headers); // Asegúrate de que esta función esté implementada
-            navigate('/gestionar_presupuestos'); // Redirige a la ruta deseada después de editar
-        } catch (error) {
-            console.error('Error al editar la solicitud:', error);
-            // Manejo de errores si es necesario
-        }
-    };
     return (
-        <form onSubmit={handleSubmit} className='h-5/6'> 
+        <div className='h-5/6'> 
             <div className="bg-white border-4 rounded-lg shadow relative m-10 mb-10 h-[calc(100vh-120px)] overflow-y-auto ">
                 <div className="flex items-start justify-between p-5 border-b rounded-t">
                     <h3 className="text-xl font-semibold">Detalles del Presupuesto</h3>
@@ -145,70 +106,52 @@ const EditarPresupuesto = () => {
 
                 <div className="p-6 space-y-6">
                     <div className="grid grid-cols-6 gap-6">
-                         
                         <div className="col-span-6 sm:col-span-3">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Nombre del vendedor</label>
-                        <input
-                            type="text"
-                                name="nombre"
-                                defaultValue={name}
-                                {...register('name')}
-                                error={!!errors.name}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                Vendedor
+                            </label>
+                            <input
+                                type="text"
+                                value={name}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                                disabled // Solo lectura
                             />
-                            </div>
+                        </div>
                         <div className="col-span-6 sm:col-span-3">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Nombre del cliente</label>
-                        <input
-                            type="text"
-                                name="nombre"
-                                defaultValue={nombreCliente.nombre}
-                                {...register('nombre')}
-                                error={!!errors.nombre}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                Cliente
+                            </label>
+                            <input
+                                type="text"
+                                value={nombreCliente.nombre + " " + nombreCliente.apellidos }
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                                disabled // Solo lectura
                             />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Apellido del cliente</label>
-                        <input
-                            type="text"
-                                name="apellidos"
-                                defaultValue={nombreCliente.apellidos}
-                                {...register('apellidos')}
-                                error={!!errors.apellidos}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required
-                            />
-                            </div>
+                        </div>
 
                         <div className="col-span-6 sm:col-span-3">
-              <label className="block text-gray-700 text-sm font-bold mb-2">ID_Presupuesto</label>
-              <input
-                type="text"
-                name="ID_Presupuesto"
-                defaultValue={presupuesto.ID_Presupuesto}
-                {...register('ID_Presupuesto')}
-                error={!!errors.ID_Presupuesto}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            <div className="col-span-6 sm:col-span-3">
-              <label className="block text-gray-700 text-sm font-bold mb-2">ID_Solicitud</label>
-              <input
-                type="text"
-                name="ID_Solicitud"
-                defaultValue={presupuesto.ID_Solicitud_Presupuesto}
-                {...register('ID_Solicitud_Presupuesto')}
-                error={!!errors.ID_Solicitud_Presupuesto}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-                        
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                ID de Presupuesto
+                            </label>
+                            <input
+                                type="text"
+                                value={presupuesto.ID_Presupuesto}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                                disabled // Solo lectura
+                            />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                ID de Solicitud
+                            </label>
+                            <input
+                                type="text"
+                                value={presupuesto.ID_Solicitud_Presupuesto.id}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                                disabled // Solo lectura
+                            />
+                        </div>
 
                         <div className="col-span-6 sm:col-span-3">
                             <label className="text-sm font-medium text-gray-900 block mb-2">
@@ -218,22 +161,21 @@ const EditarPresupuesto = () => {
                                 type="text"
                                 value={new Date(presupuesto.createdAt).toLocaleDateString()}
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                                disabled
+                                disabled // Solo lectura
                             />
                         </div>
 
                         <div className="col-span-6 sm:col-span-3">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Transporte Personal</label>
-              <input
-                type="text"
-                name="Transporte_Personal"
-                defaultValue={presupuesto.Transporte_Personal}
-                {...register('Transporte_Personal')}
-                error={!!errors.Transporte_Personal}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                Distrito
+                            </label>
+                            <input
+                                type="text"
+                                value={presupuesto.Transporte_Personal}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                                disabled // Solo lectura
+                            />
+                        </div>
 
 
                         <div className="col-span-6 sm:col-span-6">
@@ -262,44 +204,47 @@ const EditarPresupuesto = () => {
                             )}
                         </div>
 
-                       
                         <div className="col-span-6 sm:col-span-3">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Materiales</label>
-              <input
-                type="text"
-                name="Materiales"
-                defaultValue={presupuesto.Materiales}
-                {...register('Materiales')}
-                error={!!errors.Materiales}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            <div className="col-span-6 sm:col-span-3">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Costo Materiales</label>
-              <input
-                type="text"
-                name="Costo_Materiales"
-                defaultValue={presupuesto.Costo_Materiales}
-                {...register('Costo_Materiales')}
-                error={!!errors.Costo_Materiales}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            <div className="col-span-6 sm:col-span-3">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Transporte de  Personal a {presupuesto.Transporte_Personal}</label>
-              <input
-                type="text"
-                name="Costo_Transporte"
-                defaultValue={presupuesto.Costo_Transporte}
-                {...register('Costo_Transporte')}
-                error={!!errors.Costo_Transporte}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                Materiales
+                            </label>
+                            <input
+                                type="text"
+                                value={presupuesto.Materiales}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                                disabled // Solo lectura
+                            />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                Costo Materiales
+                            </label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-900">$</span>
+                                <input
+                                    type="number"
+                                    value={presupuesto.Costo_Materiales}
+                                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 pl-6"
+                                    disabled // Solo lectura
+                                />
+                            </div>
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                Transporte de  Personal a {presupuesto.Transporte_Personal}
+                            </label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-900">$</span>
+                                <input
+                                    type="number"
+                                    value={presupuesto.Costo_Transporte}
+                                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 pl-6"
+                                    disabled // Solo lectura
+                                />
+                            </div>
+                        </div>
 
                         <div className="col-span-6 sm:col-span-3">
                             <label className="text-sm font-medium text-gray-900 block mb-2">
@@ -311,7 +256,7 @@ const EditarPresupuesto = () => {
                                     type="number"
                                     value={presupuesto.Sub_Neto}
                                     className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 pl-6" // Añade padding izquierdo para el símbolo
-                                    disabled 
+                                    disabled // Solo lectura
                                 />
                             </div>
                         </div>
@@ -326,7 +271,7 @@ const EditarPresupuesto = () => {
                                     type="number"
                                     value={presupuesto.IGV}
                                     className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 pl-6"
-                                    disabled 
+                                    disabled // Solo lectura
                                 />
                             </div>
                             
@@ -342,7 +287,7 @@ const EditarPresupuesto = () => {
                                     type="number"
                                     value={presupuesto.Pago_Total}
                                     className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 pl-6"
-                                    disabled 
+                                    disabled // Solo lectura
                                 />
                             </div>
                         </div>
@@ -355,36 +300,14 @@ const EditarPresupuesto = () => {
                                 type="text"
                                 value={presupuesto.estado_2 || ''}
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                                disabled
+                                disabled // Solo lectura
                             />
                         </div>
-
-                        {presupuesto.estado_2 === 'Pendiente' && (
-                            <div className="flex space-x-4 mt-4">
-                                <button
-                                    onClick={manejarAprobacion}
-                                    className="bg-green-500 text-white px-4 py-2 rounded"
-                                >
-                                    Aprobado
-                                </button>
-                                <button
-                                    onClick={manejarRechazo}
-                                    className="bg-red-500 text-white px-4 py-2 rounded"
-                                >
-                                    Rechazado
-                                </button>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
-            <div className="flex justify-end">
-                <button type="submit" className="bg-green-800 text-white font-semibold py-2 px-4 rounded-lg">
-                    Guardar Cambios
-                </button>
-            </div>
-        </form>
+        </div>
     );
 };
 
-export default EditarPresupuesto;
+export default VerPresupuestoA;

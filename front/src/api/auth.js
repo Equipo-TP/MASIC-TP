@@ -72,6 +72,7 @@ export const registrarPresupuestoRequest = async (presupuesto) => axios.post(`${
 export const obtenerPresupuestoRequest = async (id,headers) => axios.get(`${API}/obtener_presupuesto_por_id_solicitud/${id}`, { headers });
 export const obtenerPresupuestoIDRequest = async (id,headers) => axios.get(`${API}/ver_presupuesto_id/${id}`, { headers });
 export const editarPresupuestoRequest = async (id, presupuesto, headers) => axios.put(`${API}/editar_presupuesto/${id}`, presupuesto, { headers });
+export const editarPresupuestoAdminRequest = async (id, presupuesto, headers) => axios.put(`${API}/editar_presupuesto_admin/${id}`, presupuesto, { headers });
 
 export const listarPresupuestosRequest = async (headers) => {
   

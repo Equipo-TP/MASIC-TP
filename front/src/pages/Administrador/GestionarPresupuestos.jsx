@@ -4,7 +4,7 @@ import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
 import { Link } from 'react-router-dom';
 
-const GestionarPresupuestos = () => {
+const GestionarPresupuestosA = () => {
   const [presupuestos, setPresupuestos] = useState([]);
   const [presupuestos2, setPresupuestos2] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -129,7 +129,7 @@ const GestionarPresupuestos = () => {
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos.ID_Solicitud_Presupuesto.vendedor.nombre} {presupuestos.ID_Solicitud_Presupuesto.vendedor.apellidos}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuestos?.Costo_Materiales}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
-                      <Link to={`/ver_presupuesto/${presupuestos._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                      <Link to={`/visualizar_presupuesto/${presupuestos._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Ver
                       </Link>
                       <Link to={`/editar_presupuesto/${presupuestos._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
@@ -163,4 +163,4 @@ const GestionarPresupuestos = () => {
   );
 };
 
-export default GestionarPresupuestos;
+export default GestionarPresupuestosA;
