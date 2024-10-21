@@ -31,9 +31,13 @@ import RegistrarTarifa from './pages/Administrador/RegistrarTarifa';
 import GestionarTarifas from './pages/Administrador/GestionarTarifa';
 import EditTarifaPage from './pages/Administrador/EditTarifaPage';
 
-import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuesto';
+import GestionarPresupuestosA from './pages/Administrador/GestionarPresupuestos';
 import VerPresupuesto from './pages/Vendedor/VerPresupuesto';
+import EditarPresupuesto from './pages/Administrador/EditarPresupuesto';
 
+//import GestionarPresupuestos from './pages/Administrador/GestionarPresupuesto'; 
+import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto'; 
+import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -69,8 +73,12 @@ function App() {
         <Route path='/gestionar_tarifas' element={<GestionarTarifas />} />
         <Route path='/editar_tarifa/:id' element={<EditTarifaPage />} /> 
 
-        <Route path='/gestionar_presupuestos' element={<GestionarPresupuestos />} />
+   
         <Route path='/ver_presupuesto/:id' element={<VerPresupuesto />} />  
+        <Route path='/editar_presupuesto/:id' element={<EditarPresupuesto />} />
+        <Route path='/gestionar_presupuestos' element={<GestionarPresupuestosA/>}/>
+        <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
+        <Route path='/visualizar_presupuesto/:id' element={<VerPresupuestoA />} />
         </Route>     
       </Routes>
     </BrowserRouter>
