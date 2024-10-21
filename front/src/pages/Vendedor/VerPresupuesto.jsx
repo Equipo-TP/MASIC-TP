@@ -68,13 +68,13 @@ const VerPresupuesto = () => {
     const manejarAprobacion = () => {
         actualizarEstado('Aprobado');
         alert("Presupuesto aprobado con éxito")
-        navigate('/gestionar_presupuestos');
+        navigate('/visualizar_presupuestos');
     };
 
     const manejarRechazo = () => {
         actualizarEstado('Rechazado');
         alert("Presupuesto rechazado")
-        navigate('/gestionar_presupuestos');
+        navigate('/visualizar_presupuestos');
 
     };
 
@@ -90,7 +90,7 @@ const VerPresupuesto = () => {
                     <button
                         type="button"
                         onClick={() => {
-                            navigate('/gestionar_presupuestos'); // Redirige a la ruta deseada
+                            navigate('/visualizar_presupuestos'); // Redirige a la ruta deseada
                         }}
                         className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                     >
