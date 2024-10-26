@@ -102,7 +102,7 @@ const InfoSolicitud = () => {
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
           {solicitud ? (
-            <div className="bg-white shadow-md rounded-lg p-6">
+            <div className="bg-white shadow-md rounded-lg p-6 overflow-y-auto overflow-x-auto" >
               <h1 className="text-2xl font-bold mb-4">Detalles de la Solicitud</h1>
               <div className="grid grid-cols-2 gap-4">
                 <div><strong>Nombre de cliente:</strong> {nombreCliente.nombre + " " + nombreCliente?.apellidos || ''}</div>

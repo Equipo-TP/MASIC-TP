@@ -94,7 +94,7 @@ const GestionarPresupuestosA = () => {
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
-          <div className="relative overflow-x-auto sm:rounded-lg">
+        <div className="relative overflow-x-auto overflow-y-auto sm:rounded-lg w-auto h-auto" style={{ minHeight: '500px', maxWidth: 'auto', width: '100%' }}>
             <div className='select-none flex items-center justify-between mb-4'>
               <h1 className="text-3xl font-bold mb-2">Gestor de Presupuestos</h1>
               <div className="flex justify-end mb-4">
@@ -105,7 +105,7 @@ const GestionarPresupuestosA = () => {
                 </Link>
               </div>  
             </div>
-            <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <table className="shadow-md w-auto text-sm text-left text-gray-500 dark:text-gray-400 table-fixed" style={{ width: '100%' }}>
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   

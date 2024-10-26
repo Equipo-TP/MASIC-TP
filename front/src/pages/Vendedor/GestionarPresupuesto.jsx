@@ -92,11 +92,12 @@ useEffect(() => {
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
-          <div className="relative overflow-x-auto sm:rounded-lg">
+          <div className="relative overflow-x-full sm:rounded-lg w-auto h-auto" style={{ minHeight: '500px', maxWidth: '1500px', width: '100%' }}>
             <div className='select-none flex items-center justify-between mb-4'>
               <h1 className="text-3xl font-bold mb-2">Gestor de Presupuestos de {name}</h1> 
             </div>
-            <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400 table-fixed" style={{ width: '100%' }}>
+
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">ID</th>
