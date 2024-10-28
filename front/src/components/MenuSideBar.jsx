@@ -45,6 +45,7 @@ function MenuSideBar({ open }) {
       anchor="left"
       open
       sx={{
+        display: open ? 'block' : 'none',
         width: open ? drawerWidth : collapsedWidth,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
@@ -55,7 +56,11 @@ function MenuSideBar({ open }) {
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           color: 'white',
         },
+        '@media (min-width: 768px)': {
+          display: 'block', // Siempre visible en pantallas mayores a 767px
+        },
       }}
+      
     >
       {/* Código del logo */}
       <Box

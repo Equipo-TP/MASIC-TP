@@ -32,13 +32,19 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
     <AppBar
       position="fixed"
       sx={{
-        width: `calc(100% - ${drawerOpen ? 300 : 70}px)`, // Ajusta el ancho del AppBar según el estado del drawer
-        ml: `${drawerOpen ? 300 : 70}px`, // Ajusta el margin-left para que coincida con el estado del drawer
-        backgroundColor: '#004d40', // Un verde que combina con el MenuSideBar y parece serio
-        height: '64px', // Altura fija
-        transition: 'width 0.3s ease, margin-left 0.3s ease', // Transición suave para el cambio de tamaño
+        width: drawerOpen ? 'calc(100% - 300px)' : 'calc(100% - 70px)', // Ancho dinámico
+        ml: drawerOpen ? '300px' : '70px', // Margen izquierdo dinámico
+        backgroundColor: '#004d40',
+        height: '64px',
+        transition: 'width 0.3s ease, margin-left 0.3s ease',
+        // Cambiar estilos cuando la resolución es menor a 768px
+        '@media (max-width: 767px)': {
+          width: drawerOpen ? 'calc(100% - 300px)' : '100%', // Ancho total cuando el tamaño es menor a 768px
+          ml: '0px', // Sin margen izquierdo
+        },
       }}
     >
+      
       <Toolbar>
         {/* Ícono del menú */}
         <IconButton
