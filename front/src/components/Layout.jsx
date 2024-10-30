@@ -15,7 +15,16 @@ function Layout() {
     <div>
       <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
       <MenuSideBar open={drawerOpen} />
-      {/* Otros componentes */}
+
+      {/* Overlay para pantallas pequeñas */}
+      {drawerOpen && (
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-opacity duration-300 ${
+            drawerOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+          onClick={handleDrawerToggle}
+        />
+      )}
     </div>
   );
 }

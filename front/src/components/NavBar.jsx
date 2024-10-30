@@ -32,14 +32,14 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
     <AppBar
       position="fixed"
       sx={{
-        width: drawerOpen ? 'calc(100% - 300px)' : 'calc(100% - 70px)', // Ancho dinámico
-        ml: drawerOpen ? '300px' : '70px', // Margen izquierdo dinámico
+        width: drawerOpen ? 'calc(100% - 275px)' : 'calc(100% - 70px)', // Ancho dinámico
+        ml: drawerOpen ? '275px' : '70px', // Margen izquierdo dinámico
         backgroundColor: '#004d40',
         height: '64px',
         transition: 'width 0.3s ease, margin-left 0.3s ease',
         // Cambiar estilos cuando la resolución es menor a 768px
         '@media (max-width: 767px)': {
-          width: drawerOpen ? 'calc(100% - 300px)' : '100%', // Ancho total cuando el tamaño es menor a 768px
+          width: drawerOpen ? 'calc(100% - 275px)' : '100%', // Ancho total cuando el tamaño es menor a 768px
           ml: '0px', // Sin margen izquierdo
         },
       }}
@@ -62,7 +62,7 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
 
         {/* Información del usuario y logo a la derecha */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="body1" color="inherit" sx={{ mr: 2 }}>
+          <Typography className={`${drawerOpen ? 'hidden' : 'block'} md:block`}variant="body1" color="inherit" sx={{ mr: 2 }}>
             {name ? `${name}`: ''} / {role ? `${role}`: ''}
           </Typography>
           <Tooltip title="Abrir menú de usuario">

@@ -128,9 +128,9 @@ const GestionarUsuarios = () => {
                   <div key={usuario._id} className='grid grid-cols-1 gap-4'>
                     <div className='bg-white p-4 space-y-3 rounded-lg shadow'>
                       <div className='flex items-center space-x-2 text-sm'> 
-                        <div className='font-bold text-green-500'>{usuario.nombre}</div>
-                        <div className='font-mono'>{usuario.apellidos}</div>
-                        <div>| {usuario.rol}</div>
+                        <div>{usuario.nombre}</div>
+                        <div>{usuario.apellidos}</div>
+                        <div className='font-bold text-green-500'>| {usuario.rol}</div>
                       </div>
                       <div className='text-sm text-gray-700'>{usuario.email}</div>
                       <div className='flex pt-2 items-center justify-center'>
