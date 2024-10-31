@@ -84,7 +84,9 @@ const VerPresupuesto = () => {
 
     return (
         <div className='h-5/6'> 
-            <div className="bg-white border-4 rounded-lg shadow relative m-10 mb-10 h-[calc(100vh-120px)] overflow-y-auto ">
+            <div className="bg-white border-4 rounded-lg shadow relative m-10 mb-10 ">
+                
+                {/* Titulo y boton */}
                 <div className="flex items-start justify-between p-5 border-b rounded-t">
                     <h3 className="text-xl font-semibold">Detalles del Presupuesto</h3>
                     <button
@@ -104,7 +106,8 @@ const VerPresupuesto = () => {
                     </button>
                 </div>
 
-                <div className="p-6 space-y-6">
+                {/* Parámetros de Presupuesto */}
+                <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
                     <div className="grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
                             <label className="text-sm font-medium text-gray-900 block mb-2">
@@ -176,33 +179,53 @@ const VerPresupuesto = () => {
                                 disabled // Solo lectura
                             />
                         </div>
-
-
-                        <div className="col-span-6 sm:col-span-6">
+                        
+                        {/* Tabla de Instalaciones */}
+                        <div className="col-span-6">
                             <h3 className="text-xl font-semibold mt-6">Instalaciones</h3>
                             {presupuesto.instalaciones && presupuesto.instalaciones.length > 0 ? (
-                                <table className="table-auto border-collapse border border-gray-300 w-full mt-4">
-                                    <thead>
-                                        <tr className="bg-gray-200">
-                                            <th className="border border-gray-300 px-4 py-2">Tipo Luminaria</th>
-                                            <th className="border border-gray-300 px-4 py-2">Cantidad</th>
-                                            <th className="border border-gray-300 px-4 py-2">Costo Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {presupuesto.instalaciones.map((instalacion, index) => (
-                                            <tr key={index}>
-                                                <td className="border border-gray-300 px-4 py-2">{instalacion.tipo_luminaria.tipo_luminaria}</td>
-                                                <td className="border border-gray-300 px-4 py-2">{instalacion.cantidad} UND</td>
-                                                <td className="border border-gray-300 px-4 py-2">$ {instalacion.costo_total}</td>
+                                <div className="overflow-auto rounded-lg shadow hidden md:block">
+                                    <table className="table-auto border-collapse border border-gray-300 w-full mt-4">
+                                        <thead>
+                                            <tr className="bg-gray-200">
+                                                <th className="border border-gray-300 px-4 py-2">Tipo Luminaria</th>
+                                                <th className="border border-gray-300 px-4 py-2">Cantidad</th>
+                                                <th className="border border-gray-300 px-4 py-2">Costo Total</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {presupuesto.instalaciones.map((instalacion, index) => (
+                                                <tr key={index}>
+                                                    <td className="border border-gray-300 px-4 py-2">{instalacion.tipo_luminaria.tipo_luminaria}</td>
+                                                    <td className="border border-gray-300 px-4 py-2 text-orange-600">{instalacion.cantidad} UND</td>
+                                                    <td className="border border-gray-300 px-4 py-2 text-green-600">$ {instalacion.costo_total}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             ) : (
                                 <div>No hay instalaciones disponibles.</div>
                             )}
                         </div>
+
+                        {/* Tabla de Instalaciones para móviles */}
+                        <div className='col-span-6 md:hidden'>
+                            {presupuesto.instalaciones && presupuesto.instalaciones.length > 0 ? (
+                                presupuesto.instalaciones.map((instalacion, index) => (
+                                    <div key={index} className='bg-white p-4 space-y-3 rounded-lg shadow-md'>
+                                        <div className='flex items-center justify-between text-sm'>
+                                            <div className='font-bold text-gray-800'>{instalacion.tipo_luminaria.tipo_luminaria}</div>
+                                            <div className='text-orange-600'>{instalacion.cantidad}UND</div>
+                                            <div className='text-green-600'>${instalacion.costo_total}</div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className='text-center text-gray-500'>No hay instalaciones disponibles.</div>
+                            )}
+                        </div>
+
 
                         <div className="col-span-6 sm:col-span-3">
                             <label className="text-sm font-medium text-gray-900 block mb-2">

@@ -50,7 +50,6 @@ const SolicitudForm = () => {
     useEffect(() => {
         fetchClientes(); // Carga la lista de clientes al montar el componente
     }, []);
-
     // Manejar el cambio del combobox de clientes
     const handleClienteChange = async (e) => {
         const selectedId = e.target.value;
@@ -71,9 +70,6 @@ const SolicitudForm = () => {
             setNuevaSolicitud({ ...nuevaSolicitud, cliente: selectedId });
         }
     };
-    
-
-
     // Manejar el cambio de input de la solicitud y los datos del nuevo cliente
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -90,7 +86,6 @@ const SolicitudForm = () => {
             });
         }
     };
-
     //Ingreso de nuevo cliente
     const handleNuevoClienteSubmit = async (e) => {
         e.preventDefault();
@@ -114,8 +109,6 @@ const SolicitudForm = () => {
         }
         fetchClientes();
     };
-    
-
     // Manejar el registro de la solicitud
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -130,9 +123,10 @@ const SolicitudForm = () => {
         }
     };
     
-    
     return (
         <div className="bg-white border-4 rounded-lg shadow relative m-10">
+
+            {/* Titulo y boton */}
             <div className="flex items-start justify-between p-5 border-b rounded-t">
                 <h3 className="text-xl font-semibold">Formulario para Registrar Solicitud</h3>
                 <button
@@ -152,7 +146,8 @@ const SolicitudForm = () => {
                 </button>
             </div>
 
-            <div className="p-6 space-y-6">
+            {/* Parámetros de la Solicitud */}
+            <div className="p-6 space-y-6 max-h-[75vh] overflow-y-scroll">
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
@@ -271,7 +266,7 @@ const SolicitudForm = () => {
                                         <option value="Empresa">Empresa</option>
                                     </select>
                                 </div>
-                                <div>
+                                <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="ruc" className="block mb-2 text-sm font-medium text-gray-900">
                                         RUC
                                     </label>
@@ -284,13 +279,16 @@ const SolicitudForm = () => {
                                         required
                                     />
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={handleNuevoClienteSubmit}
-                                    className="mt-4 bg-green-800 text-white font-bold py-2 px-4 rounded hover:bg-green-900"
-                                >
-                                    Registrar Nuevo Cliente
-                                </button>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <button
+                                        type="button"
+                                        onClick={handleNuevoClienteSubmit}
+                                        className="mt-4 bg-green-800 text-white font-bold py-2 px-4 rounded hover:bg-green-900"
+                                    >
+                                        Registrar Nuevo Cliente
+                                    </button>
+                                </div>
+                                
 
                             </>
                         )}

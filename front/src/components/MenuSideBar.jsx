@@ -13,7 +13,7 @@ import RateIcon from '@mui/icons-material/LocalOffer';
 import StateIcon from '@mui/icons-material/Assessment';
 import CalendarIcon from '@mui/icons-material/CalendarToday';
 
-const drawerWidth = 300;
+const drawerWidth = 275;
 const collapsedWidth = 70;
 
 function MenuSideBar({ open }) {
@@ -45,6 +45,7 @@ function MenuSideBar({ open }) {
       anchor="left"
       open
       sx={{
+        display: open ? 'block' : 'none',
         width: open ? drawerWidth : collapsedWidth,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
@@ -52,10 +53,14 @@ function MenuSideBar({ open }) {
           boxSizing: 'border-box',
           height: '100vh',
           transition: 'width 0.3s ease',
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          backgroundColor: 'black',
           color: 'white',
         },
+        '@media (min-width: 768px)': {
+          display: 'block', // Siempre visible en pantallas mayores a 767px
+        },
       }}
+      
     >
       {/* Código del logo */}
       <Box
@@ -77,7 +82,7 @@ function MenuSideBar({ open }) {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            marginRight: '20px',
+            //marginRight: '20px',
           }}
         >
           <img
@@ -89,12 +94,13 @@ function MenuSideBar({ open }) {
             }}
           />
         </Box>
+
         {/* Imagen logo1.2 al centro */}
         <Box
           sx={{
             display: open ? 'flex' : 'none',
             alignItems: 'center',
-            marginLeft: '4px',
+            marginLeft: '20px',
           }}
         >
           <img
@@ -107,7 +113,9 @@ function MenuSideBar({ open }) {
             }}
           />
         </Box>
+
       </Box>
+      
       <Box
         sx={{
           marginTop: '64px',
@@ -159,6 +167,7 @@ function MenuSideBar({ open }) {
             ))}
         </List>
       </Box>
+
     </Drawer>
   );
 }

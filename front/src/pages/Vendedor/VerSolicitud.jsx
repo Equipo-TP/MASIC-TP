@@ -29,7 +29,9 @@ const VerSolicitud = () => {
     }
 
     return (
-        <div className="bg-white border-4 rounded-lg shadow relative m-10">
+        <div className="bg-white border-4 rounded-lg shadow relative m-10 ">
+
+            {/* Titulo y boton */}
             <div className="flex items-start justify-between p-5 border-b rounded-t">
                 <h3 className="text-xl font-semibold">Detalles de la Solicitud</h3>
                 <button
@@ -49,7 +51,8 @@ const VerSolicitud = () => {
                 </button>
             </div>
 
-            <div className="p-6 space-y-6">
+            {/* Parámetros de la Solicitud */}
+            <div className="p-6 space-y-6 max-h-[80vh] overflow-y-scroll">
                 <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
                         <label className="text-sm font-medium text-gray-900 block mb-2">
