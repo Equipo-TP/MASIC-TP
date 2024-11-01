@@ -36,7 +36,7 @@ import VerPresupuesto from './pages/Vendedor/VerPresupuesto';
 import EditarPresupuesto from './pages/Administrador/EditarPresupuesto';
 import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuesto';
 
-//import GestionarPresupuestos from './pages/Administrador/GestionarPresupuesto'; 
+import GestionarProyectos from './pages/Administrador/GestionarProyectos'; 
 import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto'; 
 import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
 function App() {
@@ -81,6 +81,8 @@ function App() {
         <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
         <Route path='/visualizar_presupuesto/:id' element={<VerPresupuestoA />} />
         <Route path='/visualizar_presupuestos' element={<GestionarPresupuestos/>}/>
+
+        <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>

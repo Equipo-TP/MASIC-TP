@@ -73,25 +73,21 @@ const GestionarClientes = () => {
         <div className="p-6">
           <h1 className="text-3xl font-bold mb-4">Lista de Proyectos</h1>
 
-          {/* Barra de búsqueda */}
-          <div className="mb-4">
-            <input 
-              type="text" 
-              value={searchTerm}
-              onChange={handleSearch}
-              placeholder="Buscar proyecto por nombre"
-              className="border rounded p-2 w-56"
-            />
-          </div>
-
+          <div className="flex justify-end mb-4">
+                <Link to="/registro_presupuestos">
+                  <button className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">
+                    Crear Proyecto
+                  </button>
+                </Link>
+              </div> 
           <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead>
               <tr className="w-full bg-gray-300 text-gray-700 uppercase text-sm leading-normal">
-                <th className="py-3 px-6 text-left">Nombre</th>
-                <th className="py-3 px-6 text-left">Apellidos</th>
-                <th className="py-3 px-6 text-left">Email</th>
-                <th className="py-3 px-6 text-left">Teléfono</th>
-                <th className="py-3 px-6 text-left">Acciones</th>
+              <th className="py-3 px-6 text-left">ID</th>
+              <th className="py-3 px-6 text-left">Nombre del proyectos</th>
+                <th className="py-3 px-6 text-left">Nombre del cliente</th>                
+                <th className="py-3 px-6 text-left">Ubicacion</th>
+                <th className="py-3 px-6 text-left">Estado</th> 
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
@@ -105,11 +101,16 @@ const GestionarClientes = () => {
                     <td className="py-3 px-6">
                       <button 
                         onClick={() => handleClienteSelect(cliente)} 
-                        className="text-blue-500 hover:underline mr-4"
+                        className="text-green-500 hover:underline mr-4"
                       >
                         Ver
                       </button>
-                     
+                      <button 
+                        onClick={() => handleClienteSelect(cliente)} 
+                        className="text-red-500 hover:underline mr-4"
+                      >
+                        Editar
+                      </button>
                     </td>
                   </tr>
                 ))
