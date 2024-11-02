@@ -33,7 +33,9 @@ export const obtenerClienteRequest = async (id) => {
   }
 };
 
-
+export const crearProyectoRequest = (proyectoData) => {
+  return axios.post('/api/proyectos', proyectoData); 
+};
 // Función para actualizar un cliente específico por ID
 export const actualizarClienteRequest = async (id, cliente) => axios.put(`${API}/editar_cliente/${id}`, cliente);
 

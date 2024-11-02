@@ -1,22 +1,19 @@
-// src/pages/Vendedor/GestionarClientes.jsx
-//sacar todo de las solicitudes
-//hacer el boton para poder ver las imagenes
-//atributos id proyecto nombre descripcion, ID_cliente Proyecto, ubicacion, tipo, estado(estado 1 presupuesto)(fecha de trabajo(matriz) tiempo(matriz))LOS DOS DE LA MANO,
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useNavigate } from 'react-router-dom';
 import { listarClientesRequest, obtenerClienteConSolicitudesRequest } from '../../api/auth'; 
 import MenuSideBar from '../../components/MenuSideBar'; 
 import NavBar from '../../components/NavBar'; 
-import { Link } from 'react-router-dom'; 
 import ModalCliente from '../../components/ModalCliente';
+import RegistrarProyecto from './RegistrarProyecto'; // Importa el formulario de proyecto
 
-const GestionarClientes = () => {
+const GestionarProyectos = () => {
   const [clientes, setClientes] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCliente, setSelectedCliente] = useState(null); // Estado para el cliente seleccionado
   const [solicitudes, setSolicitudes] = useState([]); // Nuevo estado para solicitudes
+  const [showRegistrarProyecto, setShowRegistrarProyecto] = useState(false); // Estado para mostrar el formulario
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,19 +43,25 @@ const GestionarClientes = () => {
 
   const handleClienteSelect = async (cliente) => {
     try {
-      const data = await obtenerClienteConSolicitudesRequest(cliente._id); // Obtener cliente con solicitudes
-      setSelectedCliente(cliente); // Establece el cliente seleccionado
-      setSolicitudes(data.data.data || []); // Establece las solicitudes obtenidas
-      console.log(data);
+      const data = await obtenerClienteConSolicitudesRequest(cliente._id); 
+      setSelectedCliente(cliente); 
+      setSolicitudes(data.data.data || []); 
     } catch (error) {
       console.error('Error al obtener las solicitudes del cliente:', error);
     }
   };
 
+  const handleOpenRegistrarProyecto = () => {
+    setShowRegistrarProyecto(true);
+  };
+
+  const handleCloseRegistrarProyecto = () => {
+    setShowRegistrarProyecto(false);
+  };
 
   const closeModal = () => {
     setSelectedCliente(null); 
-    setSolicitudes([]); // Limpiar las solicitudes cuando se cierre el modal
+    setSolicitudes([]); 
   };
 
   const filteredClients = clientes.filter(cliente => 
@@ -74,19 +77,21 @@ const GestionarClientes = () => {
           <h1 className="text-3xl font-bold mb-4">Lista de Proyectos</h1>
 
           <div className="flex justify-end mb-4">
-                <Link to="/registro_presupuestos">
-                  <button className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">
-                    Crear Proyecto
-                  </button>
-                </Link>
-              </div> 
+            <button 
+              onClick={handleOpenRegistrarProyecto} 
+              className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
+            >
+              Crear Proyecto
+            </button>
+          </div> 
+
           <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead>
               <tr className="w-full bg-gray-300 text-gray-700 uppercase text-sm leading-normal">
-              <th className="py-3 px-6 text-left">ID</th>
-              <th className="py-3 px-6 text-left">Nombre del proyectos</th>
+                <th className="py-3 px-6 text-left">ID</th>
+                <th className="py-3 px-6 text-left">Nombre del proyecto</th>
                 <th className="py-3 px-6 text-left">Nombre del cliente</th>                
-                <th className="py-3 px-6 text-left">Ubicacion</th>
+                <th className="py-3 px-6 text-left">Ubicación</th>
                 <th className="py-3 px-6 text-left">Estado</th> 
               </tr>
             </thead>
@@ -124,7 +129,12 @@ const GestionarClientes = () => {
 
           {/* Modal para ver detalles del cliente */}
           {selectedCliente && (
-            <ModalCliente cliente={selectedCliente} solicitudes={solicitudes}  onClose={closeModal} />
+            <ModalCliente cliente={selectedCliente} solicitudes={solicitudes} onClose={closeModal} />
+          )}
+
+          {/* Modal para el formulario de creación de proyectos */}
+          {showRegistrarProyecto && (
+            <RegistrarProyecto onClose={handleCloseRegistrarProyecto} />
           )}
         </div>
       </div>
@@ -132,4 +142,4 @@ const GestionarClientes = () => {
   );
 };
 
-export default GestionarClientes;
+export default GestionarProyectos;
