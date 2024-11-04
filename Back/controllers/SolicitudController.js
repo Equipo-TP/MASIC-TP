@@ -19,6 +19,11 @@ const registro_solicitud = async function(req, res) {
     const nuevoId = await obtenerProximoId('solicitudes');
     data.id = nuevoId;
 
+    // Si se subieron archivos, guarda sus rutas en el objeto data
+    if (req.files && req.files.length > 0) {
+        data.archivos = req.files.map(file => file.path); // Guarda las rutas de los archivos subidos
+    }
+
     var solicitud_arr = await Solicitud.find({ id: data.id });
     if (solicitud_arr.length == 0) {
         var reg = await Solicitud.create(data);
