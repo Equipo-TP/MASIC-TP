@@ -6,12 +6,11 @@ var proyectoController = require('../controllers/ProyectoController');
 var api = express.Router();
 var auth = require('../middlewares/authenticate').auth;
 
-api.post('/registro_proyecto', proyectoController.registro_proyecto);
-api.get('/obtener_proyecto_por_presupuesto/:id', auth, proyectoController.obtener_proyecto_por_presupuesto);
-api.get('/ver_proyecto_id/:id', auth, proyectoController.ver_proyecto_id);
-api.put('/editar_proyecto/:id', auth, proyectoController.editar_proyecto);
-api.delete('/eliminar_proyecto/:id', auth, proyectoController.eliminar_proyecto);
+api.post('/registrar_proyecto', proyectoController.registrar_proyecto);
 api.get('/listar_proyectos', auth, proyectoController.listar_proyectos);
-
+api.get('/listar_proyectos_por_tecnico/:tecnicoId', proyectoController.listar_proyectos_por_tecnico); 
+api.post('/ver_proyecto_por_id/:id', proyectoController.ver_proyecto_por_id);
+api.put('/editar_proyecto_por_id/:id', proyectoController.editar_proyecto_por_id);
 
 module.exports = api;
+

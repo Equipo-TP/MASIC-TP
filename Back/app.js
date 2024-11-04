@@ -12,7 +12,7 @@ var user_route = require('./routes/usuario');
 var solicitud_route = require('./routes/solicitud');
 var cliente_route = require('./routes/cliente');
 var instalacion_route = require('./routes/instalacion');
-
+var proyecto_route = require('./routes/proyecto');
 var presupuesto_route = require('./routes/presupuesto');
 var presupuesto_tarifa_route = require('./routes/presupuesto_tarifa');
 
@@ -53,6 +53,6 @@ app.use('/api', cliente_route);
 app.use('/api', instalacion_route);
 app.use('/api', presupuesto_route);
 app.use('/api', presupuesto_tarifa_route);
-
+app.use('/api', proyecto_route);
 //Exportación del módulo app para que se puedan comunicar entre sí
 module.exports = app;
