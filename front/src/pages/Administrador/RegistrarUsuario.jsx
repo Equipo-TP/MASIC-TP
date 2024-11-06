@@ -89,6 +89,7 @@ const RegistrarUsuario = () => {
         });
         break;
       case 'password':
+        const passwordValid = value.length >= 6; // Validación actualizada
         setErrors({
           ...errors,
           password: value.length >= 6 ? '' : 'La contraseña debe tener al menos 6 caracteres'
@@ -180,29 +181,39 @@ const RegistrarUsuario = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', overflow: 'hidden' }}>
       <MenuSideBar open={drawerOpen} />
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          marginLeft: drawerOpen ? '300px' : '70px',
+          //marginLeft: drawerOpen ? { xs: '70px', sm: '300px' } : '70px',
           transition: 'margin-left 0.3s ease',
           padding: '16px',
           overflowX: 'hidden',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'flex-start',
+          overflowY: 'auto',
+          height: '100vh',
+          '&::-webkit-scrollbar': {
+            display: 'none', // Ocultar scrollbar en navegadores WebKit
+          },
+          scrollbarWidth: 'none', // Ocultar scrollbar en Firefox
+          msOverflowStyle: 'none', // Ocultar scrollbar en Internet Explorer y Edge
         }}
       >
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <Box
           sx={{
-            mt: 4,
+            mt: { xs: 8, sm: 15 },
             maxWidth: '1000px',
             width: '100%',
             p: 3,
             overflowX: 'hidden',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <Typography variant="h4" gutterBottom align="left">
@@ -217,6 +228,9 @@ const RegistrarUsuario = () => {
               backdropFilter: 'blur(3px)',
               width: '100%',
               boxSizing: 'border-box',
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <form onSubmit={handleSubmit}>
@@ -278,29 +292,6 @@ const RegistrarUsuario = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth error={!!errors.rol}>
-                    <InputLabel>Rol</InputLabel>
-                    <Select
-                      name="rol"
-                      label="Rol"
-                      value={formData.rol}
-                      onChange={handleRoleChange}
-                    >
-                      <MenuItem value="" disabled>
-                        Selecciona un rol
-                      </MenuItem>
-                      <MenuItem value="usuario">Usuario</MenuItem>
-                      <MenuItem value="administrador">Administrador</MenuItem>
-                      <MenuItem value="tecnico">Técnico</MenuItem>
-                    </Select>
-                    {errors.rol && (
-                      <Typography variant="caption" color="error">
-                        {errors.rol}
-                      </Typography>
-                    )}
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     label="Contraseña"
@@ -324,12 +315,28 @@ const RegistrarUsuario = () => {
                     helperText={errors.confirmPassword}
                   />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth error={!!errors.rol}>
+                    <InputLabel id="rol-label">Rol</InputLabel>
+                    <Select
+                      labelId="rol-label"
+                      name="rol"
+                      value={formData.rol}
+                      onChange={handleRoleChange}
+                    >
+                      <MenuItem value=""><em>Seleccione un rol</em></MenuItem>
+                      <MenuItem value="administrador">Administrador</MenuItem>
+                      <MenuItem value="usuario">Usuario</MenuItem>
+                    </Select>
+                    {errors.rol && <Typography color="error">{errors.rol}</Typography>}
+                  </FormControl>
+                </Grid>
               </Grid>
-              <Box mt={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}> 
-                <Button type="submit" variant="contained" color="primary">
+              <Box display="flex" justifyContent="flex-end" mt={2}>
+                <Button variant="contained" color="primary" type="submit" sx={{ mr: 1 }}>
                   Registrar
                 </Button>
-                <Button onClick={handleCancel} variant="outlined" color="secondary" sx={{ ml: 2 }}>
+                <Button variant="outlined" color="error" onClick={handleCancel}>
                   Cancelar
                 </Button>
               </Box>
@@ -337,7 +344,6 @@ const RegistrarUsuario = () => {
           </Paper>
         </Box>
       </Box>
-
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
           {snackbarMessage}

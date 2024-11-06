@@ -63,70 +63,76 @@ const GestionarClientes = () => {
   );
 
   return (
-    <div className="flex">
-      <MenuSideBar open={drawerOpen} /> 
-      <div className="flex-1">
-        <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} /> 
-        <div className="p-6">
-          <h1 className="text-3xl font-bold mb-4">Lista de Clientes</h1>
+    <div className="flex flex-col h-screen">
+      <MenuSideBar open={drawerOpen} />
+      <div className="flex-1 overflow-y-auto">
+        <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
+        <div className="pt-24 p-6 pl-8">
+          <div className=''>
+            <h1 className="text-3xl font-bold mb-4">Lista de Clientes</h1>
+            {/* Barra de búsqueda */}
+            <div className="mb-4">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Buscar cliente por nombre"
+                className="border rounded p-2 w-56"
+              />
+            </div>
+            {/* Barra de búsqueda */}
 
-          {/* Barra de búsqueda */}
-          <div className="mb-4">
-            <input 
-              type="text" 
-              value={searchTerm}
-              onChange={handleSearch}
-              placeholder="Buscar cliente por nombre"
-              className="border rounded p-2 w-56"
-            />
-          </div>
-
-          <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-            <thead>
-              <tr className="w-full bg-gray-300 text-gray-700 uppercase text-sm leading-normal">
-                <th className="py-3 px-6 text-left">Nombre</th>
-                <th className="py-3 px-6 text-left">Apellidos</th>
-                <th className="py-3 px-6 text-left">Email</th>
-                <th className="py-3 px-6 text-left">Teléfono</th>
-                <th className="py-3 px-6 text-left">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-sm font-light">
-              {filteredClients.length > 0 ? (
-                filteredClients.map((cliente) => (
-                  <tr key={cliente._id} className="border-b border-gray-200 hover:bg-gray-100">
-                    <td className="py-3 px-6">{cliente.nombre}</td>
-                    <td className="py-3 px-6">{cliente.apellidos}</td>
-                    <td className="py-3 px-6">{cliente.email}</td>
-                    <td className="py-3 px-6">{cliente.telefono}</td>
-                    <td className="py-3 px-6">
-                      <button 
-                        onClick={() => handleClienteSelect(cliente)} 
-                        className="text-blue-500 hover:underline mr-4"
-                      >
-                        Ver
-                      </button>
-                      <Link to={`/editar_cliente/${cliente._id}`} className="text-blue-500 hover:underline">
-                        Editar
-                      </Link>
-                    </td>
+            {/* Contenedor con scroll */}
+            <div className="overflow-x-auto max-w-xs sm:max-w-lg md:max-w-xl lg:max-w-max" > {/* Ajusta la altura máxima según lo necesites */}
+              <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead>
+                  <tr className="w-full bg-gray-300 text-gray-700 uppercase text-sm leading-normal">
+                    <th className="py-3 px-6 text-left">Nombre</th>
+                    <th className="py-3 px-6 text-left">Apellidos</th>
+                    <th className="py-3 px-6 text-left">Email</th>
+                    <th className="py-3 px-6 text-left">Teléfono</th>
+                    <th className="py-3 px-6 text-left">Acciones</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="py-3 px-6 text-center">No se encontraron clientes.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody className="text-gray-600 text-sm font-light">
+                  {filteredClients.length > 0 ? (
+                    filteredClients.map((cliente) => (
+                      <tr key={cliente._id} className="border-b border-gray-200 hover:bg-gray-100">
+                        <td className="py-3 px-6">{cliente.nombre}</td>
+                        <td className="py-3 px-6">{cliente.apellidos}</td>
+                        <td className="py-3 px-6">{cliente.email}</td>
+                        <td className="py-3 px-6">{cliente.telefono}</td>
+                        <td className="py-3 px-6">
+                          <button
+                            onClick={() => handleClienteSelect(cliente)}
+                            className="text-blue-500 hover:underline mr-4"
+                          >
+                            Ver
+                          </button>
+                          <Link to={`/editar_cliente/${cliente._id}`} className="text-blue-500 hover:underline">
+                            Editar
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="py-3 px-6 text-center">No se encontraron clientes.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
 
-          {/* Modal para ver detalles del cliente */}
-          {selectedCliente && (
-            <ModalCliente cliente={selectedCliente} solicitudes={solicitudes}  onClose={closeModal} />
-          )}
+            {/* Modal para ver detalles del cliente */}
+            {selectedCliente && (
+              <ModalCliente cliente={selectedCliente} solicitudes={solicitudes} onClose={closeModal} />
+            )}
+          </div>
         </div>
       </div>
     </div>
+
   );
 };
 
