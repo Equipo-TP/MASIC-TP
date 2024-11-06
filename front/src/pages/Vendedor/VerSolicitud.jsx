@@ -169,6 +169,42 @@ const VerSolicitud = () => {
                         />
                     </div>
 
+                    <div className="col-span-6 sm:col-span-3">
+                        <h3 className="text-lg font-semibold mb-2">Archivos Adjuntos</h3>
+                        {solicitud.archivos && solicitud.archivos.length > 0 ? (
+                            <table className="min-w-full border-collapse block md:table">
+                                <thead className="block md:table-header-group">
+                                    <tr className="border border-gray-300 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto md:relative">
+                                        <th className="bg-gray-200 p-2 text-gray-700 font-bold md:border md:border-gray-300 text-left block md:table-cell">Nombre del archivo</th>
+                                        <th className="bg-gray-200 p-2 text-gray-700 font-bold md:border md:border-gray-300 text-left block md:table-cell">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="block md:table-row-group">
+                                    {solicitud.archivos.map((archivo, index) => (
+                                        <tr key={index} className="bg-white border border-gray-300 md:border-none block md:table-row">
+                                            <td className="p-2 md:border md:border-gray-300 text-left block md:table-cell">{archivo.split('\\').pop()}</td>
+                                            <td className="p-2 md:border md:border-gray-300 text-left block md:table-cell">
+                                                <button 
+                                                    onClick={() => {
+                                                        const fileName = archivo.split('\\').pop(); // Extrae el nombre del archivo
+                                                        const downloadUrl = `http://localhost:8000/api/descargar-archivo/${fileName}`; // URL de descarga
+                                                        window.location.href = downloadUrl; // Forzamos la descarga
+                                                    }}
+                                                    className="text-blue-500 hover:underline"
+                                                >
+                                                    Descargar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p className="text-gray-500">No hay archivos adicionales.</p>
+                        )}
+                    </div>
+
+
                     
                 </div>
             </div>

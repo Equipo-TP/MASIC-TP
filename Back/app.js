@@ -3,6 +3,7 @@
 //creación de variables para guardar los paquetes instalados
 var cors = require('cors');
 var express = require('express');
+var path = require('path');
 var bodyparser = require('body-parser');
 var mongoose = require('mongoose');
 //declaramos la variable app que manejaremos mediante express
@@ -39,7 +40,7 @@ app.use(bodyparser.urlencoded({extended:true}));
 app.use(express.json({limit:'50mb', extended:true}));
 
 // Hacer que la carpeta 'uploads' sea accesible públicamente
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //manejo de las solicitudes
 app.use((req,res,next)=>{
