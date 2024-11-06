@@ -17,9 +17,9 @@ async function obtenerProximoId(nombreContador) {
 // Función para verificar disponibilidad de técnicos en el cronograma
 async function verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final) {
     const conflicto = await Proyecto.findOne({
-        'horario.Tecnico': tecnicoId,
+        'Horario.Tecnico': tecnicoId,
         $or: [
-            { 'horario.fecha_inicio': { $lte: fecha_final }, 'horario.fecha_final': { $gte: fecha_inicio } }
+            { 'Horario.fecha_inicio': { $lte: fecha_final }, 'Horario.fecha_final': { $gte: fecha_inicio } }
         ]
     });
     return !conflicto;
@@ -32,8 +32,8 @@ const registrar_proyecto = async function(req, res) {
         const nuevoId = await obtenerProximoId('proyectos');
         data.ID_Proyecto = nuevoId;
 
-        for (const horario of data.horario) {
-            const { fecha_inicio, fecha_final, Tecnico } = horario;
+        for (const Horario of data.Horario) {
+            const { fecha_inicio, fecha_final, Tecnico } = Horario;
 
             if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
                 return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
@@ -70,7 +70,7 @@ const listar_proyectos = async function(req, res) {
                     populate: ['cliente', 'vendedor']
                 }
             })
-            .populate('horario.Tecnico')
+            .populate('Horario.Tecnico')
             .populate('Incidencias.afectado');
         res.status(200).send({ data: proyectos });
     } catch (error) {
@@ -90,7 +90,7 @@ const ver_proyecto_por_id = async function(req, res) {
                     populate: ['cliente', 'vendedor']
                 }
             })
-            .populate('horario.Tecnico')
+            .populate('Horario.Tecnico')
             .populate('Incidencias.afectado');
         if (proyecto) {
             res.status(200).send({ data: proyecto });
@@ -107,8 +107,8 @@ const editar_proyecto_por_id = async function(req, res) {
     const id = req.params.id;
     const data = req.body;
     try {
-        for (const horario of data.horario) {
-            const { fecha_inicio, fecha_final, Tecnico } = horario;
+        for (const Horario of data.Horario) {
+            const { fecha_inicio, fecha_final, Tecnico } = Horario;
 
             if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
                 return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
@@ -127,7 +127,7 @@ const editar_proyecto_por_id = async function(req, res) {
             {
                 ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto,
                 Costo_Total: data.Costo_Total,
-                horario: data.horario,
+                Horario: data.Horario,
                 GestionarMaterial: data.GestionarMaterial,
                 Nombre_Proyecto: data.Nombre_Proyecto,
                 Descripcion: data.Descripcion,
@@ -152,7 +152,7 @@ const listar_proyectos_por_tecnico = async function(req, res) {
     const tecnicoId = req.params.tecnicoId;
 
     try {
-        const proyectos = await Proyecto.find({ 'horario.Tecnico': tecnicoId })
+        const proyectos = await Proyecto.find({ 'Horario.Tecnico': tecnicoId })
             .populate({
                 path: 'ID_Presupuesto_Proyecto',
                 populate: {
@@ -160,7 +160,7 @@ const listar_proyectos_por_tecnico = async function(req, res) {
                     populate: ['cliente', 'vendedor']
                 }
             })
-            .populate('horario.Tecnico')
+            .populate('Horario.Tecnico')
             .populate('Incidencias.afectado');
 
         if (proyectos.length > 0) {

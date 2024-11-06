@@ -7,7 +7,7 @@ var ProyectoSchema = Schema({
   ID_Proyecto: { type: Number, required: false },
   ID_Presupuesto_Proyecto: { type: Schema.ObjectId, ref: 'presupuesto', required: false, unique: true },
   Costo_Total: { type: Number, required: false }, 
-  horario: [ //recurso react para cronograma (react-big-calendar)
+  Horario: [ //recurso react para cronograma (react-big-calendar)
     {       
         Tecnico: [{  type: Schema.ObjectId, ref: 'usuario', required: false, unique: false }],
         fecha_inicio: {type: Date, required: false},
@@ -16,10 +16,11 @@ var ProyectoSchema = Schema({
         Hora_Fin: { type: String, required: false }
     }
   ],
-  GestionarMaterial: [ //recurso react para cronograma (react-big-calendar), se pone cantidad 
+  GestionarMaterial: [ 
     {       
         id_Material: {type: Schema.ObjectId, ref: 'material', required: false},
         Nombre: {type: String, required: false},
+        Cantidad: {type: Number, required: false},
         Categoria: {type: String, required: false},
         Stock: {type: String, required: false},
         Fecha_Registro: { type: Date, required: false },
