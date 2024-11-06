@@ -14,7 +14,7 @@ async function obtenerProximoId(nombreContador) {
     return contador.valor;
 }
 
-// Función para verificar disponibilidad de técnicos
+// Función para verificar disponibilidad de técnicos en el cronograma
 async function verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final) {
     const conflicto = await Proyecto.findOne({
         'horario.Tecnico': tecnicoId,
@@ -32,7 +32,6 @@ const registrar_proyecto = async function(req, res) {
         const nuevoId = await obtenerProximoId('proyectos');
         data.ID_Proyecto = nuevoId;
 
-        // Validar que fecha_final es después de fecha_inicio
         for (const horario of data.horario) {
             const { fecha_inicio, fecha_final, Tecnico } = horario;
 
@@ -40,7 +39,6 @@ const registrar_proyecto = async function(req, res) {
                 return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
             }
 
-            // Verificar la disponibilidad del técnico
             for (const tecnicoId of Tecnico) {
                 const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
                 if (!disponible) {
@@ -130,6 +128,7 @@ const editar_proyecto_por_id = async function(req, res) {
                 ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto,
                 Costo_Total: data.Costo_Total,
                 horario: data.horario,
+                GestionarMaterial: data.GestionarMaterial,
                 Nombre_Proyecto: data.Nombre_Proyecto,
                 Descripcion: data.Descripcion,
                 Estado: data.Estado,
@@ -147,12 +146,12 @@ const editar_proyecto_por_id = async function(req, res) {
         res.status(500).send({ message: 'Error al editar el proyecto', error });
     }
 };
+
 // Listar proyectos en los que un técnico específico está involucrado
 const listar_proyectos_por_tecnico = async function(req, res) {
     const tecnicoId = req.params.tecnicoId;
 
     try {
-        // Buscar proyectos donde el técnico esté asignado en el horario
         const proyectos = await Proyecto.find({ 'horario.Tecnico': tecnicoId })
             .populate({
                 path: 'ID_Presupuesto_Proyecto',
