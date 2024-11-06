@@ -1,20 +1,15 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+'use strict'
 
-const Material = sequelize.define('Material', {
-  id_Material: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  nombre: DataTypes.STRING,
-  categoria: DataTypes.INTEGER,
-  stock: DataTypes.INTEGER,
-  fecha_registro: DataTypes.DATE,
-  unidad_medida: DataTypes.STRING,
-}, {
-  tableName: 'Materiales',
-  timestamps: false
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+var MaterialSchema = Schema({
+    id_Material: {type: String, required: true},
+    nombre: { type: String, required: true }, 
+    categoria: { type: Number, required: true }, 
+    stock: { type: Number, required: true, default: 0 },
+    fecha_registro: { type: Date, default: Date.now },
+    unidad_medida: { type: String, required: true },
 });
 
-module.exports = Material;
+module.exports = mongoose.model('Material', MaterialSchema );
