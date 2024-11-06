@@ -1,19 +1,12 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+'use strict';
 
-const MovimientoInventario = sequelize.define('MovimientoInventario', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  id_Material: DataTypes.INTEGER,
-  tipo_mov: DataTypes.INTEGER,
-  cantidad: DataTypes.INTEGER,
-  fecha_mov: DataTypes.DATE,
-}, {
-  tableName: 'MovimientosInventario',
-  timestamps: false
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+var InventarioSchema = new Schema({
+    id_Inventario: { type: Number, required: true, unique: true },
+    cantidad: { type: Number, required: true },
+    fecha_mov: { type: Date, required: true }
 });
 
-module.exports = MovimientoInventario;
+module.exports = mongoose.model('Inventario', InventarioSchema);
