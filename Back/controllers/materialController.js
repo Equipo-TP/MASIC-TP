@@ -19,3 +19,7 @@ const registro_material = async function (req, res) {
       res.status(400).send({ message: 'El tipo de material ya existe en la base de datos', data: undefined }); // Cambiar a 400
   }
 };
+
+module.exports = {
+  registro_material,
+}
