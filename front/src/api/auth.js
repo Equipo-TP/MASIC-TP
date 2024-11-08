@@ -51,6 +51,35 @@ export const listarSolicitudesVendedoraRequest = async (headers) => {
 
 export const obtenerSolicitudPorIdRequest = async (id) => axios.post(`${API}/obtener_solicitud_por_id/${id}`);
 export const editarSolicitudRequest = async (id, data) => axios.put(`${API}/editar_solicitud/${id}`, data);
+export const uploadFileRequest = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);  // El nombre del campo debe ser 'file' como en el backend
+
+  try {
+    const response = await axios.post(`${API}/upload`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',  // Necesario para enviar un archivo
+      },
+    });
+    return response.data; // Devuelve la respuesta con los detalles del archivo subido
+  } catch (error) {
+    console.error('Error al subir el archivo:', error);
+    throw error;  // Maneja el error como sea necesario
+  }
+};
+
+// Función para obtener un archivo específico por su nombre
+export const getFileRequest = async (filename) => {
+  try {
+    const response = await axios.get(`${API}/archivo/${filename}`, {
+      responseType: 'blob', // Especificamos que queremos recibir un archivo binario
+    });
+    return response.data;  // Devuelve el archivo como un Blob
+  } catch (error) {
+    console.error('Error al obtener el archivo:', error);
+    throw error;  // Maneja el error como sea necesario
+  }
+};
 
 export const registroClienteRequest = async (data) => axios.post(`${API}/registro_cliente`, data);
 export const listarClientesRequest = async () => axios.get(`${API}/listar_clientes`);

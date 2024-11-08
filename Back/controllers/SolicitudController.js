@@ -4,6 +4,41 @@
 var Solicitud = require('../models/solicitud');
 const Contador = require('../models/contador'); 
 const Presupuesto = require('../models/presupuesto');
+const mongoose = require('mongoose');
+const Grid = require('gridfs-stream');
+
+
+// Inicializar GridFS
+let gfs;
+mongoose.connection.once('open', () => {
+    gfs = Grid(mongoose.connection.db, mongoose.mongo);
+    gfs.collection('uploads');
+});
+
+// Función para cargar un archivo (usada con multer)
+const uploadFile = (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No se ha subido ningún archivo' });
+    }
+    res.status(201).json({ file: req.file });
+};
+
+// Función para obtener un archivo específico por su nombre
+const getFile = (req, res) => {
+    const { filename } = req.params;
+    gfs.files.findOne({ filename }, (err, file) => {
+        if (!file || file.length === 0) {
+            return res.status(404).json({ message: 'Archivo no encontrado' });
+        }
+        // Verificar si es una imagen
+        if (file.contentType.includes('image')) {
+            const readStream = gfs.createReadStream(file.filename);
+            readStream.pipe(res);
+        } else {
+            res.status(400).json({ message: 'No es un archivo de imagen' });
+        }
+    });
+};
 
 async function obtenerProximoId(nombreContador) {
     const contador = await Contador.findOneAndUpdate(
@@ -142,5 +177,7 @@ module.exports = {
     editar_solicitud,
     obtenerSolicitudesPorCliente,
     listar_solicitudes_aprobadas,
-    listar_solicitudes_aprobadas_para_presupuesto
+    listar_solicitudes_aprobadas_para_presupuesto,
+    uploadFile, // Agrega la función de carga de archivos
+    getFile     // Agrega la función para obtener archivos
 }
