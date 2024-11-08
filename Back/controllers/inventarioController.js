@@ -76,7 +76,7 @@ const editarMovimiento = async function (req, res) {
 const eliminarMovimiento = async function (req, res) {
     const id = req.params['id'];
     try {
-        const movimientoEliminado = await Inventario.findOneAndDelete({ id_Inventario: id });
+        const movimientoEliminado = await Inventario.findOneAndDelete({ _id: id });
         if (movimientoEliminado) {
             res.status(200).send({ message: 'Movimiento eliminado correctamente', data: movimientoEliminado });
         } else {
