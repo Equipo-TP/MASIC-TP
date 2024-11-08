@@ -18,13 +18,8 @@ var ProyectoSchema = Schema({
   ],
   GestionarMaterial: [ 
     {       
-        id_Material: {type: Schema.ObjectId, ref: 'material', required: false},
-        Nombre: {type: String, required: false},
-        Cantidad: {type: Number, required: false},
-        Categoria: {type: String, required: false},
-        Stock: {type: String, required: false},
-        Fecha_Registro: { type: Date, required: false },
-        Unidad_Medida: { type: String, required: false }
+        id_Material: {type: Schema.ObjectId, ref: 'Material', required: false},
+        Cantidad: {type: Number, required: false}
     }
   ],
   Nombre_Proyecto: { type: String, required: true },

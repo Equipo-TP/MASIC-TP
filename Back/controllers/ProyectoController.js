@@ -25,7 +25,7 @@ async function verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_fin
     return !conflicto;
 }
 
-// Registrar un nuevo proyecto
+/* Registrar un nuevo proyecto
 const registrar_proyecto = async function(req, res) {
     try {
         const data = req.body;
@@ -47,6 +47,60 @@ const registrar_proyecto = async function(req, res) {
             }
         }
 
+        const proyectoExistente = await Proyecto.findOne({ ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto });
+        if (!proyectoExistente) {
+            const nuevoProyecto = await Proyecto.create(data);
+            res.status(200).send({ data: nuevoProyecto });
+        } else {
+            res.status(400).send({ message: 'El proyecto ya existe para este presupuesto' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Error al registrar el proyecto', error });
+    }
+};
+*/
+const registrar_proyecto = async function(req, res) {
+    try {
+        const data = req.body;
+        const nuevoId = await obtenerProximoId('proyectos');
+        data.ID_Proyecto = nuevoId;
+
+        // Validar fechas de Horario y disponibilidad de técnico
+        for (const Horario of data.Horario) {
+            const { fecha_inicio, fecha_final, Tecnico } = Horario;
+
+            if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
+                return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
+            }
+
+            for (const tecnicoId of Tecnico) {
+                const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
+                if (!disponible) {
+                    return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
+                }
+            }
+        }
+
+        // Procesar y actualizar stock en GestionarMaterial
+        for (const material of data.GestionarMaterial) {
+            const materialData = await Material.findById(material.id_Material);
+
+            if (materialData) {
+                materialData.stock -= material.Cantidad;
+
+                // Verificar si el stock es negativo y actualizar el Comentario
+                if (materialData.stock < 0) {
+                    materialData.Comentario = (materialData.Comentario || "") + " hace falta stock";
+                }
+
+                // Guardar los cambios en Material
+                await materialData.save();
+            } else {
+                return res.status(404).send({ message: `El material con ID ${material.id_Material} no existe.` });
+            }
+        }
+
+        // Verificar si el proyecto ya existe
         const proyectoExistente = await Proyecto.findOne({ ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto });
         if (!proyectoExistente) {
             const nuevoProyecto = await Proyecto.create(data);

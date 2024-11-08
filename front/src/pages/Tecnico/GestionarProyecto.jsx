@@ -97,7 +97,7 @@ useEffect(() => {
   }, [Solicitud]);
   // Calcular los presupuestos que se mostrarán en la página actual
   const indexOfLastProyecto = currentPage * itemsPerPage;
-  const indexOfFirstProyecto = indexOfLastPresupuesto - itemsPerPage;
+  const indexOfFirstProyecto = indexOfLastProyecto - itemsPerPage;
   const currentProyectos = presupuestos.slice(indexOfFirstProyecto, indexOfLastProyecto);
   const totalPages = Math.ceil(presupuestos.length / itemsPerPage);
   const handlePageChange = (newPage) => {
@@ -123,7 +123,7 @@ useEffect(() => {
                   <th scope="col" className="px-6 py-3">ID</th>
                   <th scope="col" className="px-6 py-3">Nombre del Proyecto</th>
                   <th className="py-3 px-6 text-left">Nombre del cliente</th>                
-                <th className="py-3 px-6 text-left">Ubicación</th>
+                <th className="py-3 px-6 text-left">Dirección</th>
                 <th className="py-3 px-6 text-left">Estado</th> 
                   <th scope="col" className="px-6 py-3">Acción</th>
                 </tr>
@@ -133,15 +133,16 @@ useEffect(() => {
                 // Busca el presupuestp correspondiente
                 presupuesto = presupuestos.find(s => s && s._id === proyecto.ID_Presupuesto_Proyecto);
                 const solicitud = Solicitud.find(s => s && s._id === presupuesto.ID_Solicitud_Presupuesto);
-                
+                solicitudes = Solicitud.find(s => s && s._id === presupuesto.ID_Solicitud_Presupuesto);
                 // Obtiene el cliente si la solicitud es válida
                 const clientes = solicitud && solicitud.cliente ? cliente[solicitud.cliente._id] : null;
+                const direccion = solicitud && solicitud.direccion ? direccion[solicitud.cliente._id] : null;
                 return (
                   <tr key={presupuesto._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{proyecto.ID_Proyecto}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {proyecto.Nombre_Proyecto} </td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{clientes ? `${clientes.nombre} ${clientes.apellidos}` : "Cargando cliente..."}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Pago_Total}</td>
+                    <td className="px-6 py-4 text-gray-900 dark:text-white">{solicitudes.direccion} </td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.estado_2}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
                       <Link to={`/ver_presupuesto/${presupuesto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">

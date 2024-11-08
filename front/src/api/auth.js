@@ -86,8 +86,8 @@ export const listarPresupuestosRequest = async (headers) => {
 export const eliminarPresupuestoRequest = async (id) => axios.delete(`${API}/eliminar_presupuesto/${id}`);
 export const listarPresupuestosVendedoraRequest = async (headers) => { return axios.get(`${API}/listar_presupuestos_vendedora`, { headers }); };
 
-export const listar_proyectos_por_tecnicoRequest = async (headers) => { return axios.get(`${API}/listar_proyectos_por_tecnico`, { headers }); };
 
+export const listar_proyectos_por_tecnicoRequest = async (tecnicoId) => {await axios.get(`${API}/listar_proyectos_por_tecnico/${tecnicoId}`);};
 export const obtenerUsuarioRequest = async (id) => {return await axios.get(`${API}/usuarios/${id}`);};
 export const obtener_usuario_por_idRequest = async (id) => {return await axios.post(`${API}/obtener_usuario_por_id/${id}`);};
 export const actualizarUsuarioRequest = async (id, data) => {return await axios.put(`/api/usuarios/${id}`, data);};
