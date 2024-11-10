@@ -14,7 +14,6 @@ var SolicitudSchema = Schema({
  observaciones: {type: String, default: 'No hay observaciones', required: false},
  estado_1: {type: String, default: 'Enviado', required: false},
  estado_2: {type: String, default: 'Pendiente', required: false},
- file: [{ type: Schema.Types.ObjectId, ref: 'GridFSFile' }],
  createdAt: {type: Date, default: Date.now, required: true}
 });
 

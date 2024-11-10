@@ -1,33 +1,12 @@
 'use strict'
 
-const express = require('express');
-const solicitudController = require('../controllers/SolicitudController');
-const multer = require('multer');
-const { GridFsStorage } = require('multer-gridfs-storage');
-const auth = require('../middlewares/authenticate').auth;
+var express = require('express');
+var solicitudController = require('../controllers/SolicitudController');
 
-const api = express.Router();
-
-// Configuración de almacenamiento de multer con GridFS
-const storage = new GridFsStorage({
-    url: 'mongodb+srv://valery:proyectotp24@masic.xd5ik.mongodb.net/Masic',
-    options: { useNewUrlParser: true, useUnifiedTopology: true },
-    file: (req, file) => {
-        return {
-            bucketName: 'uploads',
-            filename: `${Date.now()}-${file.originalname}`
-        };
-    }
-});
-
-const upload = multer({ storage });
+var api = express.Router();
+var auth = require('../middlewares/authenticate').auth;
 
 api.post('/registro_solicitud', solicitudController.registro_solicitud);
-
-// Rutas para subir y obtener archivos
-api.post('/upload', upload.single('file'), solicitudController.uploadFile);
-api.get('/archivo/:filename', solicitudController.getFile);
-
 api.get('/listar_solicitudes_vendedora', auth, solicitudController.listar_solicitudes_vendedora);
 api.get('/listar_solicitudes_administrador', solicitudController.listar_solicitudes_administrador);
 api.put('/editar_solicitud/:id', solicitudController.editar_solicitud);

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { listarClientesRequest, obtenerClientePorIdRequest, registroClienteRequest, registroSolicitudRequest } from '../../api/auth'; // Asegúrate de importar correctamente tus funciones
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const SolicitudForm = () => {
     const navigate = useNavigate();
@@ -30,7 +29,7 @@ const SolicitudForm = () => {
         email: '',
         telefono: '',
     });
-    const [selectedFile, setSelectedFile] = useState(null);
+     // Para manejar los datos de un nuevo cliente
 
     // Función para cargar la lista de clientes
     const fetchClientes = async () => {
@@ -111,27 +110,17 @@ const SolicitudForm = () => {
         fetchClientes();
     };
     // Manejar el registro de la solicitud
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData();
-        formData.append('image', selectedFile);
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const response = await axios.post('/api/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-
-        console.log('Archivo subido correctamente:', response);
+            // Registrar la solicitud
+            await registroSolicitudRequest(nuevaSolicitud);
+            alert('Solicitud registrada');
+            navigate('/gestionar_solicitudes');
         } catch (error) {
-        console.error('Error al subir el archivo:', error);
+            console.error('Error al registrar:', error);
+            alert('Hubo un error al registrar la solicitud.');
         }
-    };
-
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
     };
     
     return (
@@ -368,11 +357,6 @@ const SolicitudForm = () => {
                                 onChange={handleInputChange}
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             />
-                        </div>
-
-                        <div>
-                            <input type="file" onChange={handleFileChange} />
-                            <button>Upload</button>
                         </div>
                     </div>
 
