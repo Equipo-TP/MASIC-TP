@@ -1,6 +1,7 @@
 'use strict';
 
 const Material = require('../models/Material');
+const Inventario = require('../models/Inventario');
 
 // Registrar un nuevo material
 const registrarMaterial = async function (req, res) {
@@ -53,7 +54,6 @@ const obtenerMaterialPorId = async function (req, res) {
 const editarMaterial = async function (req, res) {
     const id = req.params['id'];
     const data = req.body;
-
     try {
         const materialActualizado = await Material.findByIdAndUpdate(
             id,
@@ -66,7 +66,6 @@ const editarMaterial = async function (req, res) {
             },
             { new: true }
         );
-
         if (materialActualizado) {
             res.status(200).send({ data: materialActualizado });
         } else {
@@ -92,10 +91,88 @@ const eliminarMaterial = async function (req, res) {
     }
 };
 
+// Registrar un movimiento en el inventario (INGRESO O EGRESO)
+const registrarMovimiento = async function (req, res) {
+    const { _id, cantidad, fecha_mov } = req.body;
+    try {
+        // Validar si existe el material
+        const material = await Material.findById(_id);
+        if (!material) {
+            return res.status(404).send({ message: 'Material no encontrado' });
+        }
+        // Crear el movimiento de inventario
+        const nuevoMovimiento = new Inventario({
+            _id,
+            cantidad,
+            fecha_mov
+        });
+        // Guardar el movimiento en el inventario
+        const movimientoGuardado = await nuevoMovimiento.save();
+        // Actualizar el stock del material
+        material.stock += cantidad; // se Permite valores negativos
+        await material.save();
+
+        res.status(201).send({ message: 'Movimiento registrado correctamente', data: movimientoGuardado });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al registrar movimiento', error });
+    }
+};
+
+// Listar movimientos del inventario
+const listarMovimientos = async function (req, res) {
+    try {
+        const movimientos = await Inventario.find().sort({ fecha_mov: -1 });
+        res.status(200).send({ data: movimientos });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al listar movimientos', error });
+    }
+};
+
+// Obtener movimiento por ID de inventario
+const obtenerMovimientoPorId = async function (req, res) {
+    const id = req.params['id'];
+    try {
+        const movimiento = await Inventario.findOne({ _id: id });
+        if (movimiento) {
+            res.status(200).send({ data: movimiento });
+        } else {
+            res.status(404).send({ message: 'Movimiento no encontrado' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Error al obtener movimiento', error });
+    }
+};
+
+// Eliminar movimiento del inventario
+const eliminarMovimiento = async function (req, res) {
+    const id = req.params['id'];
+    try {
+        const movimiento = await Inventario.findById(id);
+        if (!movimiento) {
+            return res.status(404).send({ message: 'Movimiento no encontrado' });
+        }
+        // Actualizar el stock del material al eliminar un movimiento
+        const material = await Material.findById(movimiento._id);
+        if (material) {
+            material.stock -= movimiento.cantidad; // Revertir el cambio de stock
+            await material.save();
+        }
+
+        await movimiento.deleteOne(); // Eliminar el movimiento
+        res.status(200).send({ message: 'Movimiento eliminado correctamente', data: movimiento });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al eliminar movimiento', error });
+    }
+};
+
 module.exports = {
     registrarMaterial,
     listarMateriales,
     obtenerMaterialPorId,
     editarMaterial,
-    eliminarMaterial
+    eliminarMaterial,
+    registrarMovimiento,
+    listarMovimientos,
+    obtenerMovimientoPorId,
+    eliminarMovimiento
 };
