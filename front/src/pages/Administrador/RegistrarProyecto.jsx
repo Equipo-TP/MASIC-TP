@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { crearProyectoRequest, listarPresupuestosAprobados } from '../../api/auth';
+import AsignarMaterial from './AsignarMaterial';
 
 const RegistrarProyecto = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const RegistrarProyecto = () => {
   const [clienteNombre, setClienteNombre] = useState('');
   const [direccion, setDireccion] = useState('');
   const [observaciones, setObservaciones] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
 
   useEffect(() => {
     const cargarPresupuestos = async () => {
@@ -143,7 +145,7 @@ const RegistrarProyecto = () => {
               <button
                 type="button"
                 className="bg-gray-500 text-white px-4 py-2 rounded"
-                onClick={() => alert('Función para asignar material')}
+                onClick={() => setIsModalOpen(true)} // Abre el modal de Asignar Material
               >
                 Asignar Material
               </button>
@@ -165,9 +167,11 @@ const RegistrarProyecto = () => {
             </div>
           </div>
         </form>
+        {/* Modal para Asignar Material */}
+        <AsignarMaterial isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </div>
     </div>
   );
 };
 
-export default RegistrarProyecto;
+export default RegistrarProyecto
