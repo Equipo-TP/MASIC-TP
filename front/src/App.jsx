@@ -39,6 +39,10 @@ import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuesto';
 import GestionarProyectos from './pages/Administrador/GestionarProyectos'; 
 import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto'; 
 import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
+
+import GestionarAlmacen from './pages/Administrador/GestionarAlmacen';
+import RegistrarAlmacen from './pages/Administrador/RegistrarAlmacen';
+
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -83,6 +87,11 @@ function App() {
         <Route path='/visualizar_presupuestos' element={<GestionarPresupuestos/>}/>
 
         <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
+        
+        <Route path='/gestionar_almacen' element={<GestionarAlmacen/>}/>
+        <Route path='/registro_almacen' element={<RegistrarAlmacen/>}/>
+
+        
         </Route>     
       </Routes>
     </BrowserRouter>
