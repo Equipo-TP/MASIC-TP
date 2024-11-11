@@ -33,7 +33,9 @@ export const obtenerClienteRequest = async (id) => {
   }
 };
 
-
+export const crearProyectoRequest = (proyectoData) => {
+  return axios.post('/api/proyectos', proyectoData); 
+};
 // Función para actualizar un cliente específico por ID
 export const actualizarClienteRequest = async (id, cliente) => axios.put(`${API}/editar_cliente/${id}`, cliente);
 
@@ -85,9 +87,14 @@ export const eliminarPresupuestoRequest = async (id) => axios.delete(`${API}/eli
 export const listarPresupuestosVendedoraRequest = async (headers) => { return axios.get(`${API}/listar_presupuestos_vendedora`, { headers }); };
 
 
+export const listar_proyectos_por_tecnicoRequest = async (tecnicoId) => {await axios.get(`${API}/listar_proyectos_por_tecnico/${tecnicoId}`);};
 export const obtenerUsuarioRequest = async (id) => {return await axios.get(`${API}/usuarios/${id}`);};
 export const obtener_usuario_por_idRequest = async (id) => {return await axios.post(`${API}/obtener_usuario_por_id/${id}`);};
 export const actualizarUsuarioRequest = async (id, data) => {return await axios.put(`/api/usuarios/${id}`, data);};
+
+
+export const ver_proyecto_por_idRequest = async (id, data) => {return await axios.post(`${API}/ver_proyecto_por_id/${id}`, data);};
+export const listar_proyectosRequest = async () => {return await axios.get(`${API}/listar_proyectos`);};
 
 
 

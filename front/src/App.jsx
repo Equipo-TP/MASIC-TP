@@ -36,9 +36,11 @@ import VerPresupuesto from './pages/Vendedor/VerPresupuesto';
 import EditarPresupuesto from './pages/Administrador/EditarPresupuesto';
 import GestionarPresupuestos from './pages/Vendedor/GestionarPresupuesto';
 
-//import GestionarPresupuestos from './pages/Administrador/GestionarPresupuesto'; 
+import GestionarProyectos from './pages/Administrador/GestionarProyectos'; 
 import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto'; 
 import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
+
+import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -81,6 +83,9 @@ function App() {
         <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
         <Route path='/visualizar_presupuesto/:id' element={<VerPresupuestoA />} />
         <Route path='/visualizar_presupuestos' element={<GestionarPresupuestos/>}/>
+
+        <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
+        <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>

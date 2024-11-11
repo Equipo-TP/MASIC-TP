@@ -84,7 +84,7 @@ const VerPresupuestoA = () => {
 
     return (
         <div className='h-5/6'> 
-            <div className="bg-white border-4 rounded-lg shadow relative m-10 mb-10 h-[calc(100vh-120px)] overflow-y-auto ">
+            <div className="bg-white border-4 rounded-lg shadow relative m-10 mb-10 h-[calc(100vh-120px)] overflow-y-auto overflow-x-auto ">
                 <div className="flex items-start justify-between p-5 border-b rounded-t">
                     <h3 className="text-xl font-semibold">Detalles del Presupuesto</h3>
                     <button

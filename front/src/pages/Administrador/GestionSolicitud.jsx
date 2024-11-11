@@ -55,7 +55,7 @@ const GestionSolicitud = () => {
       if (solicitudes == null) {
         return (
           <div className="flex justify-center items-center mt-10">
-          <div className="bg-gray-100 border border-gray-300 rounded-lg shadow-md p-6 text-center">
+          <div className="bg-gray-100 border border-gray-300 rounded-lg shadow-md p-6 text-center overflow-x-auto overflow-y-auto" style={{ minHeight: '5auto', maxWidth: 'auto', width: '100%' }}>
             <h2 className="text-xl font-semibold text-gray-700 mb-2">No existen solicitudes actualmente</h2>
             <p className="text-gray-500">No se han registrado solicitudes en el sistema por el momento.</p>
           </div>
@@ -71,7 +71,7 @@ const GestionSolicitud = () => {
         //mandar popup "estas seguro" cuando se busca aprobar o X 
         //usar comfirm alert
         return (
-          <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <table className="shadow-md w-auto text-sm text-left text-gray-500 dark:text-gray-400 table-fixed" style={{ width: '100%' }}>
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th className="px-6 py-3">ID</th>
