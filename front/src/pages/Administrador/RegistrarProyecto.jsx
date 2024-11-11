@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { crearProyectoRequest, listarPresupuestosAprobados } from '../../api/auth';
 
-const RegistrarProyecto = ({ onClose }) => {
+const RegistrarProyecto = () => {
+  const navigate = useNavigate();
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [presupuesto, setPresupuesto] = useState('');
@@ -27,7 +29,6 @@ const RegistrarProyecto = ({ onClose }) => {
     const presupuestoID = e.target.value;
     setPresupuesto(presupuestoID);
 
-    // Buscar y establecer el nombre y dirección del cliente según el presupuesto seleccionado
     const presupuestoSeleccionado = presupuestos.find((pres) => pres._id === presupuestoID);
     if (presupuestoSeleccionado) {
       setClienteNombre(presupuestoSeleccionado.cliente.nombre);
@@ -53,11 +54,15 @@ const RegistrarProyecto = ({ onClose }) => {
     try {
       await crearProyectoRequest(nuevoProyecto);
       alert('Proyecto creado exitosamente');
-      onClose();
+      navigate(-1); // Regresa a la página anterior después de crear el proyecto
     } catch (error) {
       console.error('Error al crear el proyecto:', error);
       alert('Hubo un error al crear el proyecto');
     }
+  };
+
+  const handleCancelar = () => {
+    navigate(-1); // Regresa a la página anterior al cancelar
   };
 
   return (
@@ -66,7 +71,6 @@ const RegistrarProyecto = ({ onClose }) => {
         <h2 className="text-2xl font-bold mb-4">Registrar Proyecto</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            {/* Nombre del Proyecto */}
             <div className="col-span-2">
               <label className="block text-gray-700">Nombre del proyecto</label>
               <input
@@ -77,8 +81,6 @@ const RegistrarProyecto = ({ onClose }) => {
                 required
               />
             </div>
-
-            {/* Descripción */}
             <div className="col-span-2">
               <label className="block text-gray-700">Descripción</label>
               <textarea
@@ -88,8 +90,6 @@ const RegistrarProyecto = ({ onClose }) => {
                 required
               />
             </div>
-
-            {/* Presupuesto (Desplegable) */}
             <div>
               <label className="block text-gray-700">Presupuesto</label>
               <select
@@ -106,8 +106,6 @@ const RegistrarProyecto = ({ onClose }) => {
                 ))}
               </select>
             </div>
-
-            {/* Cliente (autorrelleno) */}
             <div>
               <label className="block text-gray-700">Cliente</label>
               <input
@@ -117,8 +115,6 @@ const RegistrarProyecto = ({ onClose }) => {
                 readOnly
               />
             </div>
-
-            {/* Dirección (autorrelleno) */}
             <div className="col-span-2">
               <label className="block text-gray-700">Dirección</label>
               <input
@@ -128,8 +124,6 @@ const RegistrarProyecto = ({ onClose }) => {
                 readOnly
               />
             </div>
-
-            {/* Observaciones del proyecto */}
             <div className="col-span-2">
               <label className="block text-gray-700">Observaciones del proyecto</label>
               <textarea
@@ -138,8 +132,6 @@ const RegistrarProyecto = ({ onClose }) => {
                 className="w-full p-2 border rounded h-20"
               />
             </div>
-
-            {/* Botones */}
             <div className="flex justify-between col-span-2">
               <button
                 type="button"
@@ -164,7 +156,7 @@ const RegistrarProyecto = ({ onClose }) => {
                 </button>
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={handleCancelar}
                   className="bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Cancelar
