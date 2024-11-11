@@ -41,14 +41,7 @@ export const actualizarClienteRequest = async (id, cliente) => axios.put(`${API}
 export const obtenerUserRequest = async (id) => axios.post(`${API}/actualizar_usuario/${id}`);
 export const editarUserRequest = async (id, user) => axios.put(`${API}/actualizar_usuario/${id}`, user);
 
-export const registroSolicitudRequest = async (data) => {
-  const response = await axios.post(`${API}/registro_solicitud`, data, {
-      headers: {
-          'Content-Type': 'multipart/form-data', // Importante para manejar archivos
-      },
-  });
-  return response;
-};
+export const registroSolicitudRequest = async (data) => axios.post(`${API}/registro_solicitud`, data);
 export const listarSolicitudesVendedoraRequest = async (headers) => {
   
     return await axios.get('http://localhost:8000/API/listar_solicitudes_vendedora', { 

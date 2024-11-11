@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 const SolicitudForm = () => {
     const navigate = useNavigate();
-    const [archivos, setArchivos] = useState([]);
     const { user, name } = useAuth();
     const [clientes, setClientes] = useState([]);
     const [nuevaSolicitud, setNuevaSolicitud] = useState({
@@ -110,23 +109,12 @@ const SolicitudForm = () => {
         }
         fetchClientes();
     };
-
+    // Manejar el registro de la solicitud
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const formData = new FormData();
-            // Agregar los datos de la nueva solicitud
-            for (const key in nuevaSolicitud) {
-                formData.append(key, nuevaSolicitud[key]);
-            }
-            
-            // Agregar todos los archivos seleccionados al FormData
-            archivos.forEach((archivo) => {
-                formData.append('archivos', archivo);
-            });
-    
             // Registrar la solicitud
-            await registroSolicitudRequest(formData); // Asegúrate de que tu función en la API esté preparada para manejar FormData
+            await registroSolicitudRequest(nuevaSolicitud);
             alert('Solicitud registrada');
             navigate('/gestionar_solicitudes');
         } catch (error) {
@@ -371,19 +359,6 @@ const SolicitudForm = () => {
                             />
                         </div>
                     </div>
-                    <div className="col-span-6 sm:col-span-3">
-                            <label htmlFor="archivo" className="text-sm font-medium text-gray-900 block mb-2">
-                                Subir Archivos
-                            </label>
-                            <input
-                                type="file"
-                                id="archivo"
-                                multiple
-                                onChange={(e) => setArchivos(Array.from(e.target.files))} // Cambiar a Array.from para obtener un array
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                            />
-                        </div>
-
 
                     <button
                         type="submit"

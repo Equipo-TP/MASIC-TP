@@ -38,9 +38,6 @@ app.use(bodyparser.urlencoded({extended:true}));
 //permite al back recibir e interpretar los datos ingresados en formato json
 app.use(express.json({limit:'50mb', extended:true}));
 
-// Hacer que la carpeta 'uploads' sea accesible públicamente
-app.use('/uploads', express.static('uploads'));
-
 //manejo de las solicitudes
 app.use((req,res,next)=>{
     res.header('Access-Control-Allow-Origin','*');
