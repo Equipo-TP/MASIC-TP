@@ -8,6 +8,8 @@ const VerSolicitud = () => {
     const { id } = useParams(); // Obtener el ID de la solicitud desde los parámetros de la URL
     const { name } = useAuth();
     const [solicitud, setSolicitud] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     
     // Cargar los datos de la solicitud cuando el componente se monta
     useEffect(() => {
@@ -23,6 +25,18 @@ const VerSolicitud = () => {
 
         fetchSolicitud();
     }, [id]);
+
+    // Function to go to the next image in the carousel
+    const nextImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % solicitud.imagenes.length);
+    };
+
+    // Function to go to the previous image in the carousel
+    const prevImage = () => {
+        setCurrentImageIndex(
+            (prevIndex) => (prevIndex - 1 + solicitud.imagenes.length) % solicitud.imagenes.length
+        );
+    };
 
     if (!solicitud) {
         return <div>Cargando solicitud...</div>; // Indicador de carga
@@ -169,7 +183,59 @@ const VerSolicitud = () => {
                         />
                     </div>
 
-                    
+                    <div className="col-span-6 sm:col-span-3">
+                        <h2 className="text-sm font-medium text-gray-900 block mb-2">Detalles de la Solicitud</h2>
+                        <div className="flex justify-center">
+                        {solicitud.imagenes && solicitud.imagenes.length > 0 ? (
+                            <button
+                                onClick={() => setModalOpen(true)}
+                                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700"
+                            >
+                                Ver Imágenes
+                            </button>
+                        ) : (
+                            <p className="text-gray-500 italic">No hay imágenes adicionales</p>
+                        )}
+                    </div>
+
+                    {/* Modal para el carousel */}
+                    {modalOpen && (
+                        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+                            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
+
+                                {/* Carousel controls */}
+                                <div className="flex justify-between items-center mb-4">
+                                <button
+                                    onClick={prevImage}
+                                    className="bg-gray-500 text-white p-2 rounded-full hover:bg-gray-700 absolute left-0 transform -translate-x-4 ml-6"
+                                >
+                                    &lt;
+                                </button>
+
+                                <img
+                                    src={solicitud.imagenes[currentImageIndex]}
+                                    alt={`Imagen ${currentImageIndex + 1}`}
+                                    className="w-full h-auto object-contain rounded-lg"
+                                />
+
+                                <button
+                                    onClick={nextImage}
+                                    className="bg-gray-500 text-white p-2 rounded-full hover:bg-gray-700 absolute right-0 transform translate-x-4 mr-6"
+                                >
+                                    &gt;
+                                </button>
+
+                                </div>
+
+                                <button
+                                    onClick={() => setModalOpen(false)} 
+                                    className="absolute top-2 right-2 text-white bg-red-500 p-2 rounded-full hover:bg-red-700">
+                                    <span className="text-xl">×</span>
+                                </button>
+                            </div>
+                        </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

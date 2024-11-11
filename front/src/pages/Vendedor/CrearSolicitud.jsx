@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { listarClientesRequest, obtenerClientePorIdRequest, registroClienteRequest, registroSolicitudRequest } from '../../api/auth'; // Asegúrate de importar correctamente tus funciones
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,9 @@ const SolicitudForm = () => {
         presupuesto: '',
         direccion: '',
         distrito: '',
+        imagenes: '',
     });
+    
 
     const [nuevoCliente, setNuevoCliente] = useState(false); // Para manejar la creación de un nuevo cliente
     const [datosNuevoCliente, setDatosNuevoCliente] = useState({
@@ -122,6 +124,56 @@ const SolicitudForm = () => {
             alert('Hubo un error al registrar la solicitud.');
         }
     };
+
+    const convertToBase64 = (event, inputRef) => {
+        const files = event.target.files;
+        const maxFileSize = 12 * 1024 * 1024; // 12 MB
+        const validFiles = [];
+        const promises = [];
+    
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+    
+            // Verificar si el archivo es una imagen
+            if (!file.type.startsWith('image/')) {
+                alert(`El archivo "${file.name}" no es una imagen válida.`);
+                inputRef.current.value = ''; // Resetear el input
+                continue;
+            }
+    
+            // Verificar si el archivo es menor a 12 MB
+            if (file.size > maxFileSize) {
+                alert(`El archivo "${file.name}" supera los 12 MB.`);
+                inputRef.current.value = ''; // Resetear el input
+                continue;
+            }
+    
+            validFiles.push(file);
+            const fileReader = new FileReader();
+    
+            promises.push(new Promise((resolve, reject) => {
+                fileReader.onload = () => resolve(fileReader.result);
+                fileReader.onerror = (error) => reject(error);
+                fileReader.readAsDataURL(file);
+            }));
+        }
+    
+        if (validFiles.length > 0) {
+            Promise.all(promises)
+                .then((base64Images) => {
+                    // Actualiza el estado con el array de imágenes en Base64
+                    setNuevaSolicitud({ ...nuevaSolicitud, imagenes: base64Images });
+                })
+                .catch((error) => {
+                    console.error('Error al leer los archivos:', error);
+                });
+        } else {
+            alert('No se seleccionaron archivos válidos.');
+            inputRef.current.value = ''; // Resetear el input
+        }
+    };
+    
+    const inputRef = useRef();
     
     return (
         <div className="bg-white border-4 rounded-lg shadow relative m-10">
@@ -355,6 +407,20 @@ const SolicitudForm = () => {
                                 id="observaciones"
                                 value={nuevaSolicitud.observaciones}
                                 onChange={handleInputChange}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            />
+                        </div>
+                        <div className="col-span-6 sm:col-span-3">
+                            <label htmlFor="imagenes" className="text-sm font-medium text-gray-900 block mb-2">
+                                Subir Imagenes
+                            </label>
+                            <input
+                                ref={inputRef}
+                                name="imagenes"
+                                id="imagenes"
+                                type="file"
+                                multiple
+                                onChange={(e) => convertToBase64(e, inputRef)}
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             />
                         </div>
