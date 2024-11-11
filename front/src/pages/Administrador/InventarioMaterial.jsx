@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {inventarioAlmacenRequest} from '../../api/auth';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const InventarioAlmacen = () => {
   const { id } = useParams();
+  
   const [materiales, setMateriales] = useState([]);
   const [materialSeleccionado, setMaterialSeleccionado] = useState(null);
   const [formulario, setFormulario] = useState({
@@ -24,6 +26,7 @@ const InventarioAlmacen = () => {
   const listarMateriales = async () => {
     try {
       const res = await inventarioAlmacenRequest(id);
+      console.log(res.data.data);
       setMateriales(res.data.data);
     } catch (error) {
       console.error('Error al listar materiales:', error);

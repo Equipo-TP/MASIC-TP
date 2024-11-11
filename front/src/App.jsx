@@ -91,7 +91,7 @@ function App() {
         
         <Route path='/gestionar_almacen' element={<GestionarAlmacen/>}/>
         <Route path='/registro_almacen' element={<RegistrarAlmacen/>}/>
-        <Route path='/inventario_almacen' element={<InventarioAlmacen/>}/>
+        <Route path='/inventario_almacen/:id' element={<InventarioAlmacen/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>
