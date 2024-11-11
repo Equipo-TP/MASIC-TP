@@ -109,11 +109,13 @@ const GestionarAlmacen = () => {
                   <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.nombre}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.stock}</td>
+                    
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.fecha_registro}</td>
+
                     <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.unidad_medida}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white">
-                      <Link to={`/editar_almacen/${almacen._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
-                        Editar
+                      <Link to={`/inventario_almacen/${almacen._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
+                       Inventario
                       </Link>
                       <button
                         onClick={() => handleDelete(almacen._id)}

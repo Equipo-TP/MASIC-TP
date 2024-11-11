@@ -94,7 +94,7 @@ export const actualizarUsuarioRequest = async (id, data) => {return await axios.
 // ------ Manejo de Almacén ------
 
 // Función para listar todos los almacenes
-export const listarAlmacenesRequest = async () => axios.get(`${API}/listar_almacenes`);
+export const listarAlmacenesRequest = async () => axios.get(`${API}/listar_materiales`);
 
 // Función para obtener un almacén específico por ID
 export const obtenerAlmacenRequest = async (id) => axios.get(`${API}/obtener_almacen/${id}`);
@@ -107,4 +107,6 @@ export const actualizarAlmacenRequest = async (id, almacen) => axios.put(`${API}
 
 // Función para eliminar un almacén específico por ID
 export const eliminarAlmacenRequest = async (id) => axios.delete(`${API}/eliminar_almacen/${id}`);
+
+export const inventarioAlmacenRequest = async (id) => axios.get(`${API}/obtener_movimiento/${id}`);
 

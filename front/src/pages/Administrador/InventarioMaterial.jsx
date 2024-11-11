@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {inventarioAlmacenRequest} from '../../api/auth';
 import axios from 'axios';
 
-const GestionarAlmacen = () => {
+const InventarioAlmacen = () => {
+  const { id } = useParams();
   const [materiales, setMateriales] = useState([]);
   const [materialSeleccionado, setMaterialSeleccionado] = useState(null);
   const [formulario, setFormulario] = useState({
@@ -21,7 +23,7 @@ const GestionarAlmacen = () => {
   // Función para listar todos los materiales
   const listarMateriales = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/listar_materiales');
+      const res = await inventarioAlmacenRequest(id);
       setMateriales(res.data.data);
     } catch (error) {
       console.error('Error al listar materiales:', error);
@@ -177,4 +179,4 @@ const GestionarAlmacen = () => {
   );
 };
 
-export default GestionarAlmacen;
+export default InventarioAlmacen;

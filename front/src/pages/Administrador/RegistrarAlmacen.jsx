@@ -11,10 +11,11 @@ const RegistrarAlmacen = () => {
   const [stock, setStock] = useState(0);
   const [unidadMedida, setUnidadMedida] = useState('');
   const [fechaRegistro, setFechaRegistro] = useState(new Date().toISOString().substring(0, 10));
-
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -44,7 +45,7 @@ const RegistrarAlmacen = () => {
       setUnidadMedida('');
       setFechaRegistro(new Date().toISOString().substring(0, 10));
     } catch (error) {
-      console.error('Error al registrar el material:', error);
+      console.error('Error al registrar el material:', error.response?.data || error.message);
       setSnackbarMessage('Error al registrar el material');
       setSnackbarSeverity('error');
     } finally {
@@ -55,7 +56,9 @@ const RegistrarAlmacen = () => {
   const handleCancel = () => {
     const confirmCancel = window.confirm('¿Estás seguro de que deseas cancelar el registro? Todos los datos no guardados se perderán.');
     if (confirmCancel) {
-      setFormData({ nombre: '', categoria: '', stock: 0, unidadMedida: '' });
+      setNombre('');
+      setStock(0);
+      setUnidadMedida('');
       navigate('/gestionar_almacen');
     }
   };

@@ -10,7 +10,7 @@ const registrarMaterial = async function (req, res) {
     try {
         const materialExistente = await Material.findOne({ nombre: data.nombre });
         if (!materialExistente) {
-            if (data.nombre && data.categoria && data.stock !== undefined && data.unidad_medida) {
+            if (data.nombre && data.stock !== undefined && data.unidad_medida) {
                 const nuevoMaterial = await Material.create(data);
                 res.status(200).send({ data: nuevoMaterial });
             } else {

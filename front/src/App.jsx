@@ -42,6 +42,7 @@ import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
 
 import GestionarAlmacen from './pages/Administrador/GestionarAlmacen';
 import RegistrarAlmacen from './pages/Administrador/RegistrarAlmacen';
+import InventarioAlmacen from './pages/Administrador/InventarioMaterial';
 
 function App() {
     //const { checkAuth } = useAuth();
@@ -90,8 +91,7 @@ function App() {
         
         <Route path='/gestionar_almacen' element={<GestionarAlmacen/>}/>
         <Route path='/registro_almacen' element={<RegistrarAlmacen/>}/>
-
-        
+        <Route path='/inventario_almacen' element={<InventarioAlmacen/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>
