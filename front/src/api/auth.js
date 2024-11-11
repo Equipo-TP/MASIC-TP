@@ -1,6 +1,15 @@
 import axios from 'axios';
 
 const API = 'http://localhost:8000/api';
+export const listarPresupuestosAprobados = async () => {
+  try {
+    const response = await axios.get(`${API}/presupuestos/listar-presupuestos-aprobados`);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error al listar presupuestos aprobados:', error);
+    throw error;
+  }
+};
 
 // Función para registrar un usuario (usuarios normales)
 export const registrousuarioRequest = async (user) => axios.post(`${API}/registro_usuario`, user);

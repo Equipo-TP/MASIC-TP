@@ -16,6 +16,7 @@ api.get('/listar_presupuestos_vendedora', auth, presupuestoController.listar_pre
 api.get('/listar_presupuestos', presupuestoController.listar_presupuestos);
 api.get('/listar_presupuestos_administrador', presupuestoController.listar_presupuestos);
 api.put('/editar_presupuesto_admin/:id', auth, presupuestoController.editar_presupuesto_admin);
-//api.get('/presupuestos_aceptados', presupuestoController.presupuestos_aceptados);
+
+api.get('/listar_presupuestos_aceptados_para_proyectos', presupuestoController.listar_presupuestos_aprobados_para_proyectos);
 
 module.exports = api;
