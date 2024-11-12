@@ -37,6 +37,7 @@ function MenuSideBar({ open }) {
     { icon: <CalendarIcon />, text: 'Visualizar cronograma', path: '/visualizar_cronograma', roles: ['Administrador', 'Tecnico'] },
     { icon: <ProjectIcon />, text: 'Gestionar solicitudes', path: '/gestionar_solicitudes', roles: ['Vendedor'] },
     { icon: <ProjectIcon />, text: 'Visualizar clientes', path: '/visualizar_clientes', roles: ['Administrador'] },
+    { icon: <ProjectIcon />, text: 'Gestionar Almacen', path: '/gestionar_almacen', roles: ['Administrador'] },
 
   ];
 
