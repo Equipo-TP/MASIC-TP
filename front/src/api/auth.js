@@ -110,4 +110,6 @@ export const eliminarAlmacenRequest = async (id) => axios.delete(`${API}/elimina
 
 export const inventarioAlmacenRequest = async (id) => axios.get(`${API}/obtener_movimiento/${id}`);
 
+export const registrarMovimientoRequest = async (movimiento) => axios.post(`${API}/registrar_movimiento`, movimiento);
+
 export const listarInventarioRequest = async () => axios.get(`${API}/listar_movimientos'${id}`);

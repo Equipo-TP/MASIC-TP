@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { inventarioAlmacenRequest } from '../../api/auth';
-import { useParams, useNavigate } from 'react-router-dom';
+import { inventarioAlmacenRequest, registrarMovimientoRequest } from '../../api/auth';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
@@ -25,11 +25,12 @@ const InventarioMaterial = () => {
     const fetchMovimientos = async () => {
         try {
             const response = await inventarioAlmacenRequest(id);
-            if (response.data.length === 0) {
+            if (response.data.data.length === 0) {
+                console.log(response);
                 setAlerta('No hay movimientos de inventario registrados.');
             } else {
-                setMovimientos(response.data);
-                setAlerta(''); 
+                setMovimientos(response.data.data);
+                setAlerta('');
             }
         } catch (error) {
             console.error('Error fetching movements:', error);
@@ -48,7 +49,9 @@ const InventarioMaterial = () => {
                 fecha_mov: fechaMov,
                 id_material: id
             };
-            await axios.post('http://localhost:8000/api/registrar_movimiento', newMovimiento);
+            console.log(newMovimiento);
+            await registrarMovimientoRequest(newMovimiento);
+            console.log('HOLA');
             fetchMovimientos();
             setCantidad('');
             setFechaMov('');
@@ -168,6 +171,32 @@ const InventarioMaterial = () => {
                     </div>
                 </div>
             </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cantidad</th>
+                        <th>Fecha de Movimiento</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {movimientos.length > 0 ? (
+                        movimientos.map((movimiento) => (
+                            <tr key={movimiento._id}>
+                                <td>{movimiento.cantidad}</td>
+                                <td>{new Date(movimiento.fecha_mov).toLocaleDateString()}</td>
+                                <td>
+                                    <button onClick={() => handleEliminarMovimiento(movimiento._id)} style={{ color: 'red' }}>Eliminar</button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4">No hay movimientos de inventario.</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
         </div>
     );
 };
