@@ -45,6 +45,11 @@ import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
 
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
+
+import GestionarAlmacen from './pages/Administrador/GestionarAlmacen';
+import RegistrarAlmacen from './pages/Administrador/RegistrarAlmacen';
+import InventarioAlmacen from './pages/Administrador/InventarioMaterial';
+
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -91,6 +96,12 @@ function App() {
         <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
+        
+        <Route path='/gestionar_almacen' element={<GestionarAlmacen/>}/>
+        <Route path='/registro_almacen' element={<RegistrarAlmacen/>}/>
+        <Route path='/inventario_almacen/:id' element={<InventarioAlmacen/>}/>
+
+        
         </Route>     
       </Routes>
     </BrowserRouter>

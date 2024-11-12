@@ -2,6 +2,7 @@
 
 var Instalacion = require('../models/instalacion');
 
+
 // Registro de precio de instalación
 const registro_precio_instalacion = async function (req, res) {
     var data = req.body;
