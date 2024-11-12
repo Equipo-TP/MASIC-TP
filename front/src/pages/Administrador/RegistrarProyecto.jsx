@@ -18,7 +18,12 @@ const RegistrarProyecto = () => {
     const cargarPresupuestos = async () => {
       try {
         const respuesta = await listarPresupuestosAprobados();
-        setPresupuestos(respuesta.data);
+        console.log(respuesta.data);
+        if (Array.isArray(respuesta.data.data)) {
+          setPresupuestos(respuesta.data.data);
+      } else {
+          console.error('La respuesta no es un array:', respuesta.data.data);
+      }
       } catch (error) {
         console.error('Error al cargar los presupuestos aprobados:', error);
       }
@@ -103,7 +108,7 @@ const RegistrarProyecto = () => {
                 <option value="">Seleccione un presupuesto</option>
                 {presupuestos.map((presupuesto) => (
                   <option key={presupuesto._id} value={presupuesto._id}>
-                    {presupuesto._id}
+                    {presupuesto.ID_Presupuesto}
                   </option>
                 ))}
               </select>
@@ -135,13 +140,6 @@ const RegistrarProyecto = () => {
               />
             </div>
             <div className="flex justify-between col-span-2">
-              <button
-                type="button"
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-                onClick={() => alert('Función para agregar técnicos')}
-              >
-                Agregar Técnicos
-              </button>
               <button
                 type="button"
                 className="bg-gray-500 text-white px-4 py-2 rounded"

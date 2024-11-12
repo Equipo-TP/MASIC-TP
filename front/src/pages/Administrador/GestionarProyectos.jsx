@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 const GestionarProyectos = () => {
   const [proyectos, setProyectos] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,8 +42,12 @@ const GestionarProyectos = () => {
     setSearchTerm(e.target.value); 
   };
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const toggleDropdown = (id) => {
+    if (isOpen === id) {
+      setIsOpen(null); // Cierra el menú si ya está abierto
+    } else {
+      setIsOpen(id); // Abre el menú para el proyecto específico
+    }
   };
 
   const handleClienteSelect = async (cliente) => {
@@ -66,7 +70,7 @@ const GestionarProyectos = () => {
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} /> 
         <div className="p-6">
-          <h1 className="text-3xl font-bold mb-4">Lista de Proyectos</h1>
+          <h1 className="text-3xl font-bold mb-4">Gestionar Proyectos</h1>
 
           <div className="flex justify-end mb-4">
             <button 
@@ -97,27 +101,15 @@ const GestionarProyectos = () => {
                     <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.direccion}, {proyecto.ID_Presupuesto_Proyecto?.Transporte_Personal}</td>
                     <td className="py-3 px-6">
                       <div class="btn-group dropdown d-inline-block mb-3 mr-2">
-                        <button className="btn btn-outline-secondary border-2 py-2 px-6 dropdown-toggle rounded" aria-haspopup="true"
-                         aria-expanded={isOpen} type="button" onClick={toggleDropdown}>OPCIONES</button>
-                      {isOpen && (
-                        <div class="dropdown-menu" className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
+                        <button className="btn btn-outline-secondary border-2 py-2 px-6 dropdown-toggle rounded-lg bg-gray-300" aria-haspopup="true"
+                         aria-expanded={isOpen} type="button" onClick={() => toggleDropdown(proyecto._id)}>OPCIONES</button>
+                      {isOpen === proyecto._id && (
+                        <div class="dropdown-menu" className="absolute mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
+                          <Link to={`/asignar_tecnico/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Ver</Link>
                           <Link to={`/asignar_tecnico/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Asignar técnico</Link>
-                          <Link to={`/visualizar_presupuesto/${proyecto.ID_Presupuesto_Proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Ver Presupuesto</Link>
-                          
+                          <Link to={`/visualizar_presupuesto/${proyecto.ID_Presupuesto_Proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Detalle Presupuesto</Link>
                         </div>)}
                       </div> 
-                      <button 
-                        onClick={() => handleClienteSelect(proyecto)} 
-                        className="text-green-500 hover:underline mr-4"
-                      >
-                        Ver
-                      </button>
-                      <button 
-                        onClick={() => handleClienteSelect(cliente)} 
-                        className="text-red-500 hover:underline mr-4"
-                      >
-                        Editar
-                      </button>
                     </td>
                   </tr>
                 ))
