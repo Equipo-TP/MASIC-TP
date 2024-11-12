@@ -93,24 +93,22 @@ const eliminarMaterial = async function (req, res) {
 
 // Registrar un movimiento en el inventario (INGRESO O EGRESO)
 const registrarMovimiento = async function (req, res) {
-    const data = req.body;
-    const id = req.params['id'];
+    let data = req.body;
     try {
-        // Validar si existe el material
-        const material = await Material.findById({_id:id});
-        if (!material) {
-            return res.status(404).send({ message: 'Material no encontrado' });
-        }
-        // Crear el movimiento de inventario
-        const nuevoMovimiento = new Inventario.create(data);
-        // Guardar el movimiento en el inventario
-        const movimientoGuardado = await nuevoMovimiento.save();
-        // Actualizar el stock del material
-        material.stock += cantidad; // se Permite valores negativos
-        await material.save();
-
-        res.status(201).send({ message: 'Movimiento registrado correctamente', data: movimientoGuardado });
+        let reg = await Inventario.create(data);
+            //OBTENER EL REGISTRO DE MATERIAL
+            let material = await Material.findById({_id:reg.id_material});
+            //CALCULAR EL NUEVO STOCK
+                                //STOCK ACTUAL       //STOCK A AUMENTAR
+            let nuevo_stock = parseInt(material.stock) + parseInt(reg.cantidad);
+            //ACTUALIZAR EL NUEVO STOCK AL PRODUCTO
+             await Material.findByIdAndUpdate({_id:reg.id_material},{
+                stock: nuevo_stock
+            });
+        res.status(200).send({ message: 'Movimiento registrado correctamente', data: reg });
+        
     } catch (error) {
+        console.error('Error al crear el inventario:', error);
         res.status(500).send({ message: 'Error al registrar movimiento', error });
     }
 };
@@ -129,7 +127,7 @@ const listarMovimientos = async function (req, res) {
 const obtenerMovimientoPorId = async function (req, res) {
     const id = req.params['id'];
     try {
-        const movimiento = await Inventario.findOne({ id_material: id });
+        let movimiento = await Inventario.find({ id_material: id });
         if (movimiento) {
             res.status(200).send({ data: movimiento });
         } else {

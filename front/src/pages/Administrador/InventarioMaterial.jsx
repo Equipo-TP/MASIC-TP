@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { inventarioAlmacenRequest } from '../../api/auth';
+import { inventarioAlmacenRequest, registrarMovimientoRequest } from '../../api/auth';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -17,10 +17,11 @@ const InventarioMaterial = () => {
     const fetchMovimientos = async () => {
         try {
             const response = await inventarioAlmacenRequest(id);
-            if (response.data.length === 0) {
+            if (response.data.data.length === 0) {
+                console.log(response);
                 setAlerta('No hay movimientos de inventario registrados.');
             } else {
-                setMovimientos(response.data);
+                setMovimientos(response.data.data);
                 setAlerta('');
             }
         } catch (error) {
@@ -40,7 +41,9 @@ const InventarioMaterial = () => {
                 fecha_mov: fechaMov,
                 id_material: id
             };
-            await axios.post('http://localhost:8000/api/registrar_movimiento', newMovimiento);
+            console.log(newMovimiento);
+            await registrarMovimientoRequest(newMovimiento);
+            console.log('HOLA');
             fetchMovimientos();
             setCantidad('');
             setFechaMov('');
@@ -84,7 +87,6 @@ const InventarioMaterial = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Cantidad</th>
                         <th>Fecha de Movimiento</th>
                         <th>Acción</th>
@@ -94,7 +96,6 @@ const InventarioMaterial = () => {
                     {movimientos.length > 0 ? (
                         movimientos.map((movimiento) => (
                             <tr key={movimiento._id}>
-                                <td>{movimiento._id}</td>
                                 <td>{movimiento.cantidad}</td>
                                 <td>{new Date(movimiento.fecha_mov).toLocaleDateString()}</td>
                                 <td>
