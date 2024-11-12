@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { inventarioAlmacenRequest, registrarMovimientoRequest } from '../../api/auth';
+import { inventarioAlmacenRequest, registrarMovimientoRequest, eliminarInventarioRequest } from '../../api/auth';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MenuSideBar from '../../components/MenuSideBar';
@@ -15,7 +15,6 @@ const InventarioMaterial = () => {
     const [alerta, setAlerta] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
 
-    // Hook para navegar entre rutas
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,7 +25,6 @@ const InventarioMaterial = () => {
         try {
             const response = await inventarioAlmacenRequest(id);
             if (response.data.data.length === 0) {
-                console.log(response);
                 setAlerta('No hay movimientos de inventario registrados.');
             } else {
                 setMovimientos(response.data.data);
@@ -46,12 +44,11 @@ const InventarioMaterial = () => {
         try {
             const newMovimiento = {
                 cantidad: parseInt(cantidad),
-                fecha_mov: fechaMov,
-                id_material: id
+                // Convertimos la fecha a UTC antes de enviar
+            fecha_mov: new Date(new Date(fechaMov).getTime() - new Date().getTimezoneOffset() * 60000).toISOString(),
+            id_material: id
             };
-            console.log(newMovimiento);
             await registrarMovimientoRequest(newMovimiento);
-            console.log('HOLA');
             fetchMovimientos();
             setCantidad('');
             setFechaMov('');
@@ -71,7 +68,7 @@ const InventarioMaterial = () => {
                     label: 'Sí',
                     onClick: async () => {
                         try {
-                            await axios.delete(`http://localhost:8000/api/eliminar_movimiento/${movimientoId}`);
+                            await eliminarInventarioRequest(movimientoId);
                             fetchMovimientos();
                         } catch (error) {
                             console.error('Error deleting movement:', error);
@@ -99,7 +96,6 @@ const InventarioMaterial = () => {
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-4">
                         <h1 className="text-3xl font-bold">Inventario de Material</h1>
-                        {/* Botón de regresar */}
                         <button 
                             onClick={() => navigate('/gestionar_almacen')}
                             className="text-blue-500 hover:text-blue-700 font-medium text-lg"
@@ -138,7 +134,6 @@ const InventarioMaterial = () => {
                         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
-                                    <th scope="col" className="px-6 py-3">ID</th>
                                     <th scope="col" className="px-6 py-3">Cantidad</th>
                                     <th scope="col" className="px-6 py-3">Fecha de Movimiento</th>
                                     <th scope="col" className="px-6 py-3">Acción</th>
@@ -148,7 +143,6 @@ const InventarioMaterial = () => {
                                 {movimientos.length > 0 ? (
                                     movimientos.map((movimiento) => (
                                         <tr key={movimiento._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento._id}</td>
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento.cantidad}</td>
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">{new Date(movimiento.fecha_mov).toLocaleDateString()}</td>
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">
@@ -163,7 +157,7 @@ const InventarioMaterial = () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="4" className="px-6 py-4 text-center">No hay movimientos de inventario.</td>
+                                        <td colSpan="3" className="px-6 py-4 text-center">No hay movimientos de inventario.</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -171,32 +165,6 @@ const InventarioMaterial = () => {
                     </div>
                 </div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cantidad</th>
-                        <th>Fecha de Movimiento</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {movimientos.length > 0 ? (
-                        movimientos.map((movimiento) => (
-                            <tr key={movimiento._id}>
-                                <td>{movimiento.cantidad}</td>
-                                <td>{new Date(movimiento.fecha_mov).toLocaleDateString()}</td>
-                                <td>
-                                    <button onClick={() => handleEliminarMovimiento(movimiento._id)} style={{ color: 'red' }}>Eliminar</button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="4">No hay movimientos de inventario.</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
         </div>
     );
 };

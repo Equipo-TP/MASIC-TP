@@ -106,10 +106,14 @@ export const registrarAlmacenRequest = async (almacen) => axios.post(`${API}/reg
 export const actualizarAlmacenRequest = async (id, almacen) => axios.put(`${API}/editar_almacen/${id}`, almacen);
 
 // Función para eliminar un almacén específico por ID
-export const eliminarAlmacenRequest = async (id) => axios.delete(`${API}/eliminar_almacen/${id}`);
+export const eliminarAlmacenRequest = async (id) => axios.delete(`${API}/eliminar_material/${id}`);
 
 export const inventarioAlmacenRequest = async (id) => axios.get(`${API}/obtener_movimiento/${id}`);
 
 export const registrarMovimientoRequest = async (movimiento) => axios.post(`${API}/registrar_movimiento`, movimiento);
 
 export const listarInventarioRequest = async () => axios.get(`${API}/listar_movimientos'${id}`);
+
+export const eliminarInventarioRequest = async (id) => axios.delete(`${API}/eliminar_movimiento/${id}`);
+
+

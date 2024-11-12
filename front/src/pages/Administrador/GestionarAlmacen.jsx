@@ -10,8 +10,8 @@ const GestionarAlmacen = () => {
   const [almacenes, setAlmacenes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredAlmacenes, setFilteredAlmacenes] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); // Página actual
-  const itemsPerPage = 5; // Elementos por página
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const GestionarAlmacen = () => {
       try {
         const response = await listarAlmacenesRequest();
         setAlmacenes(response.data.data);
-        setFilteredAlmacenes(response.data.data); // Inicialmente, muestra todos los almacenes
+        setFilteredAlmacenes(response.data.data);
       } catch (error) {
         console.error('Error al listar los almacenes:', error);
       }
@@ -63,16 +63,15 @@ const GestionarAlmacen = () => {
         almacen.nombre.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-    setCurrentPage(1); // Reinicia la página al filtrar
+    setCurrentPage(1);
   };
 
   const handleReset = () => {
     setSearchTerm('');
     setFilteredAlmacenes(almacenes);
-    setCurrentPage(1); // Reinicia a la primera página
+    setCurrentPage(1);
   };
 
-  // Lógica de paginación
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredAlmacenes.slice(indexOfFirstItem, indexOfLastItem);
@@ -93,7 +92,7 @@ const GestionarAlmacen = () => {
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
           <div className="relative overflow-x-auto sm:rounded-lg">
-            <h1 className="text-3xl font-bold mb-2">Gestor de Almacenes</h1>
+            <h1 className="text-3xl font-bold mb-2">Gestionar Almacen</h1>
             <p className="mb-6">Este módulo lista todos los almacenes de la empresa.</p>
 
             {/* Fila para el filtro, input y botones */}
@@ -119,7 +118,7 @@ const GestionarAlmacen = () => {
               </button>
               <Link to="/registro_almacen">
                 <button className="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                  Crear Almacen
+                  Crear Material
                 </button>
               </Link>
             </div>
@@ -148,11 +147,11 @@ const GestionarAlmacen = () => {
                           Inventario
                         </Link>
                         <button
-                          onClick={() => handleDelete(almacen._id)}
-                          className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                        >
-                          Eliminar
-                        </button>
+                        onClick={() => handleDelete(almacen._id)}
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                      >
+                        Eliminar
+                      </button>
                       </td>
                     </tr>
                   ))

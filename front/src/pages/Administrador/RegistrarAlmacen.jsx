@@ -44,11 +44,16 @@ const RegistrarAlmacen = () => {
       setStock(0);
       setUnidadMedida('');
       setFechaRegistro(new Date().toISOString()); // Reinicia a la fecha y hora actual
+      setOpenSnackbar(true);
+
+      // Redirigir automáticamente a la página de gestionar_almacen
+      setTimeout(() => {
+        navigate('/gestionar_almacen');
+      }, 1500); // Espera 1.5 segundos para mostrar la alerta antes de redirigir
     } catch (error) {
       console.error('Error al registrar el material:', error.response?.data || error.message);
       setSnackbarMessage('Error al registrar el material');
       setSnackbarSeverity('error');
-    } finally {
       setOpenSnackbar(true);
     }
   };
@@ -69,12 +74,8 @@ const RegistrarAlmacen = () => {
 
   const handleFechaChange = (e) => {
     const selectedDate = e.target.value;
-    const currentTime = new Date().toISOString().substring(11, 19); // Obtiene la hora actual en formato "HH:MM:SS"
+    const currentTime = new Date().toISOString().substring(11, 19);
     setFechaRegistro(`${selectedDate}T${currentTime}`); // Combina la fecha seleccionada con la hora actual
-  };
-
-  const handleRegresar = () => {
-    navigate('/gestionar_almacen');
   };
 
   return (
@@ -147,30 +148,12 @@ const RegistrarAlmacen = () => {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Fecha de Registro"
-                    type="date"
-                    value={fechaRegistro.substring(0, 10)}
-                    onChange={handleFechaChange}
-                    required
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </Grid>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                   <Button variant="contained" color="primary" onClick={registrarMaterial}>
                     Registrar Material
                   </Button>
                   <Button variant="outlined" color="secondary" onClick={handleCancel}>
                     Cancelar
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
-                  <Button variant="text" color="primary" onClick={handleRegresar}>
-                    Regresar &gt;
                   </Button>
                 </Grid>
               </Grid>
