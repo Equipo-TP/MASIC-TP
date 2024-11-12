@@ -201,12 +201,16 @@ const editar_proyecto_por_id = async function(req, res) {
     }
 };
 
-// Listar proyectos en los que un técnico específico está involucrado
+ 
 const listar_proyectos_por_tecnico = async function(req, res) {
-    const tecnicoId = req.params.tecnicoId;
+    const { page = 1, limit = 40 } = req.query; // Recibe page y limit desde la query
+    const skip = (page - 1) * limit;
 
     try {
-        const proyectos = await Proyecto.find({ 'Horario.Tecnico': tecnicoId })
+        const totalproyectos = await Proyecto.countDocuments({ 'Horario.Tecnico': req.user._id });
+        const proyectos = await Proyecto.find({ 'Horario.Tecnico': req.user._id })
+
+            .populate('Horario.Tecnico')
             .populate({
                 path: 'ID_Presupuesto_Proyecto',
                 populate: {
@@ -214,19 +218,19 @@ const listar_proyectos_por_tecnico = async function(req, res) {
                     populate: ['cliente', 'vendedor']
                 }
             })
-            .populate('Horario.Tecnico')
-            .populate('Incidencias.afectado');
+            .skip(skip)
+            .limit(limit);
 
-        if (proyectos.length > 0) {
-            res.status(200).send({ data: proyectos });
-        } else {
-            res.status(404).send({ message: 'No se encontraron proyectos para este técnico' });
-        }
+        res.status(200).send({
+            total: totalproyectos,
+            totalPages: Math.ceil(totalproyectos / limit),
+            currentPage: page,
+            data: proyectos
+        });
     } catch (error) {
-        res.status(500).send({ message: 'Error al listar proyectos del técnico', error });
+        res.status(500).send({ message: 'Error en la solicitud', error });
     }
-};
-
+}
 module.exports = {
     registrar_proyecto,
     listar_proyectos,

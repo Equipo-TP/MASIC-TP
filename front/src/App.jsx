@@ -43,8 +43,8 @@ import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
 
 
 
+import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 
-import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
 function App() {
     //const { checkAuth } = useAuth();
   return (
