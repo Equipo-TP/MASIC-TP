@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { listarClientesRequest, obtenerClientePorIdRequest, registroClienteRequest, registroSolicitudRequest } from '../../api/auth'; // Asegúrate de importar correctamente tus funciones
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,9 @@ const SolicitudForm = () => {
         presupuesto: '',
         direccion: '',
         distrito: '',
+        imagenes: '',
     });
+    
 
     const [nuevoCliente, setNuevoCliente] = useState(false); // Para manejar la creación de un nuevo cliente
     const [datosNuevoCliente, setDatosNuevoCliente] = useState({
@@ -50,7 +52,6 @@ const SolicitudForm = () => {
     useEffect(() => {
         fetchClientes(); // Carga la lista de clientes al montar el componente
     }, []);
-
     // Manejar el cambio del combobox de clientes
     const handleClienteChange = async (e) => {
         const selectedId = e.target.value;
@@ -71,9 +72,6 @@ const SolicitudForm = () => {
             setNuevaSolicitud({ ...nuevaSolicitud, cliente: selectedId });
         }
     };
-    
-
-
     // Manejar el cambio de input de la solicitud y los datos del nuevo cliente
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -90,7 +88,6 @@ const SolicitudForm = () => {
             });
         }
     };
-
     //Ingreso de nuevo cliente
     const handleNuevoClienteSubmit = async (e) => {
         e.preventDefault();
@@ -114,8 +111,6 @@ const SolicitudForm = () => {
         }
         fetchClientes();
     };
-    
-
     // Manejar el registro de la solicitud
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -129,10 +124,61 @@ const SolicitudForm = () => {
             alert('Hubo un error al registrar la solicitud.');
         }
     };
+
+    const convertToBase64 = (event, inputRef) => {
+        const files = event.target.files;
+        const maxFileSize = 12 * 1024 * 1024; // 12 MB
+        const validFiles = [];
+        const promises = [];
     
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+    
+            // Verificar si el archivo es una imagen
+            if (!file.type.startsWith('image/')) {
+                alert(`El archivo "${file.name}" no es una imagen válida.`);
+                inputRef.current.value = ''; // Resetear el input
+                continue;
+            }
+    
+            // Verificar si el archivo es menor a 12 MB
+            if (file.size > maxFileSize) {
+                alert(`El archivo "${file.name}" supera los 12 MB.`);
+                inputRef.current.value = ''; // Resetear el input
+                continue;
+            }
+    
+            validFiles.push(file);
+            const fileReader = new FileReader();
+    
+            promises.push(new Promise((resolve, reject) => {
+                fileReader.onload = () => resolve(fileReader.result);
+                fileReader.onerror = (error) => reject(error);
+                fileReader.readAsDataURL(file);
+            }));
+        }
+    
+        if (validFiles.length > 0) {
+            Promise.all(promises)
+                .then((base64Images) => {
+                    // Actualiza el estado con el array de imágenes en Base64
+                    setNuevaSolicitud({ ...nuevaSolicitud, imagenes: base64Images });
+                })
+                .catch((error) => {
+                    console.error('Error al leer los archivos:', error);
+                });
+        } else {
+            alert('No se seleccionaron archivos válidos.');
+            inputRef.current.value = ''; // Resetear el input
+        }
+    };
+    
+    const inputRef = useRef();
     
     return (
         <div className="bg-white border-4 rounded-lg shadow relative m-10">
+
+            {/* Titulo y boton */}
             <div className="flex items-start justify-between p-5 border-b rounded-t">
                 <h3 className="text-xl font-semibold">Formulario para Registrar Solicitud</h3>
                 <button
@@ -152,7 +198,8 @@ const SolicitudForm = () => {
                 </button>
             </div>
 
-            <div className="p-6 space-y-6">
+            {/* Parámetros de la Solicitud */}
+            <div className="p-6 space-y-6 max-h-[75vh] overflow-y-scroll">
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
@@ -271,7 +318,7 @@ const SolicitudForm = () => {
                                         <option value="Empresa">Empresa</option>
                                     </select>
                                 </div>
-                                <div>
+                                <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="ruc" className="block mb-2 text-sm font-medium text-gray-900">
                                         RUC
                                     </label>
@@ -284,13 +331,16 @@ const SolicitudForm = () => {
                                         required
                                     />
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={handleNuevoClienteSubmit}
-                                    className="mt-4 bg-green-800 text-white font-bold py-2 px-4 rounded hover:bg-green-900"
-                                >
-                                    Registrar Nuevo Cliente
-                                </button>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <button
+                                        type="button"
+                                        onClick={handleNuevoClienteSubmit}
+                                        className="mt-4 bg-green-800 text-white font-bold py-2 px-4 rounded hover:bg-green-900"
+                                    >
+                                        Registrar Nuevo Cliente
+                                    </button>
+                                </div>
+                                
 
                             </>
                         )}
@@ -357,6 +407,20 @@ const SolicitudForm = () => {
                                 id="observaciones"
                                 value={nuevaSolicitud.observaciones}
                                 onChange={handleInputChange}
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            />
+                        </div>
+                        <div className="col-span-6 sm:col-span-3">
+                            <label htmlFor="imagenes" className="text-sm font-medium text-gray-900 block mb-2">
+                                Subir Imagenes
+                            </label>
+                            <input
+                                ref={inputRef}
+                                name="imagenes"
+                                id="imagenes"
+                                type="file"
+                                multiple
+                                onChange={(e) => convertToBase64(e, inputRef)}
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             />
                         </div>

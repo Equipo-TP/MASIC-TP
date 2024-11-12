@@ -2,6 +2,7 @@
 
 const Proyecto = require('../models/proyecto');
 const Contador = require('../models/contador');
+const Material = require('../models/Material')
 const Presupuesto = require('../models/presupuesto');
 
 // Función para obtener el próximo ID para el proyecto
@@ -14,33 +15,31 @@ async function obtenerProximoId(nombreContador) {
     return contador.valor;
 }
 
-// Función para verificar disponibilidad de técnicos
+// Función para verificar disponibilidad de técnicos en el cronograma
 async function verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final) {
     const conflicto = await Proyecto.findOne({
-        'horario.Tecnico': tecnicoId,
+        'Horario.Tecnico': tecnicoId,
         $or: [
-            { 'horario.fecha_inicio': { $lte: fecha_final }, 'horario.fecha_final': { $gte: fecha_inicio } }
+            { 'Horario.fecha_inicio': { $lte: fecha_final }, 'Horario.fecha_final': { $gte: fecha_inicio } }
         ]
     });
     return !conflicto;
 }
 
-// Registrar un nuevo proyecto
+/* Registrar un nuevo proyecto
 const registrar_proyecto = async function(req, res) {
     try {
         const data = req.body;
         const nuevoId = await obtenerProximoId('proyectos');
         data.ID_Proyecto = nuevoId;
 
-        // Validar que fecha_final es después de fecha_inicio
-        for (const horario of data.horario) {
-            const { fecha_inicio, fecha_final, Tecnico } = horario;
+        for (const Horario of data.Horario) {
+            const { fecha_inicio, fecha_final, Tecnico } = Horario;
 
             if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
                 return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
             }
 
-            // Verificar la disponibilidad del técnico
             for (const tecnicoId of Tecnico) {
                 const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
                 if (!disponible) {
@@ -49,6 +48,60 @@ const registrar_proyecto = async function(req, res) {
             }
         }
 
+        const proyectoExistente = await Proyecto.findOne({ ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto });
+        if (!proyectoExistente) {
+            const nuevoProyecto = await Proyecto.create(data);
+            res.status(200).send({ data: nuevoProyecto });
+        } else {
+            res.status(400).send({ message: 'El proyecto ya existe para este presupuesto' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Error al registrar el proyecto', error });
+    }
+};
+*/
+const registrar_proyecto = async function(req, res) {
+    try {
+        const data = req.body;
+        const nuevoId = await obtenerProximoId('proyectos');
+        data.ID_Proyecto = nuevoId;
+
+        // Validar fechas de Horario y disponibilidad de técnico
+        for (const Horario of data.Horario) {
+            const { fecha_inicio, fecha_final, Tecnico } = Horario;
+
+            if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
+                return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
+            }
+
+            for (const tecnicoId of Tecnico) {
+                const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
+                if (!disponible) {
+                    return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
+                }
+            }
+        }
+
+        // Procesar y actualizar stock en GestionarMaterial
+        for (const material of data.GestionarMaterial) {
+            const materialData = await Material.findById(material.id_Material);
+
+            if (materialData) {
+                materialData.stock -= material.Cantidad;
+
+                // Verificar si el stock es negativo y actualizar el Comentario
+                if (materialData.stock < 0) {
+                    materialData.Comentario = (materialData.Comentario || "") + " hace falta stock";
+                }
+
+                // Guardar los cambios en Material
+                await materialData.save();
+            } else {
+                return res.status(404).send({ message: `El material con ID ${material.id_Material} no existe.` });
+            }
+        }
+
+        // Verificar si el proyecto ya existe
         const proyectoExistente = await Proyecto.findOne({ ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto });
         if (!proyectoExistente) {
             const nuevoProyecto = await Proyecto.create(data);
@@ -72,7 +125,7 @@ const listar_proyectos = async function(req, res) {
                     populate: ['cliente', 'vendedor']
                 }
             })
-            .populate('horario.Tecnico')
+            .populate('Horario.Tecnico')
             .populate('Incidencias.afectado');
         res.status(200).send({ data: proyectos });
     } catch (error) {
@@ -92,7 +145,7 @@ const ver_proyecto_por_id = async function(req, res) {
                     populate: ['cliente', 'vendedor']
                 }
             })
-            .populate('horario.Tecnico')
+            .populate('Horario.Tecnico')
             .populate('Incidencias.afectado');
         if (proyecto) {
             res.status(200).send({ data: proyecto });
@@ -109,19 +162,23 @@ const editar_proyecto_por_id = async function(req, res) {
     const id = req.params.id;
     const data = req.body;
     try {
-        for (const horario of data.horario) {
-            const { fecha_inicio, fecha_final, Tecnico } = horario;
+        for (const Horario of data.Horario) {
+            const { fecha_inicio, fecha_final, Tecnico } = Horario;
+
+            console.log('Fecha de inicio:', fecha_inicio);
+            console.log('Fecha final:', fecha_final);
 
             if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
                 return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
             }
 
-            for (const tecnicoId of Tecnico) {
+            /* for (const tecnicoId of Tecnico) {
                 const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
+                console.log(`Técnico ${tecnicoId} disponible:`, disponible);
                 if (!disponible) {
                     return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
                 }
-            }
+            } */
         }
 
         const proyecto = await Proyecto.findByIdAndUpdate(
@@ -129,7 +186,8 @@ const editar_proyecto_por_id = async function(req, res) {
             {
                 ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto,
                 Costo_Total: data.Costo_Total,
-                horario: data.horario,
+                Horario: data.Horario,
+                GestionarMaterial: data.GestionarMaterial,
                 Nombre_Proyecto: data.Nombre_Proyecto,
                 Descripcion: data.Descripcion,
                 Estado: data.Estado,
@@ -144,16 +202,24 @@ const editar_proyecto_por_id = async function(req, res) {
             res.status(404).send({ message: 'Proyecto no encontrado' });
         }
     } catch (error) {
+        console.error('Error al editar proyecto:', error);
         res.status(500).send({ message: 'Error al editar el proyecto', error });
     }
 };
+
+
+
 // Listar proyectos en los que un técnico específico está involucrado
+
 const listar_proyectos_por_tecnico = async function(req, res) {
-    const tecnicoId = req.params.tecnicoId;
+    const { page = 1, limit = 40 } = req.query; // Recibe page y limit desde la query
+    const skip = (page - 1) * limit;
 
     try {
-        // Buscar proyectos donde el técnico esté asignado en el horario
-        const proyectos = await Proyecto.find({ 'horario.Tecnico': tecnicoId })
+        const totalproyectos = await Proyecto.countDocuments({ 'Horario.Tecnico': req.user._id });
+        const proyectos = await Proyecto.find({ 'Horario.Tecnico': req.user._id })
+
+            .populate('Horario.Tecnico')
             .populate({
                 path: 'ID_Presupuesto_Proyecto',
                 populate: {
@@ -161,19 +227,19 @@ const listar_proyectos_por_tecnico = async function(req, res) {
                     populate: ['cliente', 'vendedor']
                 }
             })
-            .populate('horario.Tecnico')
-            .populate('Incidencias.afectado');
+            .skip(skip)
+            .limit(limit);
 
-        if (proyectos.length > 0) {
-            res.status(200).send({ data: proyectos });
-        } else {
-            res.status(404).send({ message: 'No se encontraron proyectos para este técnico' });
-        }
+        res.status(200).send({
+            total: totalproyectos,
+            totalPages: Math.ceil(totalproyectos / limit),
+            currentPage: page,
+            data: proyectos
+        });
     } catch (error) {
-        res.status(500).send({ message: 'Error al listar proyectos del técnico', error });
+        res.status(500).send({ message: 'Error en la solicitud', error });
     }
-};
-
+}
 module.exports = {
     registrar_proyecto,
     listar_proyectos,

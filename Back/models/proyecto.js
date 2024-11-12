@@ -5,26 +5,21 @@ var Schema = mongoose.Schema;
 
 var ProyectoSchema = Schema({
   ID_Proyecto: { type: Number, required: false },
-  ID_Presupuesto_Proyecto: { type: Schema.ObjectId, ref: 'presupuesto', required: true, unique: true },
+  ID_Presupuesto_Proyecto: { type: Schema.ObjectId, ref: 'presupuesto', required: false, unique: true },
   Costo_Total: { type: Number, required: false }, 
-  horario: [ //recurso react para cronograma (react-big-calendar)
+  Horario: [ //recurso react para cronograma (react-big-calendar)
     {       
-        Tecnico: [{  type: Schema.ObjectId, ref: 'usuario', required: false, unique: false }],
+        Tecnico: [{  type: Schema.ObjectId, ref: 'usuario'}],
         fecha_inicio: {type: Date, required: false},
         fecha_final: {type: Date, required: false},
-        Hora_Inicio: { type: String, required: false },
-        Hora_Fin: { type: String, required: false }
+        //Hora_Inicio: { type: String, required: false },
+        //Hora_Fin: { type: String, required: false }
     }
   ],
-  GestionarMaterial: [ //recurso react para cronograma (react-big-calendar)
+  GestionarMaterial: [ 
     {       
-        id_Material: {type: Schema.ObjectId, required: false},
-        
-        Nombre: {type: String, required: false},
-        Categoria: {type: String, required: false},
-        Stock: {type: String, required: false},
-        Fecha_Registro: { type: Date, required: false },
-        Unidad_Medida: { type: String, required: false }
+        id_Material: {type: Schema.ObjectId, ref: 'Material', required: false},
+        Cantidad: {type: Number, required: false}
     }
   ],
   Nombre_Proyecto: { type: String, required: true },

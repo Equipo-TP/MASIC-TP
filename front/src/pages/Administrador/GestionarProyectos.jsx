@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import { listarClientesRequest, obtenerClienteConSolicitudesRequest } from '../../api/auth'; 
 import MenuSideBar from '../../components/MenuSideBar'; 
 import NavBar from '../../components/NavBar'; 
 import ModalCliente from '../../components/ModalCliente';
-import RegistrarProyecto from './RegistrarProyecto'; // Importa el formulario de proyecto
 
 const GestionarProyectos = () => {
   const [clientes, setClientes] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCliente, setSelectedCliente] = useState(null); // Estado para el cliente seleccionado
-  const [solicitudes, setSolicitudes] = useState([]); // Nuevo estado para solicitudes
-  const [showRegistrarProyecto, setShowRegistrarProyecto] = useState(false); // Estado para mostrar el formulario
+  const [selectedCliente, setSelectedCliente] = useState(null);
+  const [solicitudes, setSolicitudes] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,19 +49,6 @@ const GestionarProyectos = () => {
     }
   };
 
-  const handleOpenRegistrarProyecto = () => {
-    setShowRegistrarProyecto(true);
-  };
-
-  const handleCloseRegistrarProyecto = () => {
-    setShowRegistrarProyecto(false);
-  };
-
-  const closeModal = () => {
-    setSelectedCliente(null); 
-    setSolicitudes([]); 
-  };
-
   const filteredClients = clientes.filter(cliente => 
     cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -78,7 +63,7 @@ const GestionarProyectos = () => {
 
           <div className="flex justify-end mb-4">
             <button 
-              onClick={handleOpenRegistrarProyecto} 
+              onClick={() => navigate('/registrar_proyecto')} 
               className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
             >
               Crear Proyecto
@@ -130,11 +115,6 @@ const GestionarProyectos = () => {
           {/* Modal para ver detalles del cliente */}
           {selectedCliente && (
             <ModalCliente cliente={selectedCliente} solicitudes={solicitudes} onClose={closeModal} />
-          )}
-
-          {/* Modal para el formulario de creación de proyectos */}
-          {showRegistrarProyecto && (
-            <RegistrarProyecto onClose={handleCloseRegistrarProyecto} />
           )}
         </div>
       </div>

@@ -75,7 +75,6 @@ const listar_solicitudes_aprobadas_para_presupuesto = async function(req,res) {
     res.status(200).send({ data: reg });
 
 };
-
 //obtener solicitud por ID 
 const obtener_solicitud_por_id = async function(req, res) {
     const id = req.params['id'];

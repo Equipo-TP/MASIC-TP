@@ -1,188 +1,177 @@
-import React, { useState } from 'react';
-import { crearProyectoRequest } from '../../api/auth'; // Importa tu función de API para crear un proyecto
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { crearProyectoRequest, listarPresupuestosAprobados } from '../../api/auth';
+import AsignarMaterial from './AsignarMaterial';
 
-const RegistrarProyecto = ({ onClose }) => {
+const RegistrarProyecto = () => {
+  const navigate = useNavigate();
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [clienteID, setClienteID] = useState('');
-  const [ubicacion, setUbicacion] = useState('');
-  const [tipo, setTipo] = useState('');
-  const [estado, setEstado] = useState('');
-  const [fechaTrabajo, setFechaTrabajo] = useState(''); // Para la matriz de fechas
-  const [tiempoTrabajo, setTiempoTrabajo] = useState(''); // Para la matriz de tiempos
+  const [presupuesto, setPresupuesto] = useState('');
+  const [presupuestos, setPresupuestos] = useState([]);
+  const [clienteNombre, setClienteNombre] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [observaciones, setObservaciones] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+
+  useEffect(() => {
+    const cargarPresupuestos = async () => {
+      try {
+        const respuesta = await listarPresupuestosAprobados();
+        setPresupuestos(respuesta.data);
+      } catch (error) {
+        console.error('Error al cargar los presupuestos aprobados:', error);
+      }
+    };
+
+    cargarPresupuestos();
+  }, []);
+
+  const handlePresupuestoChange = (e) => {
+    const presupuestoID = e.target.value;
+    setPresupuesto(presupuestoID);
+
+    const presupuestoSeleccionado = presupuestos.find((pres) => pres._id === presupuestoID);
+    if (presupuestoSeleccionado) {
+      setClienteNombre(presupuestoSeleccionado.cliente.nombre);
+      setDireccion(presupuestoSeleccionado.cliente.direccion);
+    } else {
+      setClienteNombre('');
+      setDireccion('');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const nuevoProyecto = {
       nombre,
       descripcion,
-      clienteID,
-      ubicacion,
-      tipo,
-      estado,
-      fechaTrabajo: fechaTrabajo.split(','), // Convierte la cadena en un array
-      tiempoTrabajo: tiempoTrabajo.split(','), // Convierte la cadena en un array
+      presupuesto,
+      clienteNombre,
+      direccion,
+      observaciones,
     };
 
     try {
       await crearProyectoRequest(nuevoProyecto);
       alert('Proyecto creado exitosamente');
-      onClose();
+      navigate(-1); // Regresa a la página anterior después de crear el proyecto
     } catch (error) {
       console.error('Error al crear el proyecto:', error);
       alert('Hubo un error al crear el proyecto');
     }
   };
 
+  const handleCancelar = () => {
+    navigate(-1); // Regresa a la página anterior al cancelar
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
-        <h2 className="text-2xl font-bold mb-4">Registrar Nuevo Proyecto</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700">Nombre del Proyecto</label>
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700">Descripción</label>
-            <textarea
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-        {/*  <div className="mb-4">
-              <label htmlFor="solicitud" className="text-sm font-medium text-gray-900 block mb-2">
-                Selecciona un presupuesto
-              </label>
+        <h2 className="text-2xl font-bold mb-4">Registrar Proyecto</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <label className="block text-gray-700">Nombre del proyecto</label>
+              <input
+                type="text"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-gray-700">Descripción</label>
+              <textarea
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                className="w-full p-2 border rounded h-20"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700">Presupuesto</label>
               <select
-                name="solicitud"
-                id="solicitud"
-                value={nuevoPresupuesto.solicitud}
-                onChange={handleSolicitudChange}
-                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                value={presupuesto}
+                onChange={handlePresupuestoChange}
+                className="w-full p-2 border rounded"
                 required
               >
                 <option value="">Seleccione un presupuesto</option>
-                {solicitudes.map(nuevaSolicitud => (
-                  <option key={nuevaSolicitud._id} value={nuevaSolicitud._id}>
-                    {nuevaSolicitud.id}  / {nuevaSolicitud.cliente.nombre} {nuevaSolicitud.cliente.apellidos}
+                {presupuestos.map((presupuesto) => (
+                  <option key={presupuesto._id} value={presupuesto._id}>
+                    {presupuesto._id}
                   </option>
                 ))}
               </select>
-              
-            </div>  */}
-          <div className="mb-4">
-            <label className="block text-gray-700">Presupuesto</label>
-            <input
-              type="text"
-              value={clienteID}
-              onChange={(e) => setClienteID(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700">Cliente</label>
-            <input
-              type="text"
-              value={clienteID}
-              onChange={(e) => setClienteID(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700">Ubicación</label>
-            <input
-              type="text"
-              value={ubicacion}
-              onChange={(e) => setUbicacion(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700">Tipo</label>
-            <input
-              type="text"
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700">Estado</label>
-            <input
-              type="text"
-              value={estado}
-              onChange={(e) => setEstado(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700">Fecha de Trabajo (separada por comas)</label>
-            <input
-              type="text"
-              value={fechaTrabajo}
-              onChange={(e) => setFechaTrabajo(e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="Ejemplo: 2024-10-01,2024-10-02"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700">Tiempo de Trabajo (separado por comas)</label>
-            <input
-              type="text"
-              value={tiempoTrabajo}
-              onChange={(e) => setTiempoTrabajo(e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="Ejemplo: 4,6"
-            />
-          </div>
-
-
-          <div className="flex justify-end">
-          <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Visualizar Imagenes
-            </button>
-          
-            <button
-              type="button"
-              onClick={onClose}
-              className="bg-red-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Crear Proyecto
-            </button>
+            </div>
+            <div>
+              <label className="block text-gray-700">Cliente</label>
+              <input
+                type="text"
+                value={clienteNombre}
+                className="w-full p-2 border rounded"
+                readOnly
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-gray-700">Dirección</label>
+              <input
+                type="text"
+                value={direccion}
+                className="w-full p-2 border rounded"
+                readOnly
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-gray-700">Observaciones del proyecto</label>
+              <textarea
+                value={observaciones}
+                onChange={(e) => setObservaciones(e.target.value)}
+                className="w-full p-2 border rounded h-20"
+              />
+            </div>
+            <div className="flex justify-between col-span-2">
+              <button
+                type="button"
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+                onClick={() => alert('Función para agregar técnicos')}
+              >
+                Agregar Técnicos
+              </button>
+              <button
+                type="button"
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+                onClick={() => setIsModalOpen(true)} // Abre el modal de Asignar Material
+              >
+                Asignar Material
+              </button>
+              <div>
+                <button
+                  type="submit"
+                  className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                >
+                  Crear
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelar}
+                  className="bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
           </div>
         </form>
+        {/* Modal para Asignar Material */}
+        <AsignarMaterial isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </div>
     </div>
   );
 };
 
-export default RegistrarProyecto;
+export default RegistrarProyecto

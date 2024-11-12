@@ -1,6 +1,15 @@
 import axios from 'axios';
 
 const API = 'http://localhost:8000/api';
+export const listarPresupuestosAprobados = async () => {
+  try {
+    const response = await axios.get(`${API}/presupuestos/listar-presupuestos-aprobados`);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error al listar presupuestos aprobados:', error);
+    throw error;
+  }
+};
 
 // Función para registrar un usuario (usuarios normales)
 export const registrousuarioRequest = async (user) => axios.post(`${API}/registro_usuario`, user);
@@ -10,6 +19,9 @@ export const loginRequest = async (user) => axios.post(`${API}/login_user`, user
 
 // Función para listar todos los usuarios
 export const listarUsuariosRequest = async () => axios.get(`${API}/listar_usuarios`);
+
+// Función para listar todos los usuarios por rol
+export const listarUsuariosPorRolRequest = async (rol) => axios.get(`${API}/listar_usuarios_por_rol/${rol}`);
 
 // Función para eliminar un usuario por ID
 export const eliminarUsuarioRequest = async (id) => axios.delete(`${API}/eliminar_usuario/${id}`);
@@ -76,15 +88,12 @@ export const obtenerPresupuestoIDRequest = async (id,headers) => axios.get(`${AP
 export const editarPresupuestoRequest = async (id, presupuesto, headers) => axios.put(`${API}/editar_presupuesto/${id}`, presupuesto, { headers });
 export const editarPresupuestoAdminRequest = async (id, presupuesto, headers) => axios.put(`${API}/editar_presupuesto_admin/${id}`, presupuesto, { headers });
 
-export const listarPresupuestosRequest = async (headers) => {
-  
-  return await axios.get('http://localhost:8000/API/listar_presupuestos', { 
-    headers, 
-  });
-};
+export const listarPresupuestosRequest = async (headers) => { return await axios.get('http://localhost:8000/API/listar_presupuestos', { headers, });};
+
 //export const listarPresupuestosRequest = async () => axios.get(`${API}/listar_presupuestos`);
 export const eliminarPresupuestoRequest = async (id) => axios.delete(`${API}/eliminar_presupuesto/${id}`);
 export const listarPresupuestosVendedoraRequest = async (headers) => { return axios.get(`${API}/listar_presupuestos_vendedora`, { headers }); };
+export const listar_proyectos_por_tecnicoRequest = async (headers) => { return axios.get(`${API}/gestionar_proyectos_tecnico`, { headers }); };
 
 
 export const obtenerUsuarioRequest = async (id) => {return await axios.get(`${API}/usuarios/${id}`);};
@@ -115,5 +124,10 @@ export const registrarMovimientoRequest = async (movimiento) => axios.post(`${AP
 export const listarInventarioRequest = async () => axios.get(`${API}/listar_movimientos'${id}`);
 
 export const eliminarInventarioRequest = async (id) => axios.delete(`${API}/eliminar_movimiento/${id}`);
+
+export const ver_proyecto_por_idRequest = async (id) => {return await axios.post(`${API}/ver_proyecto_por_id/${id}`);};
+export const listar_proyectosRequest = async () => {return await axios.get(`${API}/listar_proyectos`);};
+export const editar_proyecto_Request = async(id,data) => {return await axios.put(`${API}/editar_proyecto_por_id/${id}`, data);};
+
 
 
