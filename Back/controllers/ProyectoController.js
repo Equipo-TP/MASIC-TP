@@ -172,13 +172,13 @@ const editar_proyecto_por_id = async function(req, res) {
                 return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
             }
 
-            for (const tecnicoId of Tecnico) {
+            /* for (const tecnicoId of Tecnico) {
                 const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
                 console.log(`Técnico ${tecnicoId} disponible:`, disponible);
                 if (!disponible) {
                     return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
                 }
-            } 
+            } */
         }
 
         const proyecto = await Proyecto.findByIdAndUpdate(

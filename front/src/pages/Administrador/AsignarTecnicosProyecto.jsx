@@ -55,7 +55,6 @@ const AsignarTecnicoProyecto = () => {
             try {
                 const response = await listar_proyectosRequest();
                 const proyectos = response.data.data;
-                console.log(proyectos);
         
                 const eventosFormat = proyectos.flatMap(proyecto => 
                     proyecto.Horario.map(horario => ({
@@ -65,7 +64,6 @@ const AsignarTecnicoProyecto = () => {
                     }))
                 );
         
-                console.log(eventosFormat);
                 setEventos(eventosFormat);  // Establece los eventos para el calendario
             } catch (error) {
                 console.error('Error al listar proyectos:', error);
