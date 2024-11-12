@@ -9,7 +9,7 @@ var ProyectoSchema = Schema({
   Costo_Total: { type: Number, required: false }, 
   Horario: [ //recurso react para cronograma (react-big-calendar)
     {       
-        Tecnico: [{  type: Schema.ObjectId, ref: 'usuario', required: false, unique: false }],
+        Tecnico: [{  type: Schema.ObjectId, ref: 'usuario'}],
         fecha_inicio: {type: Date, required: false},
         fecha_final: {type: Date, required: false},
         //Hora_Inicio: { type: String, required: false },
