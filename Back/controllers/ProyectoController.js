@@ -165,16 +165,20 @@ const editar_proyecto_por_id = async function(req, res) {
         for (const Horario of data.Horario) {
             const { fecha_inicio, fecha_final, Tecnico } = Horario;
 
+            console.log('Fecha de inicio:', fecha_inicio);
+            console.log('Fecha final:', fecha_final);
+
             if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
                 return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
             }
 
             for (const tecnicoId of Tecnico) {
                 const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
+                console.log(`Técnico ${tecnicoId} disponible:`, disponible);
                 if (!disponible) {
                     return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
                 }
-            }
+            } 
         }
 
         const proyecto = await Proyecto.findByIdAndUpdate(
@@ -198,9 +202,11 @@ const editar_proyecto_por_id = async function(req, res) {
             res.status(404).send({ message: 'Proyecto no encontrado' });
         }
     } catch (error) {
+        console.error('Error al editar proyecto:', error);
         res.status(500).send({ message: 'Error al editar el proyecto', error });
     }
 };
+
 
 // Listar proyectos en los que un técnico específico está involucrado
 const listar_proyectos_por_tecnico = async function(req, res) {

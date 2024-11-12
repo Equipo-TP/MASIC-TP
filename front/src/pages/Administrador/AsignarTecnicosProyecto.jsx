@@ -15,6 +15,11 @@ const AsignarTecnicoProyecto = () => {
     const [tecnicos, setTecnicos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [eventos, setEventos] = useState([]); // Estado para los eventos del calendario
+    const [nuevoHorario, setNuevoHorario] = useState({
+        fecha_inicio: '',
+        fecha_final: '',
+        Tecnico: [] // Puede ser vacío si no se ha seleccionado técnico
+    });
 
     const localizer = dateFnsLocalizer({
         format,
@@ -50,16 +55,18 @@ const AsignarTecnicoProyecto = () => {
             try {
                 const response = await listar_proyectosRequest();
                 const proyectos = response.data.data;
-                console.log(proyectos)
-                const eventosFormat = proyectos.map(proyecto => ({
-                    title: `Proyecto: ${proyecto.Nombre_Proyecto} ${proyecto.Horario}`,
-                    start: new Date(proyecto.Horario.fecha_inicio),
-                    end: new Date(proyecto.Horario.fecha_final)
-                    
-                }));
-                
-                console.log(eventosFormat)
-                setEventos(eventosFormat);
+                console.log(proyectos);
+        
+                const eventosFormat = proyectos.flatMap(proyecto => 
+                    proyecto.Horario.map(horario => ({
+                        title: `Proyecto: ${proyecto.Nombre_Proyecto}`,  // El título sigue siendo el nombre del proyecto
+                        start: new Date(horario.fecha_inicio),  // Fecha de inicio
+                        end: new Date(horario.fecha_final)  // Fecha final
+                    }))
+                );
+        
+                console.log(eventosFormat);
+                setEventos(eventosFormat);  // Establece los eventos para el calendario
             } catch (error) {
                 console.error('Error al listar proyectos:', error);
             }
@@ -71,21 +78,40 @@ const AsignarTecnicoProyecto = () => {
     }, [id]);
 
     const handleFechaInicioChange = (date) => {
-        setProyecto({ ...proyecto, horario: { ...proyecto.horario, fecha_inicio: date } });
+        setNuevoHorario({ ...nuevoHorario, fecha_inicio: date });
     };
 
     const handleFechaFinChange = (date) => {
-        setProyecto({ ...proyecto, horario: { ...proyecto.horario, fecha_final: date } });
+        setNuevoHorario({ ...nuevoHorario, fecha_final: date });
     };
+
+    const handleTecnicoChange = (e) => {
+        const tecnicoId = e.target.value;
+        console.log('Técnico seleccionado:', tecnicoId); // Verifica el valor
+        setNuevoHorario({
+            ...nuevoHorario,
+            Tecnico: [tecnicoId] // Reemplaza con el ID del técnico seleccionado
+        });
+    };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            await editar_proyecto_Request(id, proyecto); // Asegúrate de que esta función esté implementada
-            navigate('/gestionar_proyectos_tecnico'); // Redirige a la ruta deseada después de editar
-        } catch (error) {
-            console.error('Error al editar proyecto:', error);
-            // Manejo de errores si es necesario
+        if (nuevoHorario.fecha_inicio && nuevoHorario.fecha_final && nuevoHorario.Tecnico) {
+            const updatedProyecto = {
+                ...proyecto,
+                Horario: [...proyecto.Horario, nuevoHorario] // Agrega el nuevo horario al proyecto
+            };
+
+            try {
+                await editar_proyecto_Request(id, updatedProyecto); // Asegúrate de que esta función esté implementada
+                //navigate('/gestionar_proyectos_tecnico');  // O cualquier otra redirección que necesites
+                console.log('Funciono')
+            } catch (error) {
+                console.error('Error al editar proyecto:', error);
+            }
+        } else {
+            alert('Por favor complete todos los campos del horario');
         }
     };
 
@@ -123,7 +149,7 @@ const AsignarTecnicoProyecto = () => {
                 <div className="col-span-6 sm:col-span-3">
                     <label className="text-sm font-medium text-gray-900 block mb-2">Fecha de Inicio</label>
                     <Datetime
-                        value={proyecto.Horario.fecha_inicio}
+                        value={nuevoHorario.fecha_inicio}
                         onChange={handleFechaInicioChange}
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                     />
@@ -131,7 +157,7 @@ const AsignarTecnicoProyecto = () => {
                 <div className="col-span-6 sm:col-span-3">
                     <label className="text-sm font-medium text-gray-900 block mb-2">Fecha de Fin</label>
                     <Datetime
-                        value={proyecto.Horario.fecha_final}
+                        value={nuevoHorario.fecha_final}
                         onChange={handleFechaFinChange}
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                     />
@@ -143,8 +169,7 @@ const AsignarTecnicoProyecto = () => {
                         <select
                             name="tecnico"
                             id="tecnico"
-                            value={proyecto.tecnico || ''}
-                            onChange={(e) => setProyecto({ ...proyecto, tecnico: e.target.value })}
+                            onChange={handleTecnicoChange}
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                             required
                         >
