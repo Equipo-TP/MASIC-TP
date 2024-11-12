@@ -93,19 +93,16 @@ const eliminarMaterial = async function (req, res) {
 
 // Registrar un movimiento en el inventario (INGRESO O EGRESO)
 const registrarMovimiento = async function (req, res) {
-    const { _id, cantidad, fecha_mov } = req.body;
+    const data = req.body;
+    const id = req.params['id'];
     try {
         // Validar si existe el material
-        const material = await Material.findById(_id);
+        const material = await Material.findById({_id:id});
         if (!material) {
             return res.status(404).send({ message: 'Material no encontrado' });
         }
         // Crear el movimiento de inventario
-        const nuevoMovimiento = new Inventario({
-            _id,
-            cantidad,
-            fecha_mov
-        });
+        const nuevoMovimiento = new Inventario.create(data);
         // Guardar el movimiento en el inventario
         const movimientoGuardado = await nuevoMovimiento.save();
         // Actualizar el stock del material
@@ -132,7 +129,7 @@ const listarMovimientos = async function (req, res) {
 const obtenerMovimientoPorId = async function (req, res) {
     const id = req.params['id'];
     try {
-        const movimiento = await Inventario.findOne({ _id: id });
+        const movimiento = await Inventario.findOne({ id_material: id });
         if (movimiento) {
             res.status(200).send({ data: movimiento });
         } else {

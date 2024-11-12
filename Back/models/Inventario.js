@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var InventarioSchema = new Schema({
-    _id: { type: Schema.ObjectId, ref: 'Material', required: true },
+    id_material: { type: Schema.ObjectId, ref: 'Material', required: true },
     cantidad: { type: Number, required: true },
     fecha_mov: { type: Date, required: true }
 });
