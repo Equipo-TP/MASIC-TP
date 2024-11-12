@@ -10,7 +10,7 @@ const RegistrarAlmacen = () => {
   const [nombre, setNombre] = useState('');
   const [stock, setStock] = useState(0);
   const [unidadMedida, setUnidadMedida] = useState('');
-  const [fechaRegistro, setFechaRegistro] = useState(new Date().toISOString().substring(0, 10));
+  const [fechaRegistro, setFechaRegistro] = useState(new Date().toISOString()); // Guarda la fecha y hora actual
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -37,13 +37,13 @@ const RegistrarAlmacen = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:8000/api/registro_material', data);
+      await axios.post('http://localhost:8000/api/registro_material', data);
       setSnackbarMessage('Material registrado correctamente');
       setSnackbarSeverity('success');
       setNombre('');
       setStock(0);
       setUnidadMedida('');
-      setFechaRegistro(new Date().toISOString().substring(0, 10));
+      setFechaRegistro(new Date().toISOString()); // Reinicia a la fecha y hora actual
     } catch (error) {
       console.error('Error al registrar el material:', error.response?.data || error.message);
       setSnackbarMessage('Error al registrar el material');
@@ -65,6 +65,16 @@ const RegistrarAlmacen = () => {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
+  };
+
+  const handleFechaChange = (e) => {
+    const selectedDate = e.target.value;
+    const currentTime = new Date().toISOString().substring(11, 19); // Obtiene la hora actual en formato "HH:MM:SS"
+    setFechaRegistro(`${selectedDate}T${currentTime}`); // Combina la fecha seleccionada con la hora actual
+  };
+
+  const handleRegresar = () => {
+    navigate('/gestionar_almacen');
   };
 
   return (
@@ -142,8 +152,8 @@ const RegistrarAlmacen = () => {
                     fullWidth
                     label="Fecha de Registro"
                     type="date"
-                    value={fechaRegistro}
-                    onChange={(e) => setFechaRegistro(e.target.value)}
+                    value={fechaRegistro.substring(0, 10)}
+                    onChange={handleFechaChange}
                     required
                     InputLabelProps={{
                       shrink: true,
@@ -156,6 +166,11 @@ const RegistrarAlmacen = () => {
                   </Button>
                   <Button variant="outlined" color="secondary" onClick={handleCancel}>
                     Cancelar
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
+                  <Button variant="text" color="primary" onClick={handleRegresar}>
+                    Regresar &gt;
                   </Button>
                 </Grid>
               </Grid>
