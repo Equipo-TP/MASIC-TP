@@ -41,9 +41,10 @@ import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto';
 import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
 import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
 
-
-
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
+
+import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
+import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
 
 function App() {
     //const { checkAuth } = useAuth();
@@ -55,6 +56,7 @@ function App() {
         <Route path='/' element={<LoginPage/>}/>
         <Route path='/login_user' element={<LoginPage/>}/>       
         <Route element={<PrivateRoute />}>
+
         <Route path='/logged_user' element={<LoggedUsuario/>}/>
         <Route path='/mi_perfil' element={<MiPerfil/>} />
         <Route path='/registrar_usuario' element={<RegistrarUsuario/>}/>
@@ -91,7 +93,9 @@ function App() {
         <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
-        </Route>     
+        </Route> 
+        <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>     
+
       </Routes>
     </BrowserRouter>
     </UserProvider>

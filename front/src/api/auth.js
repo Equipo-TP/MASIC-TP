@@ -20,6 +20,9 @@ export const loginRequest = async (user) => axios.post(`${API}/login_user`, user
 // Función para listar todos los usuarios
 export const listarUsuariosRequest = async () => axios.get(`${API}/listar_usuarios`);
 
+// Función para listar todos los usuarios por rol
+export const listarUsuariosPorRolRequest = async (rol) => axios.get(`${API}/listar_usuarios_por_rol/${rol}`);
+
 // Función para eliminar un usuario por ID
 export const eliminarUsuarioRequest = async (id) => axios.delete(`${API}/eliminar_usuario/${id}`);
 
@@ -98,8 +101,9 @@ export const obtener_usuario_por_idRequest = async (id) => {return await axios.p
 export const actualizarUsuarioRequest = async (id, data) => {return await axios.put(`/api/usuarios/${id}`, data);};
 
 
-export const ver_proyecto_por_idRequest = async (id, data) => {return await axios.post(`${API}/ver_proyecto_por_id/${id}`, data);};
+export const ver_proyecto_por_idRequest = async (id) => {return await axios.post(`${API}/ver_proyecto_por_id/${id}`);};
 export const listar_proyectosRequest = async () => {return await axios.get(`${API}/listar_proyectos`);};
+export const editar_proyecto_Request = async(id,data) => {return await axios.put(`${API}/editar_proyecto_por_id/${id}`, data);};
 
 
 

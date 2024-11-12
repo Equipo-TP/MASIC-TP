@@ -12,8 +12,8 @@ var ProyectoSchema = Schema({
         Tecnico: [{  type: Schema.ObjectId, ref: 'usuario'}],
         fecha_inicio: {type: Date, required: false},
         fecha_final: {type: Date, required: false},
-        Hora_Inicio: { type: String, required: false },
-        Hora_Fin: { type: String, required: false }
+        //Hora_Inicio: { type: String, required: false },
+        //Hora_Fin: { type: String, required: false }
     }
   ],
   GestionarMaterial: [ 
