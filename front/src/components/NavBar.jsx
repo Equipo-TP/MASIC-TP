@@ -32,13 +32,19 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
     <AppBar
       position="fixed"
       sx={{
-        width: `calc(100% - ${drawerOpen ? 300 : 70}px)`, // Ajusta el ancho del AppBar según el estado del drawer
-        ml: `${drawerOpen ? 300 : 70}px`, // Ajusta el margin-left para que coincida con el estado del drawer
-        backgroundColor: '#004d40', // Un verde que combina con el MenuSideBar y parece serio
-        height: '64px', // Altura fija
-        transition: 'width 0.3s ease, margin-left 0.3s ease', // Transición suave para el cambio de tamaño
+        width: drawerOpen ? 'calc(100% - 275px)' : 'calc(100% - 70px)', // Ancho dinámico
+        ml: drawerOpen ? '275px' : '70px', // Margen izquierdo dinámico
+        backgroundColor: '#004d40',
+        height: '64px',
+        transition: 'width 0.3s ease, margin-left 0.3s ease',
+        // Cambiar estilos cuando la resolución es menor a 768px
+        '@media (max-width: 767px)': {
+          width: drawerOpen ? 'calc(100% - 275px)' : '100%', // Ancho total cuando el tamaño es menor a 768px
+          ml: '0px', // Sin margen izquierdo
+        },
       }}
     >
+      
       <Toolbar>
         {/* Ícono del menú */}
         <IconButton
@@ -56,7 +62,7 @@ function NavBar({ onDrawerToggle, drawerOpen }) {
 
         {/* Información del usuario y logo a la derecha */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="body1" color="inherit" sx={{ mr: 2 }}>
+          <Typography className={`${drawerOpen ? 'hidden' : 'block'} md:block`}variant="body1" color="inherit" sx={{ mr: 2 }}>
             {name ? `${name}`: ''} / {role ? `${role}`: ''}
           </Typography>
           <Tooltip title="Abrir menú de usuario">

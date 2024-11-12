@@ -53,6 +53,8 @@ const EditarSolicitud = () => {
 
     return (
         <form onSubmit={handleSubmit} className="bg-white border-4 rounded-lg shadow relative m-10 p-6 space-y-6">
+
+            {/* Titulo y boton */}
             <div className="flex items-start justify-between border-b rounded-t">
                 <h3 className="text-xl font-semibold">Editar Solicitud</h3>
                 <button
@@ -71,138 +73,143 @@ const EditarSolicitud = () => {
                     </svg>
                 </button>
             </div>
+            
+            {/* Parámetros de la Solicitud */}
+            <div className="p-6 space-y-6 max-h-[72vh] overflow-y-scroll">
+                <div className="grid grid-cols-6 gap-6">
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Vendedor
+                        </label>
+                        <input
+                            type="text"
+                            value={name}
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                            disabled // Solo lectura
+                        />
+                    </div>
 
-            <div className="grid grid-cols-6 gap-6">
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Vendedor
-                    </label>
-                    <input
-                        type="text"
-                        value={name}
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                        disabled // Solo lectura
-                    />
-                </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            ID de Solicitud
+                        </label>
+                        <input
+                            type="text"
+                            value={solicitud.id}
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                            disabled // Solo lectura
+                        />
+                    </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        ID de Solicitud
-                    </label>
-                    <input
-                        type="text"
-                        value={solicitud.id}
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                        disabled // Solo lectura
-                    />
-                </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Cliente
+                        </label>
+                        <input
+                            type="text"
+                            value={solicitud.cliente.nombre + (solicitud.cliente.apellidos ? " " + solicitud.cliente.apellidos : "")}
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                            disabled // Solo lectura
+                        />
+                    </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Cliente
-                    </label>
-                    <input
-                        type="text"
-                        value={solicitud.cliente.nombre + (solicitud.cliente.apellidos ? " " + solicitud.cliente.apellidos : "")}
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                        disabled // Solo lectura
-                    />
-                </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Dirección
+                        </label>
+                        <input
+                            name="direccion"
+                            value={solicitud.direccion}
+                            onChange={handleChange} // Llama a handleChange
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                        />
+                    </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Distrito
+                        </label>
+                        <input
+                            name="distrito"
+                            value={solicitud.distrito}
+                            onChange={handleChange} // Llama a handleChange
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                        />
+                    </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Dirección
-                    </label>
-                    <input
-                        name="direccion"
-                        value={solicitud.direccion}
-                        onChange={handleChange} // Llama a handleChange
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                    />
-                </div>
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Distrito
-                    </label>
-                    <input
-                        name="distrito"
-                        value={solicitud.distrito}
-                        onChange={handleChange} // Llama a handleChange
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                    />
-                </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Características de la obra
+                        </label>
+                        <textarea
+                            name="caracteristicas_obra"
+                            value={solicitud.caracteristicas_obra}
+                            onChange={handleChange} // Llama a handleChange
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                        />
+                    </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Características de la obra
-                    </label>
-                    <textarea
-                        name="caracteristicas_obra"
-                        value={solicitud.caracteristicas_obra}
-                        onChange={handleChange} // Llama a handleChange
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                    />
-                </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Descripción del servicio
+                        </label>
+                        <textarea
+                            name="descripcion_servicio"
+                            value={solicitud.descripcion_servicio}
+                            onChange={handleChange} // Llama a handleChange
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                        />
+                    </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Descripción del servicio
-                    </label>
-                    <textarea
-                        name="descripcion_servicio"
-                        value={solicitud.descripcion_servicio}
-                        onChange={handleChange} // Llama a handleChange
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                    />
-                </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Observaciones
+                        </label>
+                        <textarea
+                            name="observaciones"
+                            value={solicitud.observaciones}
+                            onChange={handleChange} // Llama a handleChange
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                        />
+                    </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Estado
+                        </label>
+                        <select
+                            value={solicitud.estado_1}
+                            onChange={(e) => setSolicitud({ ...solicitud, estado_1: e.target.value })}
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                        >
+                            {estados_1.map((estado, index) => (
+                                <option key={index} value={estado}>
+                                    {estado}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Observaciones
-                    </label>
-                    <textarea
-                        name="observaciones"
-                        value={solicitud.observaciones}
-                        onChange={handleChange} // Llama a handleChange
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                    />
-                </div>
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Estado
-                    </label>
-                    <select
-                        value={solicitud.estado_1}
-                        onChange={(e) => setSolicitud({ ...solicitud, estado_1: e.target.value })}
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                    >
-                        {estados_1.map((estado, index) => (
-                            <option key={index} value={estado}>
-                                {estado}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                    <div className="col-span-6 sm:col-span-3">
+                        <label className="text-sm font-medium text-gray-900 block mb-2">
+                            Estado #2
+                        </label>
+                        <input
+                            type="text"
+                            value={solicitud.estado_2}
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                            disabled // Solo lectura
+                        />
+                    </div>
 
-                <div className="col-span-6 sm:col-span-3">
-                    <label className="text-sm font-medium text-gray-900 block mb-2">
-                        Estado #2
-                    </label>
-                    <input
-                        type="text"
-                        value={solicitud.estado_2}
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                        disabled // Solo lectura
-                    />
                 </div>
-
             </div>
-
+            
+            {/* Boton de enviado */}
             <div className="flex justify-end">
                 <button type="submit" className="bg-green-800 text-white font-semibold py-2 px-4 rounded-lg">
                     Guardar Cambios
                 </button>
             </div>
+
         </form>
     );
 };
