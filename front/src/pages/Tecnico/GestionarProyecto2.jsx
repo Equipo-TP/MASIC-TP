@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const GestionarProyectos = () => {
+const GestionarProyectosTecnico = () => {
   const [proyectos, setProyectos] = useState([]);
   const [presupuestos, setPresupuestos] = useState([]);
   const [solicitudes, setSolicitudes] = useState([]);
@@ -126,14 +126,7 @@ const GestionarProyectos = () => {
         <div className="p-6">
           <div className="relative overflow-x-auto sm:rounded-lg">
             <div className='select-none flex items-center justify-between mb-4'>
-              <h1 className="text-3xl font-bold mb-2">Gestor de Proyectos</h1>
-              <div className="flex justify-end mb-4">
-                <Link to="/registro_solicitud">
-                  <button className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">
-                    Crear Proyectos
-                  </button>
-                </Link>
-              </div>  
+              <h1 className="text-3xl font-bold mb-2">Proyectos Asignados</h1>
             </div>
             <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -193,4 +186,4 @@ const GestionarProyectos = () => {
   );
 };
 
-export default GestionarProyectos;
+export default GestionarProyectosTecnico;

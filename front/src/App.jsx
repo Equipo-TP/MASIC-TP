@@ -43,7 +43,6 @@ import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 
-import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
 import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
 
 function App() {
