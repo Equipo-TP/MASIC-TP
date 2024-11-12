@@ -107,6 +107,22 @@ const listar_usuarios = async function(req, res) {
         res.status(500).send({ message: 'Error al listar los usuarios', error });
     }
 };
+
+//lista a todos los usuarios por rol
+const listar_usuarios_por_rol = async function(req, res) {
+    try {
+        const { rol } = req.params; // Suponiendo que el rol se pasa como parámetro en la URL
+        if (!['Administrador', 'Vendedor', 'Tecnico'].includes(rol)) {
+            return res.status(400).send({ message: 'Rol no válido' });
+        }
+
+        // Obtener usuarios filtrados por rol
+        let usuarios = await User.find({ rol });
+        res.status(200).send({ data: usuarios });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al listar los usuarios por rol', error });
+    }
+};
 //elimina usuario segun id
 const eliminar_usuario = async function(req, res) {
     const id = req.params.id;
@@ -200,6 +216,7 @@ module.exports = {
     login_user,
     registro_usuario,
     listar_usuarios,
+    listar_usuarios_por_rol,
     eliminar_usuario,
     obtener_usuario_por_id,
     actualizar_usuario,

@@ -41,6 +41,8 @@ import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto';
 import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
+import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
+
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -51,42 +53,44 @@ function App() {
         <Route path='/' element={<LoginPage/>}/>
         <Route path='/login_user' element={<LoginPage/>}/>       
         <Route element={<PrivateRoute />}>
-        <Route path='/logged_user' element={<LoggedUsuario/>}/>
-        <Route path='/mi_perfil' element={<MiPerfil/>} />
-        <Route path='/registrar_usuario' element={<RegistrarUsuario/>}/>
-        <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
-        <Route path='/editar_usuario/:id' element={<EditUserPage/>}/>
-        <Route path='/registro_user' element={<RegistrarUsuario/>}/>
-        <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
+          <Route path='/logged_user' element={<LoggedUsuario/>}/>
+          <Route path='/mi_perfil' element={<MiPerfil/>} />
+          <Route path='/registrar_usuario' element={<RegistrarUsuario/>}/>
+          <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
+          <Route path='/editar_usuario/:id' element={<EditUserPage/>}/>
+          <Route path='/registro_user' element={<RegistrarUsuario/>}/>
+          <Route path='/gestionar_usuarios' element={<GestionarUsuarios/>}/>
 
-        <Route path='/gestionar_clientes' element={<GestionarClientes/>}/>
-        <Route path='/editar_cliente/:id' element={<EditarCliente/>}/>
-        <Route path='/ver_cliente/:id' element={<VerCliente/>}/>
-        <Route path='/visualizar_clientes' element={<GestionarClientesA/>}/>
+          <Route path='/gestionar_clientes' element={<GestionarClientes/>}/>
+          <Route path='/editar_cliente/:id' element={<EditarCliente/>}/>
+          <Route path='/ver_cliente/:id' element={<VerCliente/>}/>
+          <Route path='/visualizar_clientes' element={<GestionarClientesA/>}/>
 
-        <Route path='/ver_usuario/:id' element={<VerUsuarioPage/>}/>
-        <Route path='/gestionar_solicitudes' element={<GestionarSolicitudes/>}/>
-        <Route path='/registro_solicitud' element={<RegistroSolicitud/>}/>  
-        <Route path='/ver_solicitud/:id' element={<VerSolicitud/>}/>
-        <Route path='/editar_solicitud/:id' element={<EditarSolicitud/>}/>
+          <Route path='/ver_usuario/:id' element={<VerUsuarioPage/>}/>
+          <Route path='/gestionar_solicitudes' element={<GestionarSolicitudes/>}/>
+          <Route path='/registro_solicitud' element={<RegistroSolicitud/>}/>  
+          <Route path='/ver_solicitud/:id' element={<VerSolicitud/>}/>
+          <Route path='/editar_solicitud/:id' element={<EditarSolicitud/>}/>
 
-        <Route path='/gestion_solicitud' element={<GestionSolicitud />} /> 
-        <Route path='/info_solicitud/:id' element={<InfoSolicitud />} />
-        <Route path='/registrar_tarifa' element={<RegistrarTarifa />} />
-        <Route path='/gestionar_tarifas' element={<GestionarTarifas />} />
-        <Route path='/editar_tarifa/:id' element={<EditTarifaPage />} /> 
+          <Route path='/gestion_solicitud' element={<GestionSolicitud />} /> 
+          <Route path='/info_solicitud/:id' element={<InfoSolicitud />} />
+          <Route path='/registrar_tarifa' element={<RegistrarTarifa />} />
+          <Route path='/gestionar_tarifas' element={<GestionarTarifas />} />
+          <Route path='/editar_tarifa/:id' element={<EditTarifaPage />} /> 
 
-   
-        <Route path='/ver_presupuesto/:id' element={<VerPresupuesto />} />  
-        <Route path='/editar_presupuesto/:id' element={<EditarPresupuesto />} />
-        <Route path='/gestionar_presupuestos' element={<GestionarPresupuestosA/>}/>
-        <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
-        <Route path='/visualizar_presupuesto/:id' element={<VerPresupuestoA />} />
-        <Route path='/visualizar_presupuestos' element={<GestionarPresupuestos/>}/>
+    
+          <Route path='/ver_presupuesto/:id' element={<VerPresupuesto />} />  
+          <Route path='/editar_presupuesto/:id' element={<EditarPresupuesto />} />
+          <Route path='/gestionar_presupuestos' element={<GestionarPresupuestosA/>}/>
+          <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
+          <Route path='/visualizar_presupuesto/:id' element={<VerPresupuestoA />} />
+          <Route path='/visualizar_presupuestos' element={<GestionarPresupuestos/>}/>
 
-        <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
-        <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
-        </Route>     
+          <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
+          <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
+          
+        </Route>
+        <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>     
       </Routes>
     </BrowserRouter>
     </UserProvider>

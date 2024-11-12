@@ -2,6 +2,7 @@
 
 const Proyecto = require('../models/proyecto');
 const Contador = require('../models/contador');
+const Material = require('../models/Material')
 const Presupuesto = require('../models/presupuesto');
 
 // Función para obtener el próximo ID para el proyecto
