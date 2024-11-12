@@ -37,9 +37,10 @@ const RegistrarProyecto = () => {
     setPresupuesto(presupuestoID);
 
     const presupuestoSeleccionado = presupuestos.find((pres) => pres._id === presupuestoID);
+    console.log(presupuestoSeleccionado);
     if (presupuestoSeleccionado) {
-      setClienteNombre(presupuestoSeleccionado.cliente.nombre);
-      setDireccion(presupuestoSeleccionado.cliente.direccion);
+      setClienteNombre(presupuestoSeleccionado.ID_Solicitud_Presupuesto.cliente.nombre);
+      setDireccion(presupuestoSeleccionado.Transporte_Personal);
     } else {
       setClienteNombre('');
       setDireccion('');
