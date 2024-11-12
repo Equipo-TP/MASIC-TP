@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { inventarioAlmacenRequest, registrarMovimientoRequest } from '../../api/auth';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
