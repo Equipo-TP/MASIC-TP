@@ -5,7 +5,8 @@ import { useAuth } from '../../context/AuthContext';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddIcon from '@mui/icons-material/Add';
-
+import { presupuestoSchema } from '../../Schemas/AUTH';
+import {z}   from "zod";
 
 
 const CrearPresupuesto = () => {
@@ -15,12 +16,12 @@ const CrearPresupuesto = () => {
   const [nuevoPresupuesto, setNuevoPresupuesto] = useState({
       ID_Solicitud_Presupuesto: '', // ID de la solicitud seleccionada
       Transporte_Personal: '',
-      Costo_Transporte: '',
+      Costo_Transporte: 0,
       Materiales: '',
-      Costo_Materiales: '',
+      Costo_Materiales: 0,
       instalaciones: [{ // Añadimos aquí el array de instalaciones
         tipo_luminaria: '',
-        cantidad: '',
+        cantidad: 0,
     }],
   });
 
@@ -88,12 +89,12 @@ const CrearPresupuesto = () => {
           ...nuevoPresupuesto,
           ID_Solicitud_Presupuesto: solicitud._id ,
           Transporte_Personal: solicitud.distrito || '',
-          Costo_Transporte: solicitud.distrito || '',
+          Costo_Transporte: solicitud.distrito || 0,
           Materiales: solicitud.materiales || '',
-          Costo_Materiales: solicitud.costo_materiales || '',
+          Costo_Materiales: solicitud.costo_materiales || 0,
           instalaciones: [{
             tipo_luminaria: solicitud.tipo_luminaria || '',
-            cantidad: solicitud.cantidad || '',
+            cantidad: solicitud.cantidad || 0,
           }],
         });
       } catch (error) {
@@ -168,7 +169,6 @@ const handleSolicitudChange2 = (event) => {
   const selectedSolicitud = solicitudes.find((sol) => sol._id === selectedSolicitudId);
   setNuevaSolicitud(selectedSolicitud);
 };*/
-console.log(nuevoPresupuesto);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -184,7 +184,6 @@ console.log(nuevoPresupuesto);
         });
     }
 };
-console.log(solicitudes)
   /*const handleNuevaSolicitudSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -209,16 +208,35 @@ console.log(solicitudes)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-        // Registrar el presupuesto
-        await registrarPresupuestoRequest(nuevoPresupuesto);
-        alert('Presupuesto registrado');
-    } catch (error) {
-        console.error('Error al registrar el presupuesto:', error);
-        alert('Hubo un error al registrar el presupuesto.');
+
+    // Asegúrate de que todos los valores numéricos son números
+  const presupuestoParaValidar = {
+    ...nuevoPresupuesto,
+    Costo_Transporte: parseFloat(nuevoPresupuesto.Costo_Transporte),
+    Costo_Materiales: parseFloat(nuevoPresupuesto.Costo_Materiales),
+    instalaciones: nuevoPresupuesto.instalaciones.map(instalacion => ({
+      ...instalacion,
+      cantidad: parseInt(instalacion.cantidad, 10), // Asegurarse de que la cantidad sea un número entero
+      costo_total: instalacion.costo_total ? parseFloat(instalacion.costo_total) : undefined, // Si existe, convertir a número
+    })),
+  };
+  
+  try {
+    // Validar con Zod
+    presupuestoSchema.parse(presupuestoParaValidar);
+    // Si la validación es exitosa, registrar el presupuesto
+    await registrarPresupuestoRequest(presupuestoParaValidar);
+    alert('Presupuesto registrado');
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      console.error('Errores de validación:', error.errors);
+      alert(`Errores de validación: ${error.errors.map(err => err.message).join(', ')}`);
+    } else {
+      console.error('Error al crear presupuesto:', error);
+      alert('Hubo un error al crear presupuesto.');
     }
+  }
 };
- console.log(nuevaSolicitud);
 
 
   return (

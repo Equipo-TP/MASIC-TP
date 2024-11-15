@@ -3,6 +3,8 @@ import { obtenerSolicitudPorIdRequest } from '../../api/auth'; // Asegúrate de 
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { editarSolicitudRequest } from '../../api/auth'; // Función para editar la solicitud
+import { solicitudSchema } from '../../Schemas/AUTH';
+import {z}   from "zod";
 
 const EditarSolicitud = () => {
     const navigate = useNavigate();
@@ -39,11 +41,17 @@ const EditarSolicitud = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            solicitudSchema.parse(solicitud);
             await editarSolicitudRequest(id, solicitud); // Asegúrate de que esta función esté implementada
             navigate('/gestionar_solicitudes'); // Redirige a la ruta deseada después de editar
         } catch (error) {
-            console.error('Error al editar la solicitud:', error);
-            // Manejo de errores si es necesario
+            if (error instanceof z.ZodError) {
+                console.error('Errores de validación:', error.errors);
+                alert(`Errores de validación: ${error.errors.map(err => err.message).join(', ')}`);
+              } else {
+                console.error('Error al registrar:', error);
+                alert('Hubo un error al registrar la solicitud.');
+              }
         }
     };
 

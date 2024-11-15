@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { listarClientesRequest, obtenerClientePorIdRequest, registroClienteRequest, registroSolicitudRequest } from '../../api/auth'; // Asegúrate de importar correctamente tus funciones
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { solicitudSchema, nuevoClienteSchema } from '../../Schemas/AUTH';
+import {z}   from "zod";
 
 const SolicitudForm = () => {
     const navigate = useNavigate();
@@ -86,42 +88,59 @@ const SolicitudForm = () => {
             });
         }
     };
-    //Ingreso de nuevo cliente
+    //Handle para nuevo cliente
     const handleNuevoClienteSubmit = async (e) => {
         e.preventDefault();
+      
+        // Validar datos del nuevo cliente usando Zod
         try {
-            const clienteResponse = await registroClienteRequest(datosNuevoCliente);
-            const nuevoClienteId = clienteResponse.data._id;
-            setNuevaSolicitud({ ...nuevaSolicitud, cliente: nuevoClienteId });
-            alert('Nuevo cliente registrado con éxito.');
-            setNuevoCliente(false); // Oculta el formulario de nuevo cliente
-            setDatosNuevoCliente({ // Reinicia los campos del nuevo cliente
-                nombre: '',
-                apellidos: '',
-                tipo: 'Persona Natural',
-                ruc: '',
-                email: '',
-                telefono: '',
-            });
+          nuevoClienteSchema.parse(datosNuevoCliente);
+          
+          const clienteResponse = await registroClienteRequest(datosNuevoCliente);
+          const nuevoClienteId = clienteResponse.data._id;
+          setNuevaSolicitud({ ...nuevaSolicitud, cliente: nuevoClienteId });
+          alert('Nuevo cliente registrado con éxito.');
+          setNuevoCliente(false); // Oculta el formulario de nuevo cliente
+          setDatosNuevoCliente({ // Reinicia los campos del nuevo cliente
+            nombre: '',
+            apellidos: '',
+            tipo: 'Persona Natural',
+            ruc: '',
+            email: '',
+            telefono: '',
+          });
         } catch (error) {
+          if (error instanceof z.ZodError) {
+            console.error('Errores de validación:', error.errors);
+            alert(`Errores de validación: ${error.errors.map(err => err.message).join(', ')}`);
+          } else {
             console.error('Error al registrar el nuevo cliente:', error);
             alert('Hubo un error al registrar el nuevo cliente.');
+          }
         }
         fetchClientes();
-    };
+      };
     // Manejar el registro de la solicitud
     const handleSubmit = async (e) => {
         e.preventDefault();
+      
+        // Validar datos de la solicitud usando Zod
         try {
-            // Registrar la solicitud
-            await registroSolicitudRequest(nuevaSolicitud);
-            alert('Solicitud registrada');
-            navigate('/gestionar_solicitudes');
+          solicitudSchema.parse(nuevaSolicitud);
+      
+          await registroSolicitudRequest(nuevaSolicitud);
+          alert('Solicitud registrada');
+          navigate('/gestionar_solicitudes');
         } catch (error) {
+          if (error instanceof z.ZodError) {
+            console.error('Errores de validación:', error.errors);
+            alert(`Errores de validación: ${error.errors.map(err => err.message).join(', ')}`);
+          } else {
             console.error('Error al registrar:', error);
             alert('Hubo un error al registrar la solicitud.');
+          }
         }
-    };
+      };
     
     return (
         <div className="bg-white border-4 rounded-lg shadow relative m-10">

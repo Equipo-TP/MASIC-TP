@@ -4,14 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { confirmAlert } from 'react-confirm-alert';
 import { useForm } from 'react-hook-form';
+import { presupuestoSchema } from '../../Schemas/AUTH';
+import {z}   from "zod";
 
 const EditarPresupuesto = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const { name } = useAuth();
     const [presupuesto, setPresupuesto] = useState(null);
-    const [solicitud, setSolicitud] = useState(null);
-    const [nombreCliente, setNombreCliente] = useState('');
     const [ luminaria, setLuminaria] = useState([]); // Lista de tipos de luminarias a instalar par el menú desplegable
 
     const { register , handleSubmit, reset, formState: { errors } } = useForm({
@@ -49,7 +48,17 @@ const EditarPresupuesto = () => {
     
     //metodo para actualizar el estado del presupuesto
     const onSubmit = async (data) => {
+        data.Costo_Materiales = Number(data.Costo_Materiales);
+        data.Costo_Transporte = Number(data.Costo_Transporte);
+
+        // Asegúrate de que los valores sean números válidos
+        if (isNaN(data.Costo_Materiales) || isNaN(data.Costo_Transporte)) {
+        alert("Por favor ingresa valores válidos para Costo Materiales y Costo Transporte.");
+        return;
+        }
+
         try {
+            presupuestoSchema.parse(data)
             const token = localStorage.getItem('token');
             const headers = {
                 'Authorization': `Bearer ${token}`,
@@ -61,7 +70,13 @@ const EditarPresupuesto = () => {
             alert("Presupuesto actualizado correctamente");
             navigate('/gestionar_presupuestos');
         } catch (error) {
-            console.error('Error al actualizar el presupuesto:', error);
+            if (error instanceof z.ZodError) {
+                console.error('Errores de validación:', error.errors);
+                alert(`Errores de validación: ${error.errors.map(err => err.message).join(', ')}`);
+              } else {
+                console.error('Error al actualizar presupuesto:', error);
+                alert('Hubo un error al actualizar presupuesto.');
+              }
         }
     };
 
@@ -217,12 +232,11 @@ const EditarPresupuesto = () => {
                                             <tr key={index}>
                                                 <td className="border border-gray-300 px-4 py-2">
                                                 <select
-                                               name="tipo_luminaria"
-                                               defaultValue={instalacion.tipo_luminaria._id}
-                                               {...register(`instalaciones.${index}.tipo_luminaria`)}
-                                               className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                               
-                                             >
+                                                    name="tipo_luminaria"
+                                                    defaultValue={instalacion.tipo_luminaria._id}
+                                                    {...register(`instalaciones.${index}.tipo_luminaria`)}
+                                                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                                                >
                                                 {instalacion.tipo_luminaria.tipo_luminaria}
                                                {luminaria.map(tipoluminaria => (
                                                  <option key={tipoluminaria._id} value={tipoluminaria._id}>
@@ -269,7 +283,7 @@ const EditarPresupuesto = () => {
             <div className="col-span-6 sm:col-span-3">
               <label className="block text-gray-700 text-sm font-bold mb-2">Costo Materiales</label>
               <input
-                type="text"
+                type="number"
                 name="Costo_Materiales"
                 defaultValue={presupuesto.Costo_Materiales}
                 {...register('Costo_Materiales')}
@@ -281,7 +295,7 @@ const EditarPresupuesto = () => {
             <div className="col-span-6 sm:col-span-3">
               <label className="block text-gray-700 text-sm font-bold mb-2">Costo de Transporte de Personal</label>
               <input
-                type="text"
+                type="number"
                 name="Costo_Transporte"
                 defaultValue={presupuesto.Costo_Transporte}
                 {...register('Costo_Transporte')}
