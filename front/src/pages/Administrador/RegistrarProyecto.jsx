@@ -13,6 +13,7 @@ const RegistrarProyecto = () => {
   const [direccion, setDireccion] = useState('');
   const [observaciones, setObservaciones] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const [datosFormulario, setDatosFormulario] = useState({});
 
   useEffect(() => {
     const cargarPresupuestos = async () => {
@@ -31,6 +32,13 @@ const RegistrarProyecto = () => {
 
     cargarPresupuestos();
   }, []);
+
+  // Función para manejar el envío de datos desde el modal
+  const handleNuevoMaterialSubmit = (data) => {
+    setDatosFormulario(data); // Almacena los datos del modal en el estado del formulario
+    console.log('Datos del formulario:', data);
+    setIsModalOpen(false); // Cierra el modal
+};
 
   const handlePresupuestoChange = (e) => {
     const presupuestoID = e.target.value;
@@ -51,15 +59,16 @@ const RegistrarProyecto = () => {
     e.preventDefault();
 
     const nuevoProyecto = {
-      nombre,
-      descripcion,
-      presupuesto,
+      Nombre_Proyecto: nombre,
+      Descripcion: descripcion,
+      ID_Presupuesto_Proyecto: presupuesto,
       clienteNombre,
       direccion,
-      observaciones,
+      Observacion: observaciones,
     };
 
     try {
+      console.log('Datos del proyecto:', nuevoProyecto);
       await crearProyectoRequest(nuevoProyecto);
       alert('Proyecto creado exitosamente');
       navigate(-1); // Regresa a la página anterior después de crear el proyecto
@@ -148,6 +157,10 @@ const RegistrarProyecto = () => {
               >
                 Asignar Material
               </button>
+              {isModalOpen && (
+                <AsignarMaterial onSubmit={handleNuevoMaterialSubmit} />
+            )}
+
               <div>
                 <button
                   type="submit"
