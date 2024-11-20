@@ -86,7 +86,7 @@ const registrar_proyecto = async function(req, res) {
         //console.log(data.GestionarMaterial.length);
         if(Array.isArray(data.GestionarMaterial) && data.GestionarMaterial.length > 0) {
         for (const material of data.GestionarMaterial) {
-            const materialData = await Material.findById(material.id_Material);
+            const materialData = await Material.findById(material.id_Material).populate('nombre');
             console.log(materialData);
             if (materialData) {
                 materialData.stock -= material.Cantidad;

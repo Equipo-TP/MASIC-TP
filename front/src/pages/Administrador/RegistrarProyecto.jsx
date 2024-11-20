@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { crearProyectoRequest, listarPresupuestosAprobados } from '../../api/auth';
+import { crearProyectoRequest, listarPresupuestosAprobados, listarAlmacenesRequest } from '../../api/auth';
 import AsignarMaterial from './AsignarMaterial';
 
 const RegistrarProyecto = () => {
@@ -14,6 +14,26 @@ const RegistrarProyecto = () => {
   const [observaciones, setObservaciones] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
   const [datosFormulario, setDatosFormulario] = useState({});
+  const [gestionarMaterial, setGestionarMaterial] = useState([]); // Estado para almacenar materiales
+  const [materiales, setMateriales] = useState([]); // Lista de materiales desde la API
+
+  useEffect(() => {
+    const fetchMateriales = async () => {
+        try {
+            const response = await listarAlmacenesRequest();
+            setMateriales(response.data.data || []);
+        } catch (error) {
+            console.error("Error al listar materiales:", error);
+        }
+    };
+    fetchMateriales();
+}, []);
+  console.log(materiales);
+  const handleNuevoMaterialSubmit = (materiales) => {
+      setGestionarMaterial(materiales); // Guardar los materiales seleccionados
+      console.log(materiales);
+      setIsModalOpen(false); // Cierra el modal
+  };
 
   useEffect(() => {
     const cargarPresupuestos = async () => {
@@ -34,11 +54,11 @@ const RegistrarProyecto = () => {
   }, []);
 
   // Función para manejar el envío de datos desde el modal
-  const handleNuevoMaterialSubmit = (data) => {
+  /*const handleNuevoMaterialSubmit = (data) => {
     setDatosFormulario(data); // Almacena los datos del modal en el estado del formulario
     console.log('Datos del formulario:', data);
     setIsModalOpen(false); // Cierra el modal
-};
+};*/
 
   const handlePresupuestoChange = (e) => {
     const presupuestoID = e.target.value;
@@ -57,26 +77,19 @@ const RegistrarProyecto = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const nuevoProyecto = {
-      Nombre_Proyecto: nombre,
-      Descripcion: descripcion,
-      ID_Presupuesto_Proyecto: presupuesto,
-      clienteNombre,
-      direccion,
-      Observacion: observaciones,
+        Nombre_Proyecto: nombre,
+        Descripcion: descripcion,
+        ID_Presupuesto_Proyecto: presupuesto,
+        GestionarMaterial: gestionarMaterial, // Agregar los materiales al proyecto
     };
-
     try {
-      console.log('Datos del proyecto:', nuevoProyecto);
-      await crearProyectoRequest(nuevoProyecto);
-      alert('Proyecto creado exitosamente');
-      navigate(-1); // Regresa a la página anterior después de crear el proyecto
+        await crearProyectoRequest(nuevoProyecto);
+        alert("Proyecto creado exitosamente");
     } catch (error) {
-      console.error('Error al crear el proyecto:', error);
-      alert('Hubo un error al crear el proyecto');
+        console.error("Error al crear el proyecto:", error);
     }
-  };
+};
 
   const handleCancelar = () => {
     navigate(-1); // Regresa a la página anterior al cancelar
@@ -150,16 +163,32 @@ const RegistrarProyecto = () => {
               />
             </div>
             <div className="flex justify-between col-span-2">
-              <button
-                type="button"
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-                onClick={() => setIsModalOpen(true)} // Abre el modal de Asignar Material
-              >
-                Asignar Material
-              </button>
-              {isModalOpen && (
-                <AsignarMaterial onSubmit={handleNuevoMaterialSubmit} />
-            )}
+            <button
+                      type="button"
+                      onClick={() => setIsModalOpen(true)}
+                      className="bg-gray-500 text-white px-4 py-2 rounded"
+                  >
+                      Asignar Material
+                  </button>
+                  <AsignarMaterial
+                      isOpen={isModalOpen}
+                      onSubmit={handleNuevoMaterialSubmit}
+                      onClose={() => setIsModalOpen(false)}
+                  />
+                  
+                  {/* Mostrar los materiales seleccionados */}
+                  {/* Textarea para mostrar materiales asignados */}
+        <textarea
+          className="w-full p-2 border rounded-lg"
+          rows="5"
+          readOnly
+          value={gestionarMaterial.map((material, index) => {
+            console.log(material.id_Material);
+            const materialEncontrado = materiales.find((item) => item._id === material.id_Material);
+            console.log(materialEncontrado);
+            return `Material ${index + 1}: ${materialEncontrado ? materialEncontrado.nombre: 'Desconocido'}, Cantidad: ${material.Cantidad}`;
+          }).join("\n")} // Unir los materiales en un solo texto con saltos de línea
+           />
 
               <div>
                 <button
@@ -179,8 +208,7 @@ const RegistrarProyecto = () => {
             </div>
           </div>
         </form>
-        {/* Modal para Asignar Material */}
-        <AsignarMaterial isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        
       </div>
     </div>
   );
