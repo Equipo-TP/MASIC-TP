@@ -166,7 +166,7 @@ const RegistrarProyecto = () => {
             <button
                       type="button"
                       onClick={() => setIsModalOpen(true)}
-                      className="bg-gray-500 text-white px-4 py-2 rounded"
+                      className="bg-gray-500 text-white px-4 py-2 m-4 rounded"
                   >
                       Asignar Material
                   </button>
@@ -179,7 +179,7 @@ const RegistrarProyecto = () => {
                   {/* Mostrar los materiales seleccionados */}
                   {/* Textarea para mostrar materiales asignados */}
         <textarea
-          className="w-full p-2 border rounded-lg"
+          className="w-full p-2 border rounded-lg mr-3"
           rows="5"
           readOnly
           value={gestionarMaterial.map((material, index) => {
@@ -190,7 +190,7 @@ const RegistrarProyecto = () => {
           }).join("\n")} // Unir los materiales en un solo texto con saltos de línea
            />
 
-              <div>
+              <div className="block w-full ">
                 <button
                   type="submit"
                   className="bg-green-500 text-white px-4 py-2 rounded mr-2"
