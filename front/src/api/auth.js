@@ -1,15 +1,7 @@
 import axios from 'axios';
 
 const API = 'http://localhost:8000/api';
-export const listarPresupuestosAprobados = async () => {
-  try {
-    const response = await axios.get(`${API}/presupuestos/listar-presupuestos-aprobados`);
-    return response.data.data;
-  } catch (error) {
-    console.error('Error al listar presupuestos aprobados:', error);
-    throw error;
-  }
-};
+export const listarPresupuestosAprobados = async () =>  axios.get(`${API}/listar_presupuestos_aceptados_para_proyectos`);
 
 // Función para registrar un usuario (usuarios normales)
 export const registrousuarioRequest = async (user) => axios.post(`${API}/registro_usuario`, user);
@@ -45,9 +37,7 @@ export const obtenerClienteRequest = async (id) => {
   }
 };
 
-export const crearProyectoRequest = (proyectoData) => {
-  return axios.post('/api/proyectos', proyectoData); 
-};
+export const crearProyectoRequest = async (data) => axios.post(`${API}/registrar_proyecto`, data); 
 // Función para actualizar un cliente específico por ID
 export const actualizarClienteRequest = async (id, cliente) => axios.put(`${API}/editar_cliente/${id}`, cliente);
 
