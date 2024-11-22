@@ -159,10 +159,10 @@ const GestionarProyectos = () => {
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.nombre} {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.direccion} </td>
                                                       
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
-                      <Link to={`/ver_solicitud/${proyecto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                      <Link to={`/ver_proyectos/${proyecto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Ver
                       </Link>
-                      <Link to={`/ver_solicitud/${proyecto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                      <Link to={`/ver_proyectos/${proyecto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Editar
                       </Link>
                     </td>

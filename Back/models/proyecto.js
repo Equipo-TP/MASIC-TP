@@ -33,6 +33,12 @@ var ProyectoSchema = Schema({
         fecha: {type: Date, required: false} 
     }
   ],
+  Cobro: [ //por cobrar, cobrado parcial, cobrado totalmente
+    {
+        estado_de_cobro: {type: String,default: 'Por cobrar', required: false}, 
+        cantidad: { type: Number, required: false }
+    }
+  ],
   createdAt: { type: Date, default: Date.now, required: true }
 });
 module.exports = mongoose.model('proyecto', ProyectoSchema);

@@ -25,40 +25,7 @@ async function verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_fin
     return !conflicto;
 }
 
-/* Registrar un nuevo proyecto
-const registrar_proyecto = async function(req, res) {
-    try {
-        const data = req.body;
-        const nuevoId = await obtenerProximoId('proyectos');
-        data.ID_Proyecto = nuevoId;
 
-        for (const Horario of data.Horario) {
-            const { fecha_inicio, fecha_final, Tecnico } = Horario;
-
-            if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
-                return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
-            }
-
-            for (const tecnicoId of Tecnico) {
-                const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
-                if (!disponible) {
-                    return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
-                }
-            }
-        }
-
-        const proyectoExistente = await Proyecto.findOne({ ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto });
-        if (!proyectoExistente) {
-            const nuevoProyecto = await Proyecto.create(data);
-            res.status(200).send({ data: nuevoProyecto });
-        } else {
-            res.status(400).send({ message: 'El proyecto ya existe para este presupuesto' });
-        }
-    } catch (error) {
-        res.status(500).send({ message: 'Error al registrar el proyecto', error });
-    }
-};
-*/
 const registrar_proyecto = async function(req, res) {
     try {
         const data = req.body;
@@ -125,7 +92,8 @@ const listar_proyectos = async function(req, res) {
                 }
             })
             .populate('Horario.Tecnico')
-            .populate('Incidencias.afectado');
+            .populate('Incidencias.afectado')
+            .populate('Cobro.estado_de_cobro');
         res.status(200).send({ data: proyectos });
     } catch (error) {
         res.status(500).send({ message: 'Error al listar proyectos', error });
@@ -145,7 +113,8 @@ const ver_proyecto_por_id = async function(req, res) {
                 }
             })
             .populate('Horario.Tecnico')
-            .populate('Incidencias.afectado');
+            .populate('Incidencias.afectado')
+            .populate('Cobro.estado_de_cobro');
         if (proyecto) {
             res.status(200).send({ data: proyecto });
         } else {
@@ -187,7 +156,8 @@ const editar_proyecto_por_id = async function(req, res) {
                 Descripcion: data.Descripcion,
                 Estado: data.Estado,
                 Observacion: data.Observacion,
-                Incidencias: data.Incidencias
+                Incidencias: data.Incidencias,
+                Cobro: data.Cobro
             },
             { new: true }
         );
