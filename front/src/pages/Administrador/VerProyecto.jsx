@@ -40,41 +40,53 @@ useEffect(() => {
   fetchProyecto();
 }, [id, navigate]);
 console.log(proyecto)
-/*
+
 useEffect(() => {
   const fetchPresupuesto = async () => {
-    try {
-      const response = await obtenerPresupuestoIDRequest(proyecto.ID_Presupuesto_Proyecto);
-      setPresupuesto(response.data.data); // Suponiendo que el proyecto se encuentra en `response.data.data`
-      setIsLoading(false);
+      try {
+        const presupuestos = await Promise.all(
+          proyecto.map(async (proyectos) => {
+            const response = await obtenerPresupuestoIDRequest(proyectos.ID_Presupuesto_Proyecto);
+            console.log(response.data);
+            return response.data.data; 
+          })
+        );
+        setPresupuestos(presupuestos);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error al obtener la solicitud:', error);
+      }
+    };
 
-    } catch (error) {
-      console.error('Error al obtener el presupuesto:', error);
-      alert('No se pudo cargar el presupuesto.');
-      navigate(-1); // Regresa a la página anterior si hay un error
-    }
-  };
+      fetchPresupuesto();
+    
+  }, [proyecto]);
 
-  fetchPresupuesto();
-}, [proyecto, navigate]);
+  useEffect(() => {
+    const fetchSolicitud = async () => {
+        try {
+          const solicitudes = await Promise.all(
+            presupuesto.map(async (presupuesto) => {
+             // const response = await obtenerSolicitudPorIdRequest(presupuesto.ID_Solicitud_Presupuesto);
+             const solicitudId = presupuesto.ID_Solicitud_Presupuesto._id || presupuesto.ID_Solicitud_Presupuesto;
+             
+             const response = await obtenerSolicitudPorIdRequest(solicitudId);
+             console.log(response.data);
+              return response.data.data; 
+            })
+          );
+          setSolicitudes(solicitudes);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Error al obtener la solicitud:', error);
+        }
+      };
+    
+      
+        fetchSolicitud();
+      
+    }, [presupuesto]);
 
-useEffect(() => {
-  const fetchSolicitud = async () => {
-    try {
-      const response = await obtener_solicitud_por_idRequest(presupuesto.ID_Solicitud_Presupuesto);
-      setSolicitud(response.data.data); // Suponiendo que el proyecto se encuentra en `response.data.data`
-      setIsLoading(false);
-
-    } catch (error) {
-      console.error('Error al obtener la solicitud:', error);
-      alert('No se pudo cargar la solicitud.');
-      navigate(-1); // Regresa a la página anterior si hay un error
-    }
-  };
-
-  fetchSolicitud();
-}, [presupuesto, navigate]);
-*/
 if (isLoading) {
   return <div>Cargando proyecto...</div>;
 }
