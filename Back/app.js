@@ -20,6 +20,14 @@ var presupuesto_tarifa_route = require('./routes/presupuesto_tarifa');
 var material_route = require('./routes/materialRoutes');
 var inventario_route = require('./routes/inventarioRoutes');
 
+// Verificar si la variable de entorno está vacía
+/*const DB_URI = process.env.DB_URI;
+
+if (!DB_URI || DB_URI.trim() === '') {
+    console.error('Error: No se ha proporcionado la URI de la base de datos.');
+    process.exit(1);  // Termina la ejecución si no hay URI
+}*/
+
 
 //llamamos a la variable mongoose para que se conecte con mongodb al puerto 27017
 mongoose.connect('mongodb+srv://valery:proyectotp24@masic.xd5ik.mongodb.net/Masic', {useUnifiedTopology: true, useNewUrlParser: true})

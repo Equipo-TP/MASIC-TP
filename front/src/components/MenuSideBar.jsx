@@ -22,22 +22,20 @@ function MenuSideBar({ open }) {
 
   // Definir los ítems del menú y los roles permitidos para cada uno
   const menuItems = [
-    { icon: <PersonIcon />, text: 'Gestionar usuario', path: '/gestionar_usuarios', roles: ['Administrador'] },
     { icon: <GroupIcon />, text: 'Ver solicitudes', path: '/gestion_solicitud', roles: ['Administrador'] },
     { icon: <BudgetIcon />, text: 'Gestionar presupuestos', path: '/gestionar_presupuestos', roles: ['Administrador'] },
     { icon: <BudgetIcon />, text: 'Gestionar presupuestos', path: '/visualizar_presupuestos', roles: ['Vendedor'] },
-    { icon: <InventoryIcon />, text: 'Control de inventario', path: '/control_inventario', roles: ['Administrador', 'Tecnico'] },
+    { icon: <ProjectIcon />, text: 'Gestionar proyectos', path: '/gestionar_proyectos', roles: ['Administrador'] },
     { icon: <ProjectIcon />, text: 'Gestionar programación de proyectos', path: '/gestionar_programacion_proyectos', roles: ['Administrador', 'Tecnico'] },
     { icon: <ClientIcon />, text: 'Gestionar clientes', path: '/gestionar_clientes', roles: ['Vendedor'] },
-    { icon: <PersonnelIcon />, text: 'Gestionar personal', path: '/gestionar_personal', roles: ['Administrador'] },
     { icon: <RateIcon />, text: 'Gestionar tarifas', path: '/gestionar_tarifas', roles: ['Administrador'] },
-    { icon: <ProjectIcon />, text: 'Gestionar proyectos', path: '/gestionar_proyectos', roles: ['Administrador'] },
     { icon: <ProjectIcon />, text: 'Gestionar proyectos', path: '/gestionar_proyectos_tecnico', roles: ['Tecnico'] },
     { icon: <StateIcon />, text: 'Gestionar estado de cobro', path: '/gestionar_estado_cobro', roles: ['Administrador', 'Vendedor'] },
     { icon: <CalendarIcon />, text: 'Visualizar cronograma', path: '/visualizar_cronograma', roles: ['Administrador', 'Tecnico'] },
     { icon: <ProjectIcon />, text: 'Gestionar solicitudes', path: '/gestionar_solicitudes', roles: ['Vendedor'] },
     { icon: <ProjectIcon />, text: 'Visualizar clientes', path: '/visualizar_clientes', roles: ['Administrador'] },
-    { icon: <ProjectIcon />, text: 'Gestionar Almacen', path: '/gestionar_almacen', roles: ['Administrador'] },
+    { icon: <InventoryIcon />, text: 'Gestionar Almacén', path: '/gestionar_almacen', roles: ['Administrador'] },
+    { icon: <PersonIcon />, text: 'Gestionar usuario', path: '/gestionar_usuarios', roles: ['Administrador'] },
 
   ];
 

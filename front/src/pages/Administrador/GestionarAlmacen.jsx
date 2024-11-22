@@ -92,7 +92,7 @@ const GestionarAlmacen = () => {
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
           <div className="relative overflow-x-auto sm:rounded-lg">
-            <h1 className="text-3xl font-bold mb-2">Gestionar Almacen</h1>
+            <h1 className="text-3xl font-bold mb-2">Gestionar Almacén</h1>
             <p className="mb-6">Este módulo lista todos los almacenes de la empresa.</p>
 
             {/* Fila para el filtro, input y botones */}

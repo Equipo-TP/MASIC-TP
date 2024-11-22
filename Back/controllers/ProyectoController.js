@@ -67,7 +67,7 @@ const registrar_proyecto = async function(req, res) {
         data.ID_Proyecto = nuevoId;
 
         // Validar fechas de Horario y disponibilidad de técnico
-        for (const Horario of data.Horario) {
+        /*for (const Horario of data.Horario) {
             const { fecha_inicio, fecha_final, Tecnico } = Horario;
 
             if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
@@ -80,9 +80,10 @@ const registrar_proyecto = async function(req, res) {
                     return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
                 }
             }
-        }
+        }*/
 
         // Procesar y actualizar stock en GestionarMaterial
+        if(Array.isArray(data.GestionarMaterial) && data.GestionarMaterial.length > 0) {
         for (const material of data.GestionarMaterial) {
             const materialData = await Material.findById(material.id_Material);
 
@@ -99,7 +100,7 @@ const registrar_proyecto = async function(req, res) {
             } else {
                 return res.status(404).send({ message: `El material con ID ${material.id_Material} no existe.` });
             }
-        }
+        }} else{ console.log('no hay materiales');}
 
         // Verificar si el proyecto ya existe
         const proyectoExistente = await Proyecto.findOne({ ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto });

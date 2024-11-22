@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { crearProyectoRequest, listarPresupuestosAprobados } from '../../api/auth';
+import { crearProyectoRequest, listarPresupuestosAprobados, listarAlmacenesRequest } from '../../api/auth';
 import AsignarMaterial from './AsignarMaterial';
 
 const RegistrarProyecto = () => {
@@ -13,12 +13,38 @@ const RegistrarProyecto = () => {
   const [direccion, setDireccion] = useState('');
   const [observaciones, setObservaciones] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const [datosFormulario, setDatosFormulario] = useState({});
+  const [gestionarMaterial, setGestionarMaterial] = useState([]); // Estado para almacenar materiales
+  const [materiales, setMateriales] = useState([]); // Lista de materiales desde la API
+
+  useEffect(() => {
+    const fetchMateriales = async () => {
+        try {
+            const response = await listarAlmacenesRequest();
+            setMateriales(response.data.data || []);
+        } catch (error) {
+            console.error("Error al listar materiales:", error);
+        }
+    };
+    fetchMateriales();
+}, []);
+  console.log(materiales);
+  const handleNuevoMaterialSubmit = (materiales) => {
+      setGestionarMaterial(materiales); // Guardar los materiales seleccionados
+      console.log(materiales);
+      setIsModalOpen(false); // Cierra el modal
+  };
 
   useEffect(() => {
     const cargarPresupuestos = async () => {
       try {
         const respuesta = await listarPresupuestosAprobados();
-        setPresupuestos(respuesta.data);
+        console.log(respuesta.data);
+        if (Array.isArray(respuesta.data.data)) {
+          setPresupuestos(respuesta.data.data);
+      } else {
+          console.error('La respuesta no es un array:', respuesta.data.data);
+      }
       } catch (error) {
         console.error('Error al cargar los presupuestos aprobados:', error);
       }
@@ -27,14 +53,22 @@ const RegistrarProyecto = () => {
     cargarPresupuestos();
   }, []);
 
+  // Función para manejar el envío de datos desde el modal
+  /*const handleNuevoMaterialSubmit = (data) => {
+    setDatosFormulario(data); // Almacena los datos del modal en el estado del formulario
+    console.log('Datos del formulario:', data);
+    setIsModalOpen(false); // Cierra el modal
+};*/
+
   const handlePresupuestoChange = (e) => {
     const presupuestoID = e.target.value;
     setPresupuesto(presupuestoID);
 
     const presupuestoSeleccionado = presupuestos.find((pres) => pres._id === presupuestoID);
+    console.log(presupuestoSeleccionado);
     if (presupuestoSeleccionado) {
-      setClienteNombre(presupuestoSeleccionado.cliente.nombre);
-      setDireccion(presupuestoSeleccionado.cliente.direccion);
+      setClienteNombre(presupuestoSeleccionado.ID_Solicitud_Presupuesto.cliente.nombre);
+      setDireccion(presupuestoSeleccionado.Transporte_Personal);
     } else {
       setClienteNombre('');
       setDireccion('');
@@ -43,25 +77,19 @@ const RegistrarProyecto = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const nuevoProyecto = {
-      nombre,
-      descripcion,
-      presupuesto,
-      clienteNombre,
-      direccion,
-      observaciones,
+        Nombre_Proyecto: nombre,
+        Descripcion: descripcion,
+        ID_Presupuesto_Proyecto: presupuesto,
+        GestionarMaterial: gestionarMaterial, // Agregar los materiales al proyecto
     };
-
     try {
-      await crearProyectoRequest(nuevoProyecto);
-      alert('Proyecto creado exitosamente');
-      navigate(-1); // Regresa a la página anterior después de crear el proyecto
+        await crearProyectoRequest(nuevoProyecto);
+        alert("Proyecto creado exitosamente");
     } catch (error) {
-      console.error('Error al crear el proyecto:', error);
-      alert('Hubo un error al crear el proyecto');
+        console.error("Error al crear el proyecto:", error);
     }
-  };
+};
 
   const handleCancelar = () => {
     navigate(-1); // Regresa a la página anterior al cancelar
@@ -103,7 +131,7 @@ const RegistrarProyecto = () => {
                 <option value="">Seleccione un presupuesto</option>
                 {presupuestos.map((presupuesto) => (
                   <option key={presupuesto._id} value={presupuesto._id}>
-                    {presupuesto._id}
+                    {presupuesto.ID_Presupuesto}
                   </option>
                 ))}
               </select>
@@ -135,21 +163,34 @@ const RegistrarProyecto = () => {
               />
             </div>
             <div className="flex justify-between col-span-2">
-              <button
-                type="button"
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-                onClick={() => alert('Función para agregar técnicos')}
-              >
-                Agregar Técnicos
-              </button>
-              <button
-                type="button"
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-                onClick={() => setIsModalOpen(true)} // Abre el modal de Asignar Material
-              >
-                Asignar Material
-              </button>
-              <div>
+            <button
+                      type="button"
+                      onClick={() => setIsModalOpen(true)}
+                      className="bg-gray-500 text-white px-4 py-2 m-4 rounded"
+                  >
+                      Asignar Material
+                  </button>
+                  <AsignarMaterial
+                      isOpen={isModalOpen}
+                      onSubmit={handleNuevoMaterialSubmit}
+                      onClose={() => setIsModalOpen(false)}
+                  />
+                  
+                  {/* Mostrar los materiales seleccionados */}
+                  {/* Textarea para mostrar materiales asignados */}
+        <textarea
+          className="w-full p-2 border rounded-lg mr-3"
+          rows="5"
+          readOnly
+          value={gestionarMaterial.map((material, index) => {
+            console.log(material.id_Material);
+            const materialEncontrado = materiales.find((item) => item._id === material.id_Material);
+            console.log(materialEncontrado);
+            return `Material ${index + 1}: ${materialEncontrado ? materialEncontrado.nombre: 'Desconocido'}, Cantidad: ${material.Cantidad}`;
+          }).join("\n")} // Unir los materiales en un solo texto con saltos de línea
+           />
+
+              <div className="block w-full ">
                 <button
                   type="submit"
                   className="bg-green-500 text-white px-4 py-2 rounded mr-2"
@@ -167,8 +208,7 @@ const RegistrarProyecto = () => {
             </div>
           </div>
         </form>
-        {/* Modal para Asignar Material */}
-        <AsignarMaterial isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        
       </div>
     </div>
   );
