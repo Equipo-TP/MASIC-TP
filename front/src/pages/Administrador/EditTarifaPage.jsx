@@ -18,7 +18,7 @@ function EditTarifaPage() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm({
     defaultValues: tarifa,
   });
 
@@ -40,13 +40,6 @@ function EditTarifaPage() {
     };
     obtTarifa();
   }, [id, reset]);
-
-  const generateNextOrderNumber = () => {
-    if (tarifa) {
-      return tarifa.orden + 1;
-    }
-    return 1; // Si no hay tarifas, empieza desde 1
-  };
 
   const onSubmit = async (data) => {
     try {
@@ -72,6 +65,22 @@ function EditTarifaPage() {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
+  };
+
+  // Restricciones de entrada en tiempo real
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // Solo permitir números en el campo de "Precio"
+    if (name === 'precio') {
+      const filteredValue = value.replace(/[^0-9.]/g, ''); // Solo permite números y punto decimal
+      setValue(name, filteredValue); // Establece el valor filtrado
+    }
+
+    // Si "Descripción" no tiene más restricciones que no esté vacío
+    if (name === 'descripcion') {
+      setValue(name, value); // Establece el valor sin cambios adicionales
+    }
   };
 
   // Si está cargando, mostrar un spinner
@@ -109,7 +118,18 @@ function EditTarifaPage() {
                     fullWidth
                     label="Precio"
                     defaultValue={tarifa?.precio || ''}
-                    {...register('precio', { required: 'El precio es requerido' })}
+                    onInput={handleInputChange} // Control de entrada en tiempo real
+                    {...register('precio', {
+                      required: 'El precio es requerido',
+                      pattern: {
+                        value: /^[0-9]+(\.[0-9]{1,2})?$/, // Solo números y hasta dos decimales
+                        message: 'El precio debe ser un número válido con hasta dos decimales',
+                      },
+                      min: {
+                        value: 0.01,
+                        message: 'El precio debe ser mayor que 0',
+                      },
+                    })}
                     error={!!errors.precio}
                     helperText={errors.precio ? errors.precio.message : ''}
                   />
@@ -119,7 +139,14 @@ function EditTarifaPage() {
                     fullWidth
                     label="Descripción"
                     defaultValue={tarifa?.descripcion || ''}
-                    {...register('descripcion', { required: 'La descripción es requerida' })}
+                    onInput={handleInputChange} // Control de entrada en tiempo real
+                    {...register('descripcion', {
+                      required: 'La descripción es requerida',
+                      minLength: {
+                        value: 10,
+                        message: 'La descripción debe tener al menos 10 caracteres',
+                      },
+                    })}
                     error={!!errors.descripcion}
                     helperText={errors.descripcion ? errors.descripcion.message : ''}
                   />

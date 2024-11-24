@@ -40,11 +40,31 @@ const RegistrarUsuario = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Filtrar los valores en base al campo
+    let filteredValue = value;
+
+    // Validación para solo permitir letras en el nombre y apellidos
+    if (name === 'nombre' || name === 'apellidos') {
+      filteredValue = value.replace(/[^a-zA-Z\s]/g, ''); // Solo letras y espacios
+    }
+
+    // Validación para solo permitir números en el DNI y teléfono
+    if (name === 'dni' || name === 'telefono') {
+      filteredValue = value.replace(/\D/g, ''); // Reemplaza cualquier carácter que no sea dígito
+    }
+
+    // Validación para solo permitir caracteres alfanuméricos en la contraseña
+    if (name === 'password') {
+      filteredValue = value.replace(/[^a-zA-Z0-9]/g, ''); // Solo caracteres alfanuméricos
+    }
+
+    // Actualizar estado con el valor filtrado
     setFormData({
       ...formData,
-      [name]: value
+      [name]: filteredValue
     });
-    validateField(name, value);
+    validateField(name, filteredValue);
   };
 
   const handleRoleChange = (e) => {
@@ -79,21 +99,20 @@ const RegistrarUsuario = () => {
       case 'dni':
         setErrors({
           ...errors,
-          dni: /^\d{8}$/.test(value) ? '' : 'DNI debe tener exactamente 8 dígitos numéricos'
+          dni: value.length === 8 ? '' : 'DNI debe tener exactamente 8 dígitos numéricos'
         });
         break;
       case 'telefono':
         setErrors({
           ...errors,
-          telefono: /^\d{9}$/.test(value) ? '' : 'Teléfono debe tener exactamente 9 dígitos numéricos'
+          telefono: value.length === 9 ? '' : 'Teléfono debe tener exactamente 9 dígitos numéricos'
         });
         break;
       case 'password':
-        const passwordValid = /^\d{6}$/.test(value);
-
+        const passwordValid = /^[a-zA-Z0-9]{6,12}$/.test(value); // Contraseña entre 6 y 12 caracteres alfanuméricos
         setErrors({
           ...errors,
-          password: passwordValid ? '' : 'La contraseña debe tener al menos 6 caracteres'
+          password: passwordValid ? '' : 'La contraseña debe tener entre 6 y 12 caracteres alfanuméricos'
         });
         break;
       case 'confirmPassword':
@@ -129,10 +148,10 @@ const RegistrarUsuario = () => {
         const response = await axios.post('http://localhost:8000/api/registro_usuario', formData);
         console.log('Usuario registrado con éxito:', response.data);
         if(response.data.data){
-        setSnackbarMessage('Usuario registrado con éxito!');
-        setSnackbarSeverity('success');
-        navigate('/gestionar_usuarios')}
-        else{
+          setSnackbarMessage('Usuario registrado con éxito!');
+          setSnackbarSeverity('success');
+          navigate('/gestionar_usuarios');
+        } else {
           alert('Ya existe un usuario registrado con los mismos datos');
         }
       } catch (error) {
@@ -186,9 +205,9 @@ const RegistrarUsuario = () => {
         <Box
           sx={{
             mt: 4,
-            maxWidth: '1000px', // Aumentado para mayor tamaño
+            maxWidth: '1000px',
             width: '100%',
-            p: 3, // Añadido para mayor relleno
+            p: 3,
             overflowX: 'hidden',
           }}
         >
@@ -217,6 +236,7 @@ const RegistrarUsuario = () => {
                     onChange={handleInputChange}
                     error={!!errors.nombre}
                     helperText={errors.nombre}
+                    inputProps={{ maxLength: 50 }} // Restricción de longitud
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -228,6 +248,7 @@ const RegistrarUsuario = () => {
                     onChange={handleInputChange}
                     error={!!errors.apellidos}
                     helperText={errors.apellidos}
+                    inputProps={{ maxLength: 50 }} // Restricción de longitud
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -251,6 +272,7 @@ const RegistrarUsuario = () => {
                     onChange={handleInputChange}
                     error={!!errors.dni}
                     helperText={errors.dni}
+                    inputProps={{ maxLength: 8 }} // Solo 8 dígitos
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -262,25 +284,22 @@ const RegistrarUsuario = () => {
                     onChange={handleInputChange}
                     error={!!errors.telefono}
                     helperText={errors.telefono}
+                    inputProps={{ maxLength: 9 }} // Solo 9 dígitos
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth error={!!errors.rol}>
                     <InputLabel>Rol</InputLabel>
                     <Select
-                      name="rol"
                       label="Rol"
+                      name="rol"
                       value={formData.rol}
                       onChange={handleRoleChange}
                     >
-                      <MenuItem value="" disabled>
-                       
-                      </MenuItem>
                       <MenuItem value="Administrador">Administrador</MenuItem>
-                      <MenuItem value="Vendedor">Vendedor</MenuItem>
-                      <MenuItem value="Tecnico">Tecnico</MenuItem>
+                      <MenuItem value="Técnico">Técnico</MenuItem>
                     </Select>
-                    {errors.rol && <Typography color="error">{errors.rol}</Typography>}
+                    <Typography variant="body2" color="error">{errors.rol}</Typography>
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -293,6 +312,7 @@ const RegistrarUsuario = () => {
                     onChange={handleInputChange}
                     error={!!errors.password}
                     helperText={errors.password}
+                    inputProps={{ minLength: 6, maxLength: 12 }} // Restricción de longitud
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -307,8 +327,8 @@ const RegistrarUsuario = () => {
                     helperText={errors.confirmPassword}
                   />
                 </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                  <Button variant="contained" color="primary" type="submit">
+                <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <Button variant="contained" color="primary" type="submit" sx={{ mr: 2 }}>
                     Registrar
                   </Button>
                   <Button variant="outlined" color="secondary" onClick={handleCancel}>
@@ -320,16 +340,9 @@ const RegistrarUsuario = () => {
           </Paper>
         </Box>
       </Box>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
+
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

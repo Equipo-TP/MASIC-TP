@@ -18,17 +18,16 @@ function EditUserPage() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm({
     defaultValues: user,
   });
-  
+
   // Obtener datos del usuario
   useEffect(() => {
     const obtUsuario = async () => {
       try {
         const res = await obtenerUserRequest(id); // API para obtener datos del usuario
         const userData = res.data.data;
-        console.log(userData);
         setUser(userData);
         reset(userData); // Resetea el formulario con los datos obtenidos
         setLoading(false); // Termina la carga
@@ -70,6 +69,23 @@ function EditUserPage() {
     setOpenSnackbar(false);
   };
 
+  // Filtrar caracteres no válidos para los campos de nombre y apellidos (solo letras y espacios)
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // Validación para solo permitir letras en el nombre y apellidos
+    if (name === 'nombre' || name === 'apellidos') {
+      const filteredValue = value.replace(/[^a-zA-Z\s]/g, ''); // Solo letras y espacios
+      setValue(name, filteredValue); // Establece el valor filtrado
+    }
+
+    // Validación para solo permitir números en el DNI y teléfono
+    if (name === 'dni' || name === 'telefono') {
+      const filteredValue = value.replace(/\D/g, ''); // Reemplaza cualquier carácter que no sea dígito
+      setValue(name, filteredValue); // Establece el valor filtrado
+    }
+  };
+
   // Si está cargando, mostrar un spinner
   if (loading) {
     return (
@@ -94,9 +110,11 @@ function EditUserPage() {
                     fullWidth
                     label="Nombre"
                     defaultValue={user?.nombre || ''}
+                    onInput={handleInputChange} // Control de entrada en tiempo real
                     {...register('nombre', {
                       required: 'El nombre es requerido',
                       minLength: { value: 2, message: 'El nombre debe tener al menos 2 caracteres' },
+                      pattern: { value: /^[a-zA-Z\s]+$/, message: 'El nombre solo puede contener letras y espacios' },
                     })}
                     error={!!errors.nombre}
                     helperText={errors.nombre ? errors.nombre.message : ''}
@@ -107,9 +125,11 @@ function EditUserPage() {
                     fullWidth
                     label="Apellidos"
                     defaultValue={user?.apellidos || ''}
+                    onInput={handleInputChange} // Control de entrada en tiempo real
                     {...register('apellidos', {
                       required: 'El apellido es requerido',
                       minLength: { value: 2, message: 'El apellido debe tener al menos 2 caracteres' },
+                      pattern: { value: /^[a-zA-Z\s]+$/, message: 'El apellido solo puede contener letras y espacios' },
                     })}
                     error={!!errors.apellidos}
                     helperText={errors.apellidos ? errors.apellidos.message : ''}
@@ -133,6 +153,7 @@ function EditUserPage() {
                     fullWidth
                     label="DNI"
                     defaultValue={user?.dni || ''}
+                    onInput={handleInputChange} // Control de entrada en tiempo real
                     {...register('dni', {
                       required: 'El DNI es requerido',
                       pattern: { value: /^[0-9]{8,10}$/, message: 'Formato de DNI inválido, debe tener entre 8 y 10 dígitos' },
@@ -146,6 +167,7 @@ function EditUserPage() {
                     fullWidth
                     label="Teléfono"
                     defaultValue={user?.telefono || ''}
+                    onInput={handleInputChange} // Control de entrada en tiempo real
                     {...register('telefono', {
                       required: 'El teléfono es requerido',
                       pattern: { value: /^[0-9]+$/, message: 'Solo se permiten números' },
