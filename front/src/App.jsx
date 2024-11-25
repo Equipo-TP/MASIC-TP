@@ -43,8 +43,9 @@ import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 
-import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
+//import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
 import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
+import VisualizarCronograma from './pages/Administrador/VisualizarCronograma';
 
 function App() {
     //const { checkAuth } = useAuth();
@@ -93,6 +94,7 @@ function App() {
         <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
+        <Route path='/visualizar_cronograma' element={<VisualizarCronograma/>}/>
         </Route> 
         <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>     
 
