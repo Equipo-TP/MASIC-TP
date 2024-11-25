@@ -68,6 +68,7 @@ export const obtenerTarifaRequest = async (id) => axios.get(`${API}/obtener_tari
 export const editarTarifaRequest = async (id, tarifa) => axios.put(`${API}/editar_tarifa/${id}`, tarifa);
 
 export const obtener_cliente_por_idRequest = async (id) => { return await axios.post(`${API}/obtener_cliente_por_id/${id}`); };
+export const listarSolicitudesAdminRequest = async () => { return await axios.get(`${API}//listar_solicitudes_administrador`); };
 export const listarSolicitudesRequest = async () => { return await axios.get(`${API}/listar_solicitudes_aprobadas_para_presupuesto`); };
 export const actualizarEstadoSolicitudRequest = async (id, estado_2) => { return await axios.put(`${API}/editar_solicitud/${id}`, { estado_2 }); };
 export const obtener_solicitud_por_idRequest = async (id) => { return await axios.post(`${API}/obtener_solicitud_por_id/${id}`); };
