@@ -51,9 +51,11 @@ import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 
 import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
 
-import GestionarCobros from './pages/Administrador/GestionarCobros';
-import RegistrarCobros from './pages/Administrador/RegistrarCobros';
-import VerDetallesPagosCuenta from './pages/Administrador/VerDetallesCobros';
+import GestionarEstadoCobro from './pages/Administrador/GestionarEstadoCobro'; // Actualizado
+import RegistrarPago from './pages/Administrador/RegistrarPago'; // Renombrado
+import VerPagosProyecto from './pages/Administrador/VerPagosProyecto'; // Renombrado
+
+
 
 function App() {
     //const { checkAuth } = useAuth();
@@ -101,7 +103,6 @@ function App() {
 
         <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
 
-        
         <Route path='/gestionar_almacen' element={<GestionarAlmacen/>}/>
         <Route path='/registro_almacen' element={<RegistrarAlmacen/>}/>
         <Route path='/inventario_almacen/:id' element={<InventarioAlmacen/>}/>
@@ -109,15 +110,12 @@ function App() {
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
         </Route> 
-        <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>     
-
-
-        <Route path='/gestionar_estado_cobro' element={<GestionarCobros/>}/>
-        <Route path='/registro_cobro' element={<RegistrarCobros/>} />
-        <Route path='/cobros/detalles/:id' element={<VerDetallesPagosCuenta/>}/>
-
-
-
+        <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>   
+          
+        {/* Gestión de estado de cobro en proyectos */}
+        <Route path="/gestionar_estado_cobro" element={<GestionarEstadoCobro />} />
+        <Route path="/registro_pago" element={<RegistrarPago />} />
+        <Route path="/proyectos/detalles/:id" element={<VerPagosProyecto />} />
 
       </Routes>
     </BrowserRouter>

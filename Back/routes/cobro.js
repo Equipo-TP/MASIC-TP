@@ -1,18 +1,17 @@
 'use strict';
 
 var express = require('express');
-var cobroController = require('../controllers/CobroController');
+var proyectoController = require('../controllers/ProyectoController');
 
 var api = express.Router();
 
-api.post('/registro_cobro', cobroController.registro_cobro);
-api.get('/listar_cobros', cobroController.listar_cobros);
-api.get('/obtener_cobro/:id', cobroController.obtener_cobro_por_id);
-api.put('/editar_cobro/:id', cobroController.editar_cobro);
-api.delete('/eliminar_cobro/:id', cobroController.eliminar_cobro);
-
-api.get('/obtener_cobro_con_pagos/:id', cobroController.obtener_cobro_con_pagos);
-api.get('/ver_detalles/:id', cobroController.obtener_cobro_detallado);
+router.post('/registrar', ProyectoController.registrar_proyecto);
+router.get('/listar', ProyectoController.listar_proyectos);
+router.get('/ver/:id', ProyectoController.ver_proyecto_por_id);
+router.put('/editar/:id', ProyectoController.editar_proyecto_por_id);
+router.delete('/eliminar/:id', ProyectoController.eliminar_proyecto);
+router.post('/actualizarCobros/:id', ProyectoController.actualizar_cobros_proyecto);
+router.get('/verPagos/:id', ProyectoController.ver_pagos_proyecto);
 
 
 module.exports = api;

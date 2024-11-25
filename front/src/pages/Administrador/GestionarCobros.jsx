@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
-import { listarCobrosRequest, eliminarCobroRequest } from '../../api/auth';
+import { listarProyectosRequest, editar_proyecto_Request } from '../../api/auth';
 import { Link } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const GestionarCobros = () => {
-  const [cobros, setCobros] = useState([]);
+  const [proyectos, setProyectos] = useState([]); // Cambiado de cobros a proyectos
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredCobros, setFilteredCobros] = useState([]);
+  const [filteredProyectos, setFilteredProyectos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
-    const fetchCobros = async () => {
+    const fetchProyectos = async () => {
       try {
-        const response = await listarCobrosRequest();
-        setCobros(response.data.data);
-        setFilteredCobros(response.data.data);
+        const response = await listarProyectosRequest(); // Ahora obtenemos proyectos
+        setProyectos(response.data.data);
+        setFilteredProyectos(response.data.data);
       } catch (error) {
-        console.error('Error al listar los cobros:', error);
+        console.error('Error al listar los proyectos:', error);
       }
     };
 
-    fetchCobros();
+    fetchProyectos();
   }, []);
 
   const handleDrawerToggle = () => {
@@ -34,19 +34,19 @@ const GestionarCobros = () => {
 
   const handleDelete = (id) => {
     confirmAlert({
-      title: 'Confirmar eliminación de cobro',
-      message: '¿Estás seguro de que deseas eliminar este cobro?',
+      title: 'Confirmar eliminación de proyecto',
+      message: '¿Estás seguro de que deseas eliminar este proyecto?',
       buttons: [
         {
           label: 'Sí',
           onClick: async () => {
             try {
-              await eliminarCobroRequest(id);
-              const updatedCobros = cobros.filter((cobro) => cobro._id !== id);
-              setCobros(updatedCobros);
-              setFilteredCobros(updatedCobros);
+              await editar_proyecto_Request(id, { estado: 'Eliminado' });
+              const updatedProyectos = proyectos.filter((proyecto) => proyecto._id !== id);
+              setProyectos(updatedProyectos);
+              setFilteredProyectos(updatedProyectos);
             } catch (error) {
-              console.error('Error al eliminar el cobro:', error);
+              console.error('Error al eliminar el proyecto:', error);
             }
           },
         },
@@ -59,23 +59,23 @@ const GestionarCobros = () => {
   };
 
   const handleFilter = () => {
-    const filtered = cobros.filter((cobro) =>
-      cobro.vendedora.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = proyectos.filter((proyecto) =>
+      proyecto.Nombre_Proyecto.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredCobros(filtered);
+    setFilteredProyectos(filtered);
     setCurrentPage(1);
   };
 
   const handleReset = () => {
     setSearchTerm('');
-    setFilteredCobros(cobros);
+    setFilteredProyectos(proyectos);
     setCurrentPage(1);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredCobros.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredCobros.length / itemsPerPage);
+  const currentItems = filteredProyectos.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredProyectos.length / itemsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -93,12 +93,12 @@ const GestionarCobros = () => {
         <div className="p-6">
           <div className="relative overflow-x-auto sm:rounded-lg">
             <h1 className="text-3xl font-bold mb-2">Control de estado de cobro</h1>
-            <p className="mb-6">Este módulo lista todos los cobros de la empresa.</p>
+            <p className="mb-6">Este módulo lista todos los proyectos con sus cobros asociados.</p>
 
             <div className="flex items-center gap-4 mb-4">
               <input
                 type="text"
-                placeholder="Nombre de la vendedora"
+                placeholder="Nombre del proyecto"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="px-4 py-2 border rounded-md shadow-sm flex-1"
@@ -115,9 +115,9 @@ const GestionarCobros = () => {
               >
                 Resetear
               </button>
-              <Link to="/registro_cobro">
+              <Link to="/registro_proyecto">
                 <button className="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">
-                  Registrar Cobro
+                  Registrar Proyecto
                 </button>
               </Link>
             </div>
@@ -125,61 +125,61 @@ const GestionarCobros = () => {
             <table className="shadow-md w-full text-sm text-left text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th scope="col" className="px-6 py-3">Vendedora</th>
-                  <th scope="col" className="px-6 py-3">Cliente</th>
-                  <th scope="col" className="px-6 py-3">Servicio</th>
+                  <th scope="col" className="px-6 py-3">Nombre del Proyecto</th>
+                  <th scope="col" className="px-6 py-3">Costo Total</th>
                   <th scope="col" className="px-6 py-3">Total Cobrado</th>
                   <th scope="col" className="px-6 py-3">Saldo Restante</th>
-                  <th scope="col" className="px-6 py-3">Estado</th>
+                  <th scope="col" className="px-6 py-3">Estado de Cobro</th>
                   <th scope="col" className="px-6 py-3">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {currentItems.length > 0 ? (
-                  currentItems.map((cobro, index) => (
+                  currentItems.map((proyecto, index) => (
                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                      <td className="px-6 py-4">{cobro.vendedora}</td>
-                      <td className="px-6 py-4">{cobro.cliente}</td>
-                      <td className="px-6 py-4">{cobro.servicio}</td>
-                      <td className="px-6 py-4">S/.{cobro.totalCobrado}</td>
-                      <td className="px-6 py-4">S/.{cobro.saldoRestante}</td>
+                      <td className="px-6 py-4">{proyecto.Nombre_Proyecto}</td>
+                      <td className="px-6 py-4">S/.{proyecto.Costo_Total}</td>
+                      <td className="px-6 py-4">S/.{proyecto.totalCobrado}</td>
+                      <td className="px-6 py-4">S/.{proyecto.saldoRestante}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <span
-                            className={`mr-2 ${getEstadoClass(cobro.estado)}`}
+                            className={`mr-2 ${getEstadoClass(proyecto.estadodeCobro)}`}
                           >
-                            {cobro.estado}
+                            {proyecto.estadodeCobro}
                           </span>
-                          {cobro.estado !== 'Cobrado Completamente' && (
+                          {proyecto.estadodeCobro !== 'Cobrado Completamente' && (
                             <i className="fas fa-exclamation-triangle text-yellow-500"></i>
                           )}
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2.5">
                           <div
-                            className={`h-2.5 rounded-full ${getProgressBarClass(cobro)}`}
-                            style={{ width: `${getProgressPercentage(cobro)}%` }}
+                            className={`h-2.5 rounded-full ${getProgressBarClass(proyecto)}`}
+                            style={{ width: `${getProgressPercentage(proyecto)}%` }}
                           ></div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <Link to={`/cobros/detalles/${cobro._id}`}>
+                        <Link to={`/proyectos/detalles/${proyecto._id}`}>
                           <button className="text-blue-600 hover:underline">
-                            Ver Detalles
+                            Ver Pagos
                           </button>
                         </Link>
-                        <button
-                          onClick={() => handleDelete(cobro._id)}
-                          className="ml-2 text-red-600 hover:underline"
-                        >
-                          Eliminar
-                        </button>
+                        {proyecto.estadodeCobro === 'Cobrado Completamente' && (
+                          <button
+                            onClick={() => handleDelete(proyecto._id)}
+                            className="ml-2 text-red-600 hover:underline"
+                          >
+                            Eliminar
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="px-6 py-4 text-center">
-                      No se encontraron cobros.
+                    <td colSpan="6" className="px-6 py-4 text-center">
+                      No se encontraron proyectos.
                     </td>
                   </tr>
                 )}
@@ -224,8 +224,8 @@ const GestionarCobros = () => {
     }
   }
 
-  function getProgressBarClass(cobro) {
-    switch (cobro.estado) {
+  function getProgressBarClass(proyecto) {
+    switch (proyecto.estadodeCobro) {
       case 'Cobrado Completamente':
         return 'bg-green-500';
       case 'Saldo Parcial':
@@ -237,9 +237,9 @@ const GestionarCobros = () => {
     }
   }
 
-  function getProgressPercentage(cobro) {
-    const total = cobro.totalCobrado + cobro.saldoRestante;
-    return Math.round((cobro.totalCobrado / total) * 100);
+  function getProgressPercentage(proyecto) {
+    const total = proyecto.totalCobrado + proyecto.saldoRestante;
+    return Math.round((proyecto.totalCobrado / total) * 100);
   }
 };
 

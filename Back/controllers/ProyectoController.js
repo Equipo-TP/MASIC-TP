@@ -26,61 +26,16 @@ async function verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_fin
     return !conflicto;
 }
 
-/* Registrar un nuevo proyecto
 const registrar_proyecto = async function(req, res) {
     try {
         const data = req.body;
-        const nuevoId = await obtenerProximoId('proyectos');
-        data.ID_Proyecto = nuevoId;
-
-        for (const Horario of data.Horario) {
-            const { fecha_inicio, fecha_final, Tecnico } = Horario;
-
-            if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
-                return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
-            }
-
-            for (const tecnicoId of Tecnico) {
-                const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
-                if (!disponible) {
-                    return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
-                }
-            }
+        
+        if (!data.Costo_Total || data.Costo_Total <= 0) {
+            return res.status(400).send({ message: 'El costo total debe ser mayor a 0' });
         }
 
-        const proyectoExistente = await Proyecto.findOne({ ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto });
-        if (!proyectoExistente) {
-            const nuevoProyecto = await Proyecto.create(data);
-            res.status(200).send({ data: nuevoProyecto });
-        } else {
-            res.status(400).send({ message: 'El proyecto ya existe para este presupuesto' });
-        }
-    } catch (error) {
-        res.status(500).send({ message: 'Error al registrar el proyecto', error });
-    }
-};
-*/
-const registrar_proyecto = async function(req, res) {
-    try {
-        const data = req.body;
         const nuevoId = await obtenerProximoId('proyectos');
         data.ID_Proyecto = nuevoId;
-
-        // Validar fechas de Horario y disponibilidad de técnico
-        /*for (const Horario of data.Horario) {
-            const { fecha_inicio, fecha_final, Tecnico } = Horario;
-
-            if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
-                return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
-            }
-
-            for (const tecnicoId of Tecnico) {
-                const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
-                if (!disponible) {
-                    return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
-                }
-            }
-        }*/
 
         // Procesar y actualizar stock en GestionarMaterial
         if(Array.isArray(data.GestionarMaterial) && data.GestionarMaterial.length > 0) {
@@ -101,6 +56,16 @@ const registrar_proyecto = async function(req, res) {
                 return res.status(404).send({ message: `El material con ID ${material.id_Material} no existe.` });
             }
         }} else{ console.log('no hay materiales');}
+
+        // Calcular estado inicial de cobro
+        data.totalCobrado = data.totalCobrado || 0;
+        data.saldoRestante = data.Costo_Total - data.totalCobrado;
+        data.estadodeCobro =
+            data.totalCobrado === data.Costo_Total
+                ? 'Cobrado Completamente'
+                : data.totalCobrado > 0
+                ? 'Saldo Parcial'
+                : 'Por Cobrar';
 
         // Verificar si el proyecto ya existe
         const proyectoExistente = await Proyecto.findOne({ ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto });
@@ -172,14 +137,6 @@ const editar_proyecto_por_id = async function(req, res) {
             if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
                 return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
             }
-
-            /* for (const tecnicoId of Tecnico) {
-                const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
-                console.log(`Técnico ${tecnicoId} disponible:`, disponible);
-                if (!disponible) {
-                    return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
-                }
-            } */
         }
 
         const proyecto = await Proyecto.findByIdAndUpdate(
@@ -208,10 +165,7 @@ const editar_proyecto_por_id = async function(req, res) {
     }
 };
 
-
-
 // Listar proyectos en los que un técnico específico está involucrado
-
 const listar_proyectos_por_tecnico = async function(req, res) {
     const { page = 1, limit = 40 } = req.query; // Recibe page y limit desde la query
     const skip = (page - 1) * limit;
@@ -241,20 +195,93 @@ const listar_proyectos_por_tecnico = async function(req, res) {
         res.status(500).send({ message: 'Error en la solicitud', error });
     }
 
-    
+// Ver pagos de un proyecto
+const ver_pagos_proyecto = async function(req, res) {
+    const id = req.params.id;
+    try {
+        const proyecto = await Proyecto.findById(id).populate('pagos');
+        if (!proyecto) {
+            return res.status(404).send({ message: 'Proyecto no encontrado' });
+        }
 
+        const porcentajeCobrado = calcularPorcentaje(proyecto.totalCobrado, proyecto.Costo_Total);
 
+        res.status(200).send({
+            data: proyecto,
+            porcentajeCobrado,
+            puedeEliminar: porcentajeCobrado === 100
+        });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al obtener los pagos del proyecto', error });
+    }
+};
 
+// Actualizar cobros en un proyecto
+const actualizar_cobros_proyecto = async function(req, res) {
+    const id = req.params.id;
+    const { monto, observaciones } = req.body;
 
+    try {
+        const proyecto = await Proyecto.findById(id);
+        if (!proyecto) {
+            return res.status(404).send({ message: 'Proyecto no encontrado' });
+        }
 
+        // Agregar nuevo pago
+        const nuevoPago = {
+            monto,
+            porcentaje: calcularPorcentaje(monto, proyecto.Costo_Total),
+            fecha: new Date(),
+            observaciones
+        };
 
+        proyecto.pagos.push(nuevoPago);
+        proyecto.totalCobrado += monto;
+        proyecto.saldoRestante = proyecto.Costo_Total - proyecto.totalCobrado;
 
+        // Actualizar estado de cobro
+        proyecto.estadodeCobro =
+            proyecto.totalCobrado === proyecto.Costo_Total
+                ? 'Cobrado Completamente'
+                : proyecto.totalCobrado > 0
+                ? 'Saldo Parcial'
+                : 'Por Cobrar';
+
+        await proyecto.save();
+
+        res.status(200).send({ data: proyecto });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al actualizar los cobros del proyecto', error });
+    }
+};
+
+// Eliminar proyecto
+const eliminar_proyecto = async function(req, res) {
+    const id = req.params.id;
+    try {
+        const proyecto = await Proyecto.findByIdAndDelete(id);
+        if (!proyecto) {
+            return res.status(404).send({ message: 'Proyecto no encontrado' });
+        }
+        res.status(200).send({ message: 'Proyecto eliminado correctamente.' });
+    } catch (error) {
+        res.status(500).send({ message: 'Error al eliminar el proyecto', error });
+    }
+};
+
+// Función para calcular el porcentaje de cobro
+function calcularPorcentaje(totalCobrado, costoTotal) {
+    return (totalCobrado / costoTotal) * 100;
+}
 
 }
 module.exports = {
     registrar_proyecto,
     listar_proyectos,
     ver_proyecto_por_id,
+    editar_proyecto_por_id,
     listar_proyectos_por_tecnico,
-    editar_proyecto_por_id
-};
+    ver_pagos_proyecto,
+    actualizar_cobros_proyecto,
+    eliminar_proyecto
+}

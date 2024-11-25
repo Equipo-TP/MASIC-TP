@@ -12,8 +12,6 @@ var ProyectoSchema = Schema({
         Tecnico: [{  type: Schema.ObjectId, ref: 'usuario'}],
         fecha_inicio: {type: Date, required: false},
         fecha_final: {type: Date, required: false},
-        //Hora_Inicio: { type: String, required: false },
-        //Hora_Fin: { type: String, required: false }
     }
   ],
   GestionarMaterial: [ 
@@ -35,12 +33,18 @@ var ProyectoSchema = Schema({
   ],
 
   totalCobrado: { type: Number, required: true },
-    saldoRestante: { type: Number, required: true },
-    estadodeCobro: { type: String, enum: ['Cobrado Completamente', 'Por Cobrar', 'Saldo Parcial'], required: true },
+  saldoRestante: { type: Number, required: true },
+  estadodeCobro: { type: String, enum: ['Cobrado Completamente', 'Por Cobrar', 'Saldo Parcial'], required: true },
     pagos: [
         {
             monto: { type: Number },
-            porcentaje: { type: Number },
+            porcentaje: {
+              type: Number,
+              required: false,
+              default: function () {
+                return this.Costo_Total - this.totalCobrado;
+              },
+            },
             fecha: { type: Date },
             observaciones: { type: String },
         }

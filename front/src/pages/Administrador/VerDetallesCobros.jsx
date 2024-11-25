@@ -1,51 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { obtenerPagosRequest, registrarPagoRequest, eliminarPagoRequest } from '../../api/auth';
+import { ver_proyecto_por_idRequest, actualizar_cobros_proyecto, eliminarPagoRequest } from '../../api/auth';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
+import { useParams, useNavigate } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const VerDetallesPagosCuenta = () => {
-  const [pagos, setPagos] = useState([]);
+  const { id } = useParams(); // ID del proyecto recibido como parámetro
+  const navigate = useNavigate();
+
+  const [proyecto, setProyecto] = useState(null); // Información del proyecto
   const [monto, setMonto] = useState('');
-  const [porcentaje, setPorcentaje] = useState('');
-  const [fecha, setFecha] = useState('');
   const [observaciones, setObservaciones] = useState('');
   const [alerta, setAlerta] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
-    fetchPagos();
+    fetchProyecto();
   }, []);
 
-  const fetchPagos = async () => {
+  const fetchProyecto = async () => {
     try {
-      const response = await obtenerPagosRequest();
-      setPagos(response.data.data);
+      const response = await ver_proyecto_por_idRequest(id);
+      setProyecto(response.data.data); // Guardamos los datos del proyecto
       setAlerta('');
     } catch (error) {
-      console.error('Error fetching payments:', error);
-      setAlerta('Error al cargar los pagos.');
+      console.error('Error fetching project details:', error);
+      setAlerta('Error al cargar los detalles del proyecto.');
     }
   };
 
   const handleRegistrarPago = async () => {
-    if (!monto || !porcentaje || !fecha) {
+    if (!monto) {
       setAlerta('Por favor, complete todos los campos.');
       return;
     }
     try {
       const nuevoPago = {
         monto: parseFloat(monto),
-        porcentaje: parseFloat(porcentaje),
-        fecha,
         observaciones,
       };
-      await registrarPagoRequest(nuevoPago);
-      fetchPagos();
+
+      const response = await actualizar_cobros_proyecto(id, nuevoPago);
+      setProyecto(response.data.data); // Actualizamos los datos del proyecto tras registrar el pago
       setMonto('');
-      setPorcentaje('');
-      setFecha('');
       setObservaciones('');
       setAlerta('');
     } catch (error) {
@@ -63,8 +62,8 @@ const VerDetallesPagosCuenta = () => {
           label: 'Sí',
           onClick: async () => {
             try {
-              await eliminarPagoRequest(pagoId);
-              fetchPagos();
+              await eliminarPagoRequest(id, pagoId); // Elimina el pago específico
+              fetchProyecto(); // Refresca los datos del proyecto
             } catch (error) {
               console.error('Error deleting payment:', error);
               setAlerta('Error al eliminar el pago.');
@@ -83,6 +82,22 @@ const VerDetallesPagosCuenta = () => {
     setDrawerOpen(!drawerOpen);
   };
 
+  if (!proyecto) {
+    return (
+      <div className="flex">
+        <MenuSideBar open={drawerOpen} />
+        <div className="flex-1">
+          <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
+          <div className="p-6">
+            <p>Cargando detalles del proyecto...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { pagos, estadodeCobro } = proyecto;
+
   return (
     <div className="flex">
       <MenuSideBar open={drawerOpen} />
@@ -90,9 +105,9 @@ const VerDetallesPagosCuenta = () => {
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold">VER DETALLES - Pagos a Cuenta</h1>
-            <button 
-              onClick={() => window.history.back()} 
+            <h1 className="text-3xl font-bold">Detalles - Pagos del Proyecto</h1>
+            <button
+              onClick={() => navigate(-1)}
               className="text-blue-500 hover:text-blue-700 font-medium text-lg"
             >
               Regresar &gt;
@@ -101,44 +116,36 @@ const VerDetallesPagosCuenta = () => {
 
           {alerta && <div className="mb-4 text-red-600 font-semibold">{alerta}</div>}
 
-          <div className="flex space-x-4 mb-6">
-            <input
-              type="number"
-              placeholder="Monto"
-              value={monto}
-              onChange={(e) => setMonto(e.target.value)}
-              className="border p-2 rounded-md w-full"
-            />
-            <input
-              type="number"
-              placeholder="Porcentaje"
-              value={porcentaje}
-              onChange={(e) => setPorcentaje(e.target.value)}
-              className="border p-2 rounded-md w-full"
-            />
-            <input
-              type="date"
-              value={fecha}
-              onChange={(e) => setFecha(e.target.value)}
-              className="border p-2 rounded-md w-full"
-            />
-            <button
-              onClick={handleRegistrarPago}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 rounded-md"
-            >
-              Ingresar
-            </button>
-          </div>
-          <textarea
-            placeholder="Observaciones"
-            value={observaciones}
-            onChange={(e) => setObservaciones(e.target.value)}
-            className="border p-2 rounded-md w-full mb-6"
-          />
+          {/* Formulario para registrar pagos solo si no está completamente cobrado */}
+          {estadodeCobro !== 'Cobrado Completamente' && (
+            <div>
+              <div className="flex space-x-4 mb-6">
+                <input
+                  type="number"
+                  placeholder="Monto"
+                  value={monto}
+                  onChange={(e) => setMonto(e.target.value)}
+                  className="border p-2 rounded-md w-full"
+                />
+                <button
+                  onClick={handleRegistrarPago}
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 rounded-md"
+                >
+                  Registrar Pago
+                </button>
+              </div>
+              <textarea
+                placeholder="Observaciones"
+                value={observaciones}
+                onChange={(e) => setObservaciones(e.target.value)}
+                className="border p-2 rounded-md w-full mb-6"
+              />
+            </div>
+          )}
 
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table className="w-full text-sm text-left text-gray-500">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" className="px-6 py-3">Monto</th>
                   <th scope="col" className="px-6 py-3">Porcentaje</th>
@@ -152,19 +159,21 @@ const VerDetallesPagosCuenta = () => {
                   pagos.map((pago) => (
                     <tr
                       key={pago._id}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                      className="bg-white border-b hover:bg-gray-50"
                     >
                       <td className="px-6 py-4">S/.{pago.monto}</td>
                       <td className="px-6 py-4">{pago.porcentaje}%</td>
                       <td className="px-6 py-4">{new Date(pago.fecha).toLocaleDateString()}</td>
                       <td className="px-6 py-4">{pago.observaciones || 'N/A'}</td>
                       <td className="px-6 py-4">
-                        <button
-                          onClick={() => handleEliminarPago(pago._id)}
-                          className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-500"
-                        >
-                          Eliminar
-                        </button>
+                        {estadodeCobro !== 'Cobrado Completamente' && (
+                          <button
+                            onClick={() => handleEliminarPago(pago._id)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            Eliminar
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))
