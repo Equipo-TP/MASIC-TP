@@ -84,6 +84,7 @@ function App() {
         <Route path='/ver_presupuesto/:id' element={<VerPresupuesto />} />  
         <Route path='/editar_presupuesto/:id' element={<EditarPresupuesto />} />
         <Route path='/gestionar_presupuestos' element={<GestionarPresupuestosA/>}/>
+        <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
         <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
         <Route path='/visualizar_presupuesto/:id' element={<VerPresupuestoA />} />
         <Route path='/visualizar_presupuestos' element={<GestionarPresupuestos/>}/>

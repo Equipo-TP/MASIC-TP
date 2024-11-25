@@ -98,8 +98,7 @@ export const obtener_usuario_por_idRequest = async (id) => {return await axios.p
 export const actualizarUsuarioRequest = async (id, data) => {return await axios.put(`/api/usuarios/${id}`, data);};
 
 
-export const ver_proyecto_por_idRequest = async (id, data) => {return await axios.post(`${API}/ver_proyecto_por_id/${id}`, data);};
+export const ver_proyecto_por_idRequest = async (id) => {return await axios.post(`${API}/ver_proyecto_por_id/${id}`);};
 export const listar_proyectosRequest = async () => {return await axios.get(`${API}/listar_proyectos`);};
-
-
+export const editarProyectoPorIdRequest = async (id, data) => {return await axios.put(`${API}/editar_proyecto_por_id/${id}`, data);}
 

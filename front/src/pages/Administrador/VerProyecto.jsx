@@ -10,37 +10,27 @@ const VerProyecto = () => {
   const [solicitud, setSolicitud] = useState(null);
   const [presupuesto, setPresupuesto] = useState(null); // Estado para almacenar el proyecto
   const [isLoading, setIsLoading] = useState(true);
+  
 
-  /*
-  const navigate = useNavigate();
-  const [nombre, setNombre] = useState('');
-  const [descripcion, setDescripcion] = useState('');
-  const [presupuesto, setPresupuesto] = useState('');
-  const [solicitud, setSolicitud] = useState([]);
-  const [clienteNombre, setClienteNombre] = useState('');
-  const [direccion, setDireccion] = useState('');
-  const [observaciones, setObservaciones] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
-*/
-
+  console.log(id);
 useEffect(() => {
   const fetchProyecto = async () => {
     try {
-      const response = await ver_proyecto_por_idRequest(id);
-      setProyecto(response.data.data); // Suponiendo que el proyecto se encuentra en `response.data.data`
-      setIsLoading(false);
-
-    } catch (error) {
+      const response = await verProyectoPorIdRequest(id); // Llama a la API con el ID
+      setProyecto(response.data.data); // Guarda los datos del proyecto en el estado
+    } catch (err) {
+      setError(err.message || 'Error al cargar el proyecto');
       console.error('Error al obtener el proyecto:', error);
       alert('No se pudo cargar el proyecto.');
-      navigate(-1); // Regresa a la página anterior si hay un error
+    } finally {
+      setLoading(false); // Desactiva el indicador de carga
     }
   };
 
   fetchProyecto();
-}, [id, navigate]);
-console.log(proyecto)
-
+}, [id]);
+console.log(proyecto);
+/*
 useEffect(() => {
   const fetchPresupuesto = async () => {
       try {
@@ -51,7 +41,7 @@ useEffect(() => {
             return response.data.data; 
           })
         );
-        setPresupuestos(presupuestos);
+        setPresupuesto(presupuestos);
         setIsLoading(false);
       } catch (error) {
         console.error('Error al obtener la solicitud:', error);
@@ -75,7 +65,7 @@ useEffect(() => {
               return response.data.data; 
             })
           );
-          setSolicitudes(solicitudes);
+          setSolicitud(solicitudes);
           setIsLoading(false);
         } catch (error) {
           console.error('Error al obtener la solicitud:', error);
@@ -94,6 +84,7 @@ if (isLoading) {
 if (!proyecto) {
   return <div>No se encontró el proyecto.</div>;
 }
+  */
 console.log(proyecto.nombre)
   const handlePresupuestoChange = (e) => {
     const presupuestoID = e.target.value;
@@ -171,7 +162,7 @@ console.log(proyecto.nombre)
               <label className="block text-gray-700">Cliente</label>
               <input
                 type="text"
-                value={solicitud.cliente || ''}
+               
                 className="w-full p-2 border rounded"
                 readOnly
               />
@@ -180,7 +171,7 @@ console.log(proyecto.nombre)
               <label className="block text-gray-700">Dirección</label>
               <input
                 type="text"
-                value={solicitud.direccion || ''}
+                
                 className="w-full p-2 border rounded"
                 readOnly
               />
