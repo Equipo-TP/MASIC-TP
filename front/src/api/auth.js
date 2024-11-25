@@ -120,4 +120,63 @@ export const listar_proyectosRequest = async () => {return await axios.get(`${AP
 export const editar_proyecto_Request = async(id,data) => {return await axios.put(`${API}/editar_proyecto_por_id/${id}`, data);};
 
 
+// Función para listar todos los cobros
+export const listarCobrosRequest = async () => {return axios.get(`${API}/listar_cobros`);};
+
+// Función para registrar un nuevo cobro
+export const registrarCobroRequest = async (cobro) => {return axios.post(`${API}/registro_cobro`, cobro);};
+
+// Función para obtener un cobro específico por su ID
+export const obtenerCobroRequest = async (id) => {return axios.get(`${API}/obtener_cobro/${id}`);};
+
+// Función para actualizar un cobro específico por ID
+export const actualizarCobroRequest = async (id, cobro) => {return axios.put(`${API}/editar_cobro/${id}`, cobro);};
+
+// Función para eliminar un cobro específico por ID
+export const eliminarCobroRequest = async (id) => {return axios.delete(`${API}/eliminar_cobro/${id}`);};
+
+// Función para obtener un cobro con los pagos asociados
+export const obtenerCobroConPagosRequest = async (id) => {return axios.get(`${API}/obtener_cobro_con_pagos/${id}`);};
+
+// Función para obtener detalles completos del cobro
+export const obtenerDetallesCobroRequest = async (id) => {return axios.get(`${API}/ver_detalles/${id}`);};
+
+
+// Obtener la lista de pagos
+export const obtenerPagosRequest = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/listar_cobros`);
+    return response; // Contiene los datos de la respuesta
+  } catch (error) {
+    console.error('Error al obtener los pagos:', error);
+    throw error;
+  }
+};
+
+// Registrar un nuevo pago en un cobro existente
+export const registrarPagoRequest = async (nuevoPago) => {
+  try {
+    const response = await axios.put(`${API_URL}/editar_cobro/${nuevoPago.cobroId}`, {
+      $push: { pagos: nuevoPago },
+    });
+    return response;
+  } catch (error) {
+    console.error('Error al registrar el pago:', error);
+    throw error;
+  }
+};
+
+// Eliminar un pago específico de un cobro
+export const eliminarPagoRequest = async (cobroId, pagoId) => {
+  try {
+    const response = await axios.put(`${API_URL}/editar_cobro/${cobroId}`, {
+      $pull: { pagos: { _id: pagoId } },
+    });
+    return response;
+  } catch (error) {
+    console.error('Error al eliminar el pago:', error);
+    throw error;
+  }
+};
+
 

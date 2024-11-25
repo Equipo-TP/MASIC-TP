@@ -20,6 +20,8 @@ var presupuesto_tarifa_route = require('./routes/presupuesto_tarifa');
 var material_route = require('./routes/materialRoutes');
 var inventario_route = require('./routes/inventarioRoutes');
 
+var cobro_route = require('./routes/cobro');
+
 // Verificar si la variable de entorno está vacía
 /*const DB_URI = process.env.DB_URI;
 
@@ -70,6 +72,7 @@ app.use('/api', presupuesto_tarifa_route);
 app.use('/api', proyecto_route);
 app.use('/api', material_route);
 app.use('/api', inventario_route);
+app.use('/api', cobro_route);
 
 
 //Exportación del módulo app para que se puedan comunicar entre sí

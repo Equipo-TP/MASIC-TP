@@ -51,6 +51,10 @@ import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 
 import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
 
+import GestionarCobros from './pages/Administrador/GestionarCobros';
+import RegistrarCobros from './pages/Administrador/RegistrarCobros';
+import VerDetallesPagosCuenta from './pages/Administrador/VerDetallesCobros';
+
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -107,6 +111,14 @@ function App() {
         </Route> 
         <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>     
 
+
+        <Route path='/gestionar_estado_cobro' element={<GestionarCobros/>}/>
+        <Route path='/registro_cobro' element={<RegistrarCobros/>} />
+        <Route path='/cobros/detalles/:id' element={<VerDetallesPagosCuenta/>}/>
+
+
+
+
       </Routes>
     </BrowserRouter>
     </UserProvider>
@@ -114,4 +126,3 @@ function App() {
 }
 
 export default App;
-

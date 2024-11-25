@@ -240,6 +240,16 @@ const listar_proyectos_por_tecnico = async function(req, res) {
     } catch (error) {
         res.status(500).send({ message: 'Error en la solicitud', error });
     }
+
+    
+
+
+
+
+
+
+
+
 }
 module.exports = {
     registrar_proyecto,
