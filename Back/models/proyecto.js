@@ -32,9 +32,9 @@ var ProyectoSchema = Schema({
     }
   ],
 
-  totalCobrado: { type: Number, required: true },
-  saldoRestante: { type: Number, required: true },
-  estadodeCobro: { type: String, enum: ['Cobrado Completamente', 'Por Cobrar', 'Saldo Parcial'], required: true },
+  totalCobrado: { type: Number, required: false },
+  saldoRestante: { type: Number, required: false },
+  estadodeCobro: { type: String, enum: ['Cobrado Completamente', 'Por Cobrar', 'Saldo Parcial'], required: false },
     pagos: [
         {
             monto: { type: Number },

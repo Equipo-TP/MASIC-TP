@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ver_proyecto_por_idRequest, actualizar_cobros_proyecto, eliminarPagoRequest } from '../../api/auth';
+import { ver_proyecto_por_idRequest, actualizarProyectoCobrosRequest, eliminarPagoProyectoRequest } from '../../api/auth';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -39,10 +39,11 @@ const VerDetallesPagosCuenta = () => {
     try {
       const nuevoPago = {
         monto: parseFloat(monto),
+        porcentaje: parseFloat(((monto / proyecto.Costo_Total) * 100).toFixed(2)), // Porcentaje redondeado a 2 decimales
         observaciones,
       };
 
-      const response = await actualizar_cobros_proyecto(id, nuevoPago);
+      const response = await actualizarProyectoCobrosRequest(id, nuevoPago);
       setProyecto(response.data.data); // Actualizamos los datos del proyecto tras registrar el pago
       setMonto('');
       setObservaciones('');
@@ -62,7 +63,7 @@ const VerDetallesPagosCuenta = () => {
           label: 'Sí',
           onClick: async () => {
             try {
-              await eliminarPagoRequest(id, pagoId); // Elimina el pago específico
+              await eliminarPagoProyectoRequest(id, pagoId); // Elimina el pago específico
               fetchProyecto(); // Refresca los datos del proyecto
             } catch (error) {
               console.error('Error deleting payment:', error);
@@ -96,24 +97,22 @@ const VerDetallesPagosCuenta = () => {
     );
   }
 
-  const { pagos, estadodeCobro } = proyecto;
+  const { pagos, estadodeCobro, Nombre_Proyecto } = proyecto;
 
   return (
     <div className="flex">
       <MenuSideBar open={drawerOpen} />
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold">Detalles - Pagos del Proyecto</h1>
-            <button
-              onClick={() => navigate(-1)}
-              className="text-blue-500 hover:text-blue-700 font-medium text-lg"
-            >
-              Regresar &gt;
+        <div className="p-6 relative">
+          <button
+          onClick={() => navigate(-1)}
+          className="absolute top-0 right-0 text-blue-500 hover:text-blue-700 font-medium text-lg"
+          >
+            Regresar &gt;
             </button>
-          </div>
-
+            <h1 className="text-3xl font-bold text-left mt-6">Detalles - Pagos del Proyecto: {proyecto?.Nombre_Proyecto}</h1>
+            
           {alerta && <div className="mb-4 text-red-600 font-semibold">{alerta}</div>}
 
           {/* Formulario para registrar pagos solo si no está completamente cobrado */}
@@ -162,7 +161,7 @@ const VerDetallesPagosCuenta = () => {
                       className="bg-white border-b hover:bg-gray-50"
                     >
                       <td className="px-6 py-4">S/.{pago.monto}</td>
-                      <td className="px-6 py-4">{pago.porcentaje}%</td>
+                      <td className="px-6 py-4">{parseFloat(pago.porcentaje).toFixed(2)}%</td>
                       <td className="px-6 py-4">{new Date(pago.fecha).toLocaleDateString()}</td>
                       <td className="px-6 py-4">{pago.observaciones || 'N/A'}</td>
                       <td className="px-6 py-4">

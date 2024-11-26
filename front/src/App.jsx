@@ -51,9 +51,9 @@ import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 
 import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
 
-import GestionarEstadoCobro from './pages/Administrador/GestionarEstadoCobro'; // Actualizado
-import RegistrarPago from './pages/Administrador/RegistrarPago'; // Renombrado
-import VerPagosProyecto from './pages/Administrador/VerPagosProyecto'; // Renombrado
+
+import GestionarCobros from './pages/Administrador/GestionarCobros';
+import VerDetallesCobros from './pages/Administrador/VerDetallesCobros';
 
 
 
@@ -113,10 +113,8 @@ function App() {
         <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>   
           
         {/* Gestión de estado de cobro en proyectos */}
-        <Route path="/gestionar_estado_cobro" element={<GestionarEstadoCobro />} />
-        <Route path="/registro_pago" element={<RegistrarPago />} />
-        <Route path="/proyectos/detalles/:id" element={<VerPagosProyecto />} />
-
+        <Route path="/gestionar_estado_cobro" element={<GestionarCobros />} /> 
+        <Route path="/proyectos/detalles/:id" element={<VerDetallesCobros/>} />
       </Routes>
     </BrowserRouter>
     </UserProvider>

@@ -7,7 +7,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const GestionarCobros = () => {
-  const [proyectos, setProyectos] = useState([]); // Cambiado de cobros a proyectos
+  const [proyectos, setProyectos] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProyectos, setFilteredProyectos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +17,7 @@ const GestionarCobros = () => {
   useEffect(() => {
     const fetchProyectos = async () => {
       try {
-        const response = await listarProyectosRequest(); // Ahora obtenemos proyectos
+        const response = await listarProyectosRequest();
         setProyectos(response.data.data);
         setFilteredProyectos(response.data.data);
       } catch (error) {
@@ -92,7 +92,7 @@ const GestionarCobros = () => {
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
           <div className="relative overflow-x-auto sm:rounded-lg">
-            <h1 className="text-3xl font-bold mb-2">Control de estado de cobro</h1>
+            <h1 className="text-3xl font-bold mb-2">Control de Estado de Cobro</h1>
             <p className="mb-6">Este módulo lista todos los proyectos con sus cobros asociados.</p>
 
             <div className="flex items-center gap-4 mb-4">
@@ -115,17 +115,14 @@ const GestionarCobros = () => {
               >
                 Resetear
               </button>
-              <Link to="/registro_proyecto">
-                <button className="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">
-                  Registrar Proyecto
-                </button>
-              </Link>
             </div>
 
             <table className="shadow-md w-full text-sm text-left text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" className="px-6 py-3">Nombre del Proyecto</th>
+                  <th scope="col" className="px-6 py-3">Cliente</th>
+                  <th scope="col" className="px-6 py-3">Vendedora</th>
                   <th scope="col" className="px-6 py-3">Costo Total</th>
                   <th scope="col" className="px-6 py-3">Total Cobrado</th>
                   <th scope="col" className="px-6 py-3">Saldo Restante</th>
@@ -138,6 +135,8 @@ const GestionarCobros = () => {
                   currentItems.map((proyecto, index) => (
                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                       <td className="px-6 py-4">{proyecto.Nombre_Proyecto}</td>
+                      <td className="px-6 py-4">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente?.nombre || 'N/A'}</td>
+                      <td className="px-6 py-4">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.vendedor?.nombre || 'N/A'}</td>
                       <td className="px-6 py-4">S/.{proyecto.Costo_Total}</td>
                       <td className="px-6 py-4">S/.{proyecto.totalCobrado}</td>
                       <td className="px-6 py-4">S/.{proyecto.saldoRestante}</td>
@@ -178,7 +177,7 @@ const GestionarCobros = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center">
+                    <td colSpan="8" className="px-6 py-4 text-center">
                       No se encontraron proyectos.
                     </td>
                   </tr>

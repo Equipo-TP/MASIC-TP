@@ -119,20 +119,20 @@ export const ver_proyecto_por_idRequest = async (id) => {return await axios.post
 export const listar_proyectosRequest = async () => {return await axios.get(`${API}/listar_proyectos`);};
 export const editar_proyecto_Request = async(id,data) => {return await axios.put(`${API}/editar_proyecto_por_id/${id}`, data);};
 
+// ------ Manejo de Cobro ------
+
 // Listar todos los proyectos (incluye datos de cobros/pagos)
 export const listarProyectosRequest = async () => axios.get(`${API}/listar_proyectos`);
 
 // Obtener un proyecto específico con todos los detalles (incluye cobros y pagos)
-export const verProyectoPorIdRequest = async (id) => axios.get(`${API}/ver_proyecto_por_id/${id}`);
+export const verProyectoPorIdRequest = async (id) => axios.get(`${API}/ver/${id}`);
 
-// Editar los cobros/pagos de un proyecto específico
-export const actualizarProyectoCobrosRequest = async (id, data) =>
-   axios.put(`${API}/proyectos/${id}/actualizar_cobros`, data);
+// Actualizar los cobros/pagos de un proyecto específico
+export const actualizarProyectoCobrosRequest = async (id, data) => axios.post(`${API}/actualizarCobros/${id}`, data);
 
 // Registrar un nuevo pago en un proyecto
-export const registrarPagoProyectoRequest = async (id, pago) =>
-   axios.post(`${API}/proyectos/${id}/pagos`, pago);
+export const registrarPagoProyectoRequest = async (id, pago) => axios.post(`${API}/proyectos/${id}/pagos`, pago);
 
 // Eliminar un pago específico de un proyecto
-export const eliminarPagoProyectoRequest = async (idPago) =>
-   axios.delete(`${API}/pagos/${idPago}`);
+export const eliminarPagoProyectoRequest = async (idPago) => axios.delete(`${API}/pagos/${idPago}`);
+
