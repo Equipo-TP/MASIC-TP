@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { crearProyectoRequest, listarPresupuestosAprobados, ver_proyecto_por_idRequest, obtenerPresupuestoIDRequest } from '../../api/auth';
-import AsignarMaterial from './AsignarMaterial';
+
 
 const VerProyecto = () => {
   const { id } = useParams(); // Obtener el ID del proyecto desde la URL

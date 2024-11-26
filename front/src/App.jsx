@@ -41,6 +41,7 @@ import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto';
 import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
 import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
 import VerProyecto from './pages/Administrador/VerProyecto';
+import VerProyectoTecnico from './pages/Tecnico/VerProyecto';
 
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
@@ -93,6 +94,7 @@ function App() {
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
         <Route path='/ver_proyectos/:id' element={<VerProyecto/>}/>
+        <Route path='/ver_proyectos/:id' element={<VerProyectoTecnico/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>
