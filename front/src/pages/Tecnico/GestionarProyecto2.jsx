@@ -162,7 +162,7 @@ const GestionarProyectos = () => {
                       <Link to={`/ver_proyectos/${proyecto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Ver
                       </Link>
-                      <Link to={`/ver_proyectos/${proyecto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
+                      <Link to={`/editar_proyectos/${proyecto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">
                         Editar
                       </Link>
                     </td>

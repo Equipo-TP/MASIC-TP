@@ -45,7 +45,7 @@ import VerProyectoTecnico from './pages/Tecnico/VerProyecto';
 
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
-
+import EditarProyectoTecnico from './pages/Tecnico/EditarProyecto';
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -95,6 +95,7 @@ function App() {
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
         <Route path='/ver_proyectos/:id' element={<VerProyecto/>}/>
         <Route path='/ver_proyectos/:id' element={<VerProyectoTecnico/>}/>
+        <Route path='/editar_proyectos/:id' element={<EditarProyectoTecnico/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>
