@@ -131,6 +131,7 @@ const GestionarAlmacen = () => {
                   <th scope="col" className="px-6 py-3">Stock</th>
                   <th scope="col" className="px-6 py-3">Fecha de Registro</th>
                   <th scope="col" className="px-6 py-3">Unidad de Medida</th>
+                  <th scope="col" className="px-6 py-3">Tipo de Material</th> {/* Nueva columna */}
                   <th scope="col" className="px-6 py-3">Acciones</th>
                 </tr>
               </thead>
@@ -142,22 +143,23 @@ const GestionarAlmacen = () => {
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.stock}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.fecha_registro}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.unidad_medida}</td>
+                      <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.tipo_material}</td> {/* Mostrar tipo de material */}
                       <td className="px-6 py-4 text-gray-900 dark:text-white">
                         <Link to={`/inventario_almacen/${almacen._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
                           Inventario
                         </Link>
                         <button
-                        onClick={() => handleDelete(almacen._id)}
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                      >
-                        Eliminar
-                      </button>
+                          onClick={() => handleDelete(almacen._id)}
+                          className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                        >
+                          Eliminar
+                        </button>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center text-gray-500">No se encontraron almacenes.</td>
+                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">No se encontraron almacenes.</td>
                   </tr>
                 )}
               </tbody>

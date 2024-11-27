@@ -95,16 +95,34 @@ const eliminarMaterial = async function (req, res) {
 const registrarMovimiento = async function (req, res) {
     let data = req.body;
     try {
+        // Crear el registro de movimiento
         let reg = await Inventario.create(data);
-            //OBTENER EL REGISTRO DE MATERIAL
-            let material = await Material.findById({_id:reg.id_material});
-            //CALCULAR EL NUEVO STOCK
-                                //STOCK ACTUAL       //STOCK A AUMENTAR
-            let nuevo_stock = parseInt(material.stock) + parseInt(reg.cantidad);
-            //ACTUALIZAR EL NUEVO STOCK AL PRODUCTO
-             await Material.findByIdAndUpdate({_id:reg.id_material},{
-                stock: nuevo_stock
-            });
+        
+        // Obtener el material para actualizar el stock
+        let material = await Material.findById({ _id: reg.id_material });
+        
+        // Actualizar el stock total y el stock físico según el tipo de movimiento
+        let nuevo_stock = material.stock;
+        let nuevo_stock_fisico = material.stock_fisico;
+
+        // Si es un ingreso, aumentamos el stock total y físico
+        if (reg.tipo_movimiento === 'Ingreso') {
+            nuevo_stock += reg.cantidad;
+            if (reg.motivo === 'Compra') {
+                nuevo_stock_fisico += reg.cantidad;
+            }
+        } else if (reg.tipo_movimiento === 'Egreso') {
+            // Si es egreso, reducimos el stock total y físico
+            nuevo_stock -= reg.cantidad;
+            nuevo_stock_fisico -= reg.cantidad;
+        }
+
+        // Actualizar el stock y stock físico en el material
+        await Material.findByIdAndUpdate({ _id: reg.id_material }, {
+            stock: nuevo_stock,
+            stock_fisico: nuevo_stock_fisico
+        });
+
         res.status(200).send({ message: 'Movimiento registrado correctamente', data: reg });
         
     } catch (error) {
