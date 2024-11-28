@@ -5,10 +5,10 @@ var materialController = require('../controllers/materialController');
 
 var api = express.Router();
 
-api.post('/registro_material', materialController.registro_material);
-/*api.get('/listar_tarifas', instalacionController.listar_tarifario);
-api.delete('/eliminar_tarifa/:id', instalacionController.eliminar_tarifa);
-api.put('/editar_tarifa/:id', instalacionController.editar_tarifa);
-api.get('/obtener_tarifa_por_id/:id', instalacionController.obtener_tarifario_por_id);*/
+api.post('/registro_material', materialController.registrarMaterial);
+api.get('/listar_materiales', materialController.listarMateriales);
+api.get('/obtener_material_por_id/:id', materialController.obtenerMaterialPorId);
+api.put('/editar_material/:id', materialController.editarMaterial);
+api.delete('/eliminar_material/:id', materialController.eliminarMaterial);
 
 module.exports = api;

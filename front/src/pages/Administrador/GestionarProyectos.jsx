@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'; 
 import { useNavigate } from 'react-router-dom';
-import { listarClientesRequest, obtenerClienteConSolicitudesRequest } from '../../api/auth'; 
+import { listar_proyectosRequest, obtenerClienteConSolicitudesRequest } from '../../api/auth'; 
 import MenuSideBar from '../../components/MenuSideBar'; 
 import NavBar from '../../components/NavBar'; 
 import ModalCliente from '../../components/ModalCliente';
+import { Link } from 'react-router-dom';
 
 const GestionarProyectos = () => {
-  const [clientes, setClientes] = useState([]);
+  const [proyectos, setProyectos] = useState([]);
+  const [isOpen, setIsOpen] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,16 +17,17 @@ const GestionarProyectos = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const listarClientes = async () => {
+    const listarProyectos = async () => {
       try {
-        const data = await listarClientesRequest();
-        setClientes(data.data.data); 
+        const data = await listar_proyectosRequest();
+        setProyectos(data.data.data); 
+        console.log(proyectos);
       } catch (error) {
-        console.error('Error al listar los clientes:', error);
+        console.error('Error al listar los proyectos:', error);
       }
     };
 
-    listarClientes();
+    listarProyectos();
   }, [refresh]);
 
   const handleDrawerToggle = () => {
@@ -39,6 +42,14 @@ const GestionarProyectos = () => {
     setSearchTerm(e.target.value); 
   };
 
+  const toggleDropdown = (id) => {
+    if (isOpen === id) {
+      setIsOpen(null); // Cierra el menú si ya está abierto
+    } else {
+      setIsOpen(id); // Abre el menú para el proyecto específico
+    }
+  };
+
   const handleClienteSelect = async (cliente) => {
     try {
       const data = await obtenerClienteConSolicitudesRequest(cliente._id); 
@@ -49,8 +60,8 @@ const GestionarProyectos = () => {
     }
   };
 
-  const filteredClients = clientes.filter(cliente => 
-    cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredClients = proyectos.filter(proyecto => 
+    proyecto.Nombre_Proyecto.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -59,7 +70,7 @@ const GestionarProyectos = () => {
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} /> 
         <div className="p-6">
-          <h1 className="text-3xl font-bold mb-4">Lista de Proyectos</h1>
+          <h1 className="text-3xl font-bold mb-4">Gestionar Proyectos</h1>
 
           <div className="flex justify-end mb-4">
             <button 
@@ -77,18 +88,19 @@ const GestionarProyectos = () => {
                 <th className="py-3 px-6 text-left">Nombre del proyecto</th>
                 <th className="py-3 px-6 text-left">Nombre del cliente</th>                
                 <th className="py-3 px-6 text-left">Ubicación</th>
-                <th className="py-3 px-6 text-left">Estado</th> 
+                <th className="py-3 px-6 text-left">Acciones</th> 
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
               {filteredClients.length > 0 ? (
-                filteredClients.map((cliente) => (
-                  <tr key={cliente._id} className="border-b border-gray-200 hover:bg-gray-100">
-                    <td className="py-3 px-6">{cliente.nombre}</td>
-                    <td className="py-3 px-6">{cliente.apellidos}</td>
-                    <td className="py-3 px-6">{cliente.email}</td>
-                    <td className="py-3 px-6">{cliente.telefono}</td>
+                filteredClients.map((proyecto) => (
+                  <tr key={proyecto._id} className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6">{proyecto.ID_Proyecto}</td>
+                    <td className="py-3 px-6">{proyecto.Nombre_Proyecto}</td>
+                    <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.nombre} {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.apellidos}</td>
+                    <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.direccion}, {proyecto.ID_Presupuesto_Proyecto?.Transporte_Personal}</td>
                     <td className="py-3 px-6">
+
                       <button 
                         onClick={() => navigate(`/info_solicitud/${solicitud._id}`)} 
                         className="text-green-500 hover:underline mr-4"
@@ -101,6 +113,18 @@ const GestionarProyectos = () => {
                       >
                         Editar
                       </button>
+
+                      <div class="btn-group dropdown d-inline-block mb-3 mr-2">
+                        <button className="btn btn-outline-secondary border-2 py-2 px-6 dropdown-toggle rounded-lg bg-gray-300" aria-haspopup="true"
+                         aria-expanded={isOpen} type="button" onClick={() => toggleDropdown(proyecto._id)}>OPCIONES</button>
+                      {isOpen === proyecto._id && (
+                        <div class="dropdown-menu" className="absolute mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
+                          <Link to={`/asignar_tecnico/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Ver</Link>
+                          <Link to={`/asignar_tecnicos/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Asignar técnico</Link>
+                          <Link to={`/visualizar_presupuesto/${proyecto.ID_Presupuesto_Proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Detalle Presupuesto</Link>
+                        </div>)}
+                      </div> 
+
                     </td>
                   </tr>
                 ))

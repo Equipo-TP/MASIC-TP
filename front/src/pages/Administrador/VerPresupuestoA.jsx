@@ -164,7 +164,7 @@ const VerPresupuestoA = () => {
                                     <tbody>
                                         {presupuesto.instalaciones.map((instalacion, index) => (
                                             <tr key={index}>
-                                                <td className="border border-gray-300 px-4 py-2">{instalacion.tipo_luminaria.tipo_luminaria}</td>
+                                                <td className="border border-gray-300 px-4 py-2">{instalacion.tipo_luminaria?.tipo_luminaria}</td>
                                                 <td className="border border-gray-300 px-4 py-2">{instalacion.cantidad} UND</td>
                                                 <td className="border border-gray-300 px-4 py-2">$ {instalacion.costo_total}</td>
                                             </tr>
