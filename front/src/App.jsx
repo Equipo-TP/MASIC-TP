@@ -40,6 +40,10 @@ import GestionarProyectos from './pages/Administrador/GestionarProyectos';
 import RegistroPresupuestos from './pages/Administrador/CrearPresupuesto'; 
 import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
 
+import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
+import VerProyecto from './pages/Administrador/VerProyecto';
+import VerProyectoTecnico from './pages/Tecnico/VerProyecto';
+
 
 import GestionarAlmacen from './pages/Administrador/GestionarAlmacen';
 import RegistrarAlmacen from './pages/Administrador/RegistrarAlmacen';
@@ -48,14 +52,17 @@ import InventarioAlmacen from './pages/Administrador/InventarioMaterial';
 import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
+import EditarProyectoTecnico from './pages/Tecnico/EditarProyecto';
+
+import EditarIncidenciasTecnico from './pages/Tecnico/EditarIncidencias';
+import VerIncidencias from './pages/Tecnico/VerIncidencias';
+import VerIncidenciasAdmin from './pages/Administrador/VerIncidencias';
 
 import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
 
 
 import GestionarCobros from './pages/Administrador/GestionarCobros';
 import VerDetallesCobros from './pages/Administrador/VerDetallesCobros';
-
-
 
 function App() {
     //const { checkAuth } = useAuth();
@@ -97,6 +104,7 @@ function App() {
         <Route path='/ver_presupuesto/:id' element={<VerPresupuesto />} />  
         <Route path='/editar_presupuesto/:id' element={<EditarPresupuesto />} />
         <Route path='/gestionar_presupuestos' element={<GestionarPresupuestosA/>}/>
+        <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
         <Route path='/registro_presupuestos' element={<RegistroPresupuestos/>}/>
         <Route path='/visualizar_presupuesto/:id' element={<VerPresupuestoA />} />
         <Route path='/visualizar_presupuestos' element={<GestionarPresupuestos/>}/>
@@ -109,12 +117,22 @@ function App() {
 
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
+
+        <Route path='/ver_proyectos/:id' element={<VerProyecto/>}/>
+        <Route path='/ver_proyectos/:id' element={<VerProyectoTecnico/>}/>
+        <Route path='/editar_proyectos/:id' element={<EditarProyectoTecnico/>}/>
+        
+        <Route path='/ver_incidencias/:id' element={<VerIncidencias/>}/>
+        <Route path='/ver_incidencias_admin/:id' element={<VerIncidenciasAdmin/>}/>
+        <Route path='/editar_incidencias_tecnico/:id' element={<EditarIncidenciasTecnico/>}/>
+
         </Route> 
         <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>   
           
         {/* Gestión de estado de cobro en proyectos */}
         <Route path="/gestionar_estado_cobro" element={<GestionarCobros />} /> 
         <Route path="/proyectos/detalles/:id" element={<VerDetallesCobros/>} />
+
       </Routes>
     </BrowserRouter>
     </UserProvider>

@@ -13,34 +13,6 @@ const VerPresupuestoA = () => {
     const [nombreCliente, setNombreCliente] = useState('');
 
 
-    useEffect(() => {
-        const fetchPresupuesto = async () => {
-            try {
-                //llama token por seguridad
-                const token = localStorage.getItem('token');
-                const headers = {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                };
-                //llama obtener presupuesto por ID
-                const response = await obtenerPresupuestoIDRequest(id, headers);
-                setPresupuesto(response.data.data);
-
-                //llama obtener solicitud por ID
-                const solicitudResponse = await obtener_solicitud_por_idRequest(response.data.data.ID_Solicitud_Presupuesto._id);
-                setSolicitud(solicitudResponse.data.data);
-          
-                //llama obtener cliente por ID
-                const clienteResponse = await obtener_cliente_por_idRequest(solicitudResponse.data.data.cliente._id); 
-                setNombreCliente(clienteResponse.data.data);
-                
-
-            } catch (error) {
-                console.error('Error al obtener el presupuesto:', error);
-            }
-        };
-        fetchPresupuesto();
-    }, [id]);
 
     //metodo para actualizar el estado del presupuesto
     const actualizarEstado = async (nuevoEstado) => {
