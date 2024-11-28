@@ -10,6 +10,7 @@ const RegistrarProyecto = () => {
   const [presupuesto, setPresupuesto] = useState('');
   const [presupuestos, setPresupuestos] = useState([]);
   const [clienteNombre, setClienteNombre] = useState('');
+  const [pago_total, setPagoTotal] = useState('');
   const [direccion, setDireccion] = useState('');
   const [observaciones, setObservaciones] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
@@ -69,6 +70,7 @@ const RegistrarProyecto = () => {
     if (presupuestoSeleccionado) {
       setClienteNombre(presupuestoSeleccionado.ID_Solicitud_Presupuesto.cliente.nombre);
       setDireccion(presupuestoSeleccionado.Transporte_Personal);
+      setPagoTotal(presupuestoSeleccionado.Pago_Total);
     } else {
       setClienteNombre('');
       setDireccion('');
@@ -82,6 +84,7 @@ const RegistrarProyecto = () => {
         Descripcion: descripcion,
         ID_Presupuesto_Proyecto: presupuesto,
         GestionarMaterial: gestionarMaterial, // Agregar los materiales al proyecto
+        Costo_Total: pago_total,
     };
     try {
         await crearProyectoRequest(nuevoProyecto);

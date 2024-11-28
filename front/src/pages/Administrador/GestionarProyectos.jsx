@@ -101,7 +101,7 @@ const GestionarProyectos = () => {
                     <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.direccion}, {proyecto.ID_Presupuesto_Proyecto?.Transporte_Personal}</td>
                     <td className="py-3 px-6">
                       <div class="btn-group dropdown d-inline-block mb-3 mr-2">
-                        <button className="btn btn-outline-secondary border-2 py-2 px-6 dropdown-toggle rounded-lg bg-gray-300" aria-haspopup="true"
+                        <button className="btn btn-outline-secondary border-2 py-2 px-6 dropdown-toggle rounded-lg bg-blue-400 text-cyan-50 font-semibold" aria-haspopup="true"
                          aria-expanded={isOpen} type="button" onClick={() => toggleDropdown(proyecto._id)}>OPCIONES</button>
                       {isOpen === proyecto._id && (
                         <div class="dropdown-menu" className="absolute mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
