@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { listarSolicitudesRequest } from '../../api/auth';
+import { listarSolicitudesAdminRequest, actualizarEstadoSolicitudRequest } from '../../api/auth';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ const GestionSolicitud = () => {
     useEffect(() => {
         const fetchSolicitudes = async () => {
             try {
-                const response = await listarSolicitudesRequest();
+                const response = await listarSolicitudesAdminRequest();
                 setSolicitudes(response.data.data);
             } catch (error) {
                 console.error('Error al listar las solicitudes:', error);

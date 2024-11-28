@@ -8,6 +8,7 @@ var api = express.Router();
 api.post('/login_user',usuarioController.login_user);
 api.post('/registro_usuario', usuarioController.registro_usuario);
 api.get('/listar_usuarios', usuarioController.listar_usuarios);
+api.get('/listar_usuarios_por_rol/:rol', usuarioController.listar_usuarios_por_rol);
 api.delete('/eliminar_usuario/:id', usuarioController.eliminar_usuario);
 api.post('/obtener_usuario_por_id/:id', usuarioController.obtener_usuario_por_id);
 api.post('/actualizar_usuario/:id', usuarioController.obtener_usuario_por_id);

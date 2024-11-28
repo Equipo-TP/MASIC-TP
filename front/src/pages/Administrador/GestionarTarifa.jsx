@@ -69,6 +69,7 @@ const GestionarTarifas = () => {
     <div className="flex">
       <MenuSideBar open={drawerOpen} />
       <div className="flex-1">
+
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6 mt-16 h-full">
           <div className="relative overflow-hidden h-full">
@@ -91,6 +92,7 @@ const GestionarTarifas = () => {
                     <th scope="col" className="px-6 py-3">Monto</th>
                     <th scope="col" className="px-6 py-3">Descripción</th>
                     <th scope="col" className="px-6 py-3">Acciones</th>
+
                   </tr>
                 </thead>
                 <tbody>

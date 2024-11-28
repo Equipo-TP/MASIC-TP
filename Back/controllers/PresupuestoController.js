@@ -3,6 +3,7 @@
 const Presupuesto = require('../models/presupuesto');
 const Solicitud = require('../models/solicitud');
 const Instalacion = require('../models/instalacion');
+const Proyecto = require('../models/proyecto');
 
 
 const registro_presupuesto = async function(req, res) {
@@ -261,7 +262,31 @@ const listar_presupuestos_vendedora = async function(req, res) {
         res.status(500).send({ message: 'Error al listar presupuestos por vendedora', error });
     }
 };
+const listar_presupuestos_aprobados_para_proyectos = async function(req,res) {
+    // Buscar todos los presupuestos y obtener la lista de IDs de solicitudes
+    var proyectos = await Proyecto.find().select('ID_Solicitud_Presupuesto');
+    var id_presupuestos_excluidas = proyectos.map(proyecto => proyecto.ID_Presupuesto_Proyecto);
 
+    // Buscar solicitudes aprobadas cuyo _id no esté en la lista de id_solicitudes_excluidas
+    var reg = await Presupuesto.find({
+        estado_1: 'Enviado',
+        estado_2: 'Aprobado',
+        _id: { $nin: id_presupuestos_excluidas }
+    }).sort({ createdAt: -1 }).populate({
+        path: 'ID_Solicitud_Presupuesto',
+        populate: [
+          {
+            path: 'cliente', // Asegúrate de que este es el campo dentro de ID_Solicitud_Presupuesto que guarda el cliente
+          },
+          {
+            path: 'vendedor', // Asegúrate de que este es el campo dentro de ID_Solicitud_Presupuesto que guarda el vendedor
+          }
+        ]
+      });
+
+    res.status(200).send({ data: reg });
+
+};
 module.exports = {
     registro_presupuesto,
     ver_presupuesto_id,
@@ -271,5 +296,6 @@ module.exports = {
     eliminar_presupuesto,
     listar_presupuestos,
     listar_presupuestos_vendedora,
+    listar_presupuestos_aprobados_para_proyectos,
 };
 

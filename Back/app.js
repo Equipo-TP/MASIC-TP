@@ -5,16 +5,20 @@ var cors = require('cors');
 var express = require('express');
 var bodyparser = require('body-parser');
 var mongoose = require('mongoose');
+
 //declaramos la variable app que manejaremos mediante express
 var app = express();
 
+//importacion de rutas
 var user_route = require('./routes/usuario');
 var solicitud_route = require('./routes/solicitud');
 var cliente_route = require('./routes/cliente');
 var instalacion_route = require('./routes/instalacion');
-
+var proyecto_route = require('./routes/proyecto');
 var presupuesto_route = require('./routes/presupuesto');
 var presupuesto_tarifa_route = require('./routes/presupuesto_tarifa');
+var material_route = require('./routes/materialRoutes');
+var inventario_route = require('./routes/inventarioRoutes');
 
 //llamamos a la variable mongoose para que se conecte con mongodb al puerto 27017
 mongoose.connect('mongodb+srv://valery:proyectotp24@masic.xd5ik.mongodb.net/Masic', {useUnifiedTopology: true, useNewUrlParser: true})
@@ -47,12 +51,17 @@ app.use((req,res,next)=>{
     next();
 });
 
+// el registro de las rutas de los diferentes módulos
 app.use('/api', user_route);
 app.use('/api', solicitud_route);
 app.use('/api', cliente_route);
 app.use('/api', instalacion_route);
 app.use('/api', presupuesto_route);
 app.use('/api', presupuesto_tarifa_route);
+app.use('/api', proyecto_route);
+app.use('/api', material_route);
+app.use('/api', inventario_route);
+
 
 //Exportación del módulo app para que se puedan comunicar entre sí
 module.exports = app;
