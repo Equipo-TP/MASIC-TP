@@ -51,6 +51,12 @@ import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 
 import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
 
+
+import GestionarCobros from './pages/Administrador/GestionarCobros';
+import VerDetallesCobros from './pages/Administrador/VerDetallesCobros';
+
+
+
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -97,7 +103,6 @@ function App() {
 
         <Route path='/gestionar_proyectos' element={<GestionarProyectos/>}/>
 
-        
         <Route path='/gestionar_almacen' element={<GestionarAlmacen/>}/>
         <Route path='/registro_almacen' element={<RegistrarAlmacen/>}/>
         <Route path='/inventario_almacen/:id' element={<InventarioAlmacen/>}/>
@@ -105,8 +110,11 @@ function App() {
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
         </Route> 
-        <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>     
-
+        <Route path='/asignar_tecnicos/:id' element={<AsignarTecnicosProyecto/>}/>   
+          
+        {/* Gestión de estado de cobro en proyectos */}
+        <Route path="/gestionar_estado_cobro" element={<GestionarCobros />} /> 
+        <Route path="/proyectos/detalles/:id" element={<VerDetallesCobros/>} />
       </Routes>
     </BrowserRouter>
     </UserProvider>
@@ -114,4 +122,3 @@ function App() {
 }
 
 export default App;
-
