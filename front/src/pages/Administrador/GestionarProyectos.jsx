@@ -100,6 +100,20 @@ const GestionarProyectos = () => {
                     <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.nombre} {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.apellidos}</td>
                     <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.direccion}, {proyecto.ID_Presupuesto_Proyecto?.Transporte_Personal}</td>
                     <td className="py-3 px-6">
+
+                      <button 
+                        onClick={() => navigate(`/info_solicitud/${solicitud._id}`)} 
+                        className="text-green-500 hover:underline mr-4"
+                      >
+                        Ver
+                      </button>
+                      <button 
+                        onClick={() => navigate(`/info_solicitud/${solicitud._id}`)} 
+                        className="text-red-500 hover:underline mr-4"
+                      >
+                        Editar
+                      </button>
+
                       <div class="btn-group dropdown d-inline-block mb-3 mr-2">
                         <button className="btn btn-outline-secondary border-2 py-2 px-6 dropdown-toggle rounded-lg bg-blue-400 text-cyan-50 font-semibold" aria-haspopup="true"
                          aria-expanded={isOpen} type="button" onClick={() => toggleDropdown(proyecto._id)}>OPCIONES</button>
@@ -110,6 +124,7 @@ const GestionarProyectos = () => {
                           <Link to={`/visualizar_presupuesto/${proyecto.ID_Presupuesto_Proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Detalle Presupuesto</Link>
                         </div>)}
                       </div> 
+
                     </td>
                   </tr>
                 ))

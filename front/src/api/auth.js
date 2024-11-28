@@ -105,6 +105,11 @@ export const registrarAlmacenRequest = async (almacen) => axios.post(`${API}/reg
 // Función para actualizar un almacén específico por ID
 export const actualizarAlmacenRequest = async (id, almacen) => axios.put(`${API}/editar_almacen/${id}`, almacen);
 
+
+export const ver_proyecto_por_idRequest = async (id) => {return await axios.post(`${API}/ver_proyecto_por_id/${id}`);};
+export const listar_proyectosRequest = async () => {return await axios.get(`${API}/listar_proyectos`);};
+export const editarProyectoPorIdRequest = async (id, data) => {return await axios.put(`${API}/editar_proyecto_por_id/${id}`, data);}
+
 // Función para eliminar un almacén específico por ID
 export const eliminarAlmacenRequest = async (id) => axios.delete(`${API}/eliminar_material/${id}`);
 
@@ -136,4 +141,5 @@ export const registrarPagoProyectoRequest = async (id, pago) => axios.post(`${AP
 
 // Eliminar un pago específico de un proyecto
 export const eliminarPagoProyectoRequest = async (idPago) => axios.delete(`${API}/pagos/${idPago}`);
+
 

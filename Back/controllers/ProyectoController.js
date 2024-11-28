@@ -26,6 +26,7 @@ async function verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_fin
     return !conflicto;
 }
 
+
 const registrar_proyecto = async function (req, res) {
     try {
         const data = req.body;
@@ -33,6 +34,7 @@ const registrar_proyecto = async function (req, res) {
         if (!data.Costo_Total || data.Costo_Total <= 0) {
             return res.status(400).send({ message: 'El costo total debe ser mayor a 0' });
         }
+
 
         const nuevoId = await obtenerProximoId('proyectos');
         data.ID_Proyecto = nuevoId;
@@ -90,7 +92,8 @@ const listar_proyectos = async function (req, res) {
                 }
             })
             .populate('Horario.Tecnico')
-            .populate('Incidencias.afectado');
+            .populate('Incidencias.afectado')
+            .populate('Cobro.estado_de_cobro');
         res.status(200).send({ data: proyectos });
     } catch (error) {
         res.status(500).send({ message: 'Error al listar proyectos', error });
@@ -110,7 +113,8 @@ const ver_proyecto_por_id = async function (req, res) {
                 }
             })
             .populate('Horario.Tecnico')
-            .populate('Incidencias.afectado');
+            .populate('Incidencias.afectado')
+            .populate('Cobro.estado_de_cobro');
         if (proyecto) {
             res.status(200).send({ data: proyecto });
         } else {
@@ -126,7 +130,37 @@ const editar_proyecto_por_id = async function (req, res) {
     const id = req.params.id;
     const data = req.body;
     try {
-        const proyecto = await Proyecto.findByIdAndUpdate(id, data, { new: true });
+        for (const Horario of data.Horario) {
+            const { fecha_inicio, fecha_final, Tecnico } = Horario;
+
+            if (fecha_inicio && fecha_final && new Date(fecha_final) <= new Date(fecha_inicio)) {
+                return res.status(400).send({ message: 'La fecha final debe ser posterior a la fecha de inicio' });
+            }
+
+            for (const tecnicoId of Tecnico) {
+                const disponible = await verificarDisponibilidadTecnico(tecnicoId, fecha_inicio, fecha_final);
+                if (!disponible) {
+                    return res.status(400).send({ message: `El técnico ${tecnicoId} ya está asignado a otro proyecto en las mismas fechas` });
+                }
+            }
+        }
+
+        const proyecto = await Proyecto.findByIdAndUpdate(
+            { _id: id },
+            {
+                ID_Presupuesto_Proyecto: data.ID_Presupuesto_Proyecto,
+                Costo_Total: data.Costo_Total,
+                Horario: data.Horario,
+                GestionarMaterial: data.GestionarMaterial,
+                Nombre_Proyecto: data.Nombre_Proyecto,
+                Descripcion: data.Descripcion,
+                Estado: data.Estado,
+                Observacion: data.Observacion,
+                Incidencias: data.Incidencias,
+            },
+            { new: true }
+        );
+
         if (proyecto) {
             res.status(200).send({ data: proyecto });
         } else {
