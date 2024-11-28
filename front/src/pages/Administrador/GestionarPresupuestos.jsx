@@ -70,7 +70,8 @@ const GestionarPresupuestosA = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentPresupuestos.map((presupuesto) => (
+                  { currentPresupuestos.length > 0 ? (
+                  currentPresupuestos.map((presupuesto) => (
                     <tr key={presupuesto._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.ID_Solicitud_Presupuesto?.id}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.ID_Solicitud_Presupuesto?.cliente.nombre} {presupuesto.ID_Solicitud_Presupuesto?.cliente.apellidos}</td>
@@ -81,13 +82,18 @@ const GestionarPresupuestosA = () => {
                         <Link to={`/editar_presupuesto/${presupuesto._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">Editar</Link>
                       </td>
                     </tr>
-                  ))}
+                  ))) : (
+                    <tr>
+                      <td colSpan="5" className="py-3 px-6 text-center">No se encontraron presupuestos.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
 
               {/* Vista para móviles */}
               <div className="space-y-6 md:hidden">
-                {currentPresupuestos.map((presupuesto) => (
+                { currentPresupuestos.length > 0 ? (
+                currentPresupuestos.map((presupuesto) => (
                   <div key={presupuesto._id} className="bg-white p-4 space-y-3 rounded-lg shadow">
                     <div className="text-sm font-bold">{`ID Solicitud: ${presupuesto.ID_Solicitud_Presupuesto?.id}`}</div>
                     <div className="text-sm text-gray-700">{`Vendedor: ${presupuesto.ID_Solicitud_Presupuesto.vendedor.nombre} ${presupuesto.ID_Solicitud_Presupuesto.vendedor.apellidos}`}</div>
@@ -98,7 +104,9 @@ const GestionarPresupuestosA = () => {
                       <Link to={`/editar_presupuesto/${presupuesto._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline">Editar</Link>
                     </div>
                   </div>
-                ))}
+                ))) : (
+                  <div className="text-center py-3">No se encontraron presupuestos.</div>
+                )}
               </div>
 
               {/* Paginación */}

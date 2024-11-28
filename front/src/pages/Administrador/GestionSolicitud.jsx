@@ -58,7 +58,8 @@ const GestionSolicitud = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {currentSolicitudes.map((solicitud) => (
+                            { currentSolicitudes.length > 0 ? (
+                            currentSolicitudes.map((solicitud) => (
                                 <tr key={solicitud._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                     <td className="px-6 py-4">{solicitud.id}</td>
                                     <td className="px-6 py-4">{solicitud.caracteristicas_obra}</td>
@@ -73,13 +74,18 @@ const GestionSolicitud = () => {
                                         </button>
                                     </td>
                                 </tr>
-                            ))}
+                            )) ) : (
+                                <tr>
+                                  <td colSpan="5" className="py-3 px-6 text-center">No se encontraron solicitudes.</td>
+                                </tr>
+                              )}
                         </tbody>
                     </table>
 
                     {/* Tabla para pantallas pequeñas */}
                     <div className="space-y-4 md:hidden">
-                        {currentSolicitudes.map((solicitud) => (
+                        { currentSolicitudes.length > 0 ? (
+                        currentSolicitudes.map((solicitud) => (
                             <div key={solicitud._id} className="bg-white p-4 rounded-lg shadow">
                                 <div className="text-sm font-bold">ID: {solicitud.id}</div>
                                 <div className="text-sm">Característica: {solicitud.caracteristicas_obra}</div>
@@ -93,7 +99,9 @@ const GestionSolicitud = () => {
                                     </button>
                                 </div>
                             </div>
-                        ))}
+                        )) ) : (
+                            <div className="text-center py-3">No se encontraron solicitudes.</div>
+                          )}
                     </div>
 
                     {/* Paginación */}
