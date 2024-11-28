@@ -133,6 +133,7 @@ const GestionarPresupuestosA = () => {
         </div>
       </div>
     </div>
+    </div>
   );
 };
 
