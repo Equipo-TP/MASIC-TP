@@ -46,6 +46,10 @@ import VerProyectoTecnico from './pages/Tecnico/VerProyecto';
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 import EditarProyectoTecnico from './pages/Tecnico/EditarProyecto';
+
+import EditarIncidenciasTecnico from './pages/Tecnico/EditarIncidencias';
+import VerIncidencias from './pages/Tecnico/VerIncidencias';
+import VerIncidenciasAdmin from './pages/Administrador/VerIncidencias';
 function App() {
     //const { checkAuth } = useAuth();
   return (
@@ -96,6 +100,10 @@ function App() {
         <Route path='/ver_proyectos/:id' element={<VerProyecto/>}/>
         <Route path='/ver_proyectos/:id' element={<VerProyectoTecnico/>}/>
         <Route path='/editar_proyectos/:id' element={<EditarProyectoTecnico/>}/>
+        
+        <Route path='/ver_incidencias/:id' element={<VerIncidencias/>}/>
+        <Route path='/ver_incidencias_admin/:id' element={<VerIncidenciasAdmin/>}/>
+        <Route path='/editar_incidencias_tecnico/:id' element={<EditarIncidenciasTecnico/>}/>
         </Route>     
       </Routes>
     </BrowserRouter>

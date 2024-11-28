@@ -180,7 +180,19 @@ const onSubmit = async (data) => {
               >
                 Editar Presupuesto
                 </button>
-
+                <button
+                type="button"
+                onClick={() => {
+                  if (proyecto.ID_Presupuesto_Proyecto && proyecto.ID_Presupuesto_Proyecto._id) {
+                    navigate(`/editar_incidencias_tecnico/${proyecto._id}`);
+                  } else {
+                    alert('El presupuesto no está disponible.');
+                  }
+                }}                
+                className="bg-red-500 text-white px-4 py-2 rounded"
+              >
+                Editar incidencias
+                </button>
             </div>
             <div className="col-span-2">
               <label className="block text-gray-700">Observaciones del proyecto</label>

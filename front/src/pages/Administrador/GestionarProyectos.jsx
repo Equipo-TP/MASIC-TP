@@ -90,13 +90,13 @@ const GestionarProyectos = () => {
                     <td className="py-3 px-6">{cliente.telefono}</td>
                     <td className="py-3 px-6">
                       <button 
-                        onClick={() => handleClienteSelect(cliente)} 
+                        onClick={() => navigate(`/info_solicitud/${solicitud._id}`)} 
                         className="text-green-500 hover:underline mr-4"
                       >
                         Ver
                       </button>
                       <button 
-                        onClick={() => handleClienteSelect(cliente)} 
+                        onClick={() => navigate(`/info_solicitud/${solicitud._id}`)} 
                         className="text-red-500 hover:underline mr-4"
                       >
                         Editar

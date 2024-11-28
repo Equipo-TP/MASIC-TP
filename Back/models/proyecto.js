@@ -26,7 +26,7 @@ var ProyectoSchema = Schema({
   Descripcion: { type: String, required: true },
   Estado: {type: String, default: 'Por realizar', required: false},
   Observacion: { type: String, required: false },//no es la de la solicitud, que notifique cuando no esta puesto el horario/tecnico
-  Incidencias: [//aun no esta en el back
+  Incidencias: [
     {
         afectado: {type: Schema.ObjectId, ref: 'usuario', required: false}, 
         descripcion: {type: String, required: false}, 
