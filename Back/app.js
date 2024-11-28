@@ -19,7 +19,6 @@ var presupuesto_route = require('./routes/presupuesto');
 var presupuesto_tarifa_route = require('./routes/presupuesto_tarifa');
 var material_route = require('./routes/materialRoutes');
 var inventario_route = require('./routes/inventarioRoutes');
-
 var cobro_route = require('./routes/cobro');
 
 // Verificar si la variable de entorno está vacía
