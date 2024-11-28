@@ -51,7 +51,6 @@ const GestionarPresupuestosA = () => {
             <div className="overflow-y-auto h-[calc(100vh-6rem)]">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-3xl font-bold mb-2">Gestor de Presupuestos</h1>
-                <div className="flex justify-end mb-4">
 
                 <Link to="/registro_presupuestos">
                   <button className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">
@@ -132,7 +131,6 @@ const GestionarPresupuestosA = () => {
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
