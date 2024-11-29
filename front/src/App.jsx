@@ -44,6 +44,7 @@ import VerPresupuestoA from './pages/Administrador/VerPresupuestoA';
 import GestionarAlmacen from './pages/Administrador/GestionarAlmacen';
 import RegistrarAlmacen from './pages/Administrador/RegistrarAlmacen';
 import InventarioAlmacen from './pages/Administrador/InventarioMaterial';
+import Movimientos from './pages/Administrador/Movimientos';
 
 import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
 
@@ -54,8 +55,6 @@ import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyec
 
 import GestionarCobros from './pages/Administrador/GestionarCobros';
 import VerDetallesCobros from './pages/Administrador/VerDetallesCobros';
-
-
 
 function App() {
     //const { checkAuth } = useAuth();
@@ -106,6 +105,8 @@ function App() {
         <Route path='/gestionar_almacen' element={<GestionarAlmacen/>}/>
         <Route path='/registro_almacen' element={<RegistrarAlmacen/>}/>
         <Route path='/inventario_almacen/:id' element={<InventarioAlmacen/>}/>
+        <Route path='/movimientos_almacen/:id' element={<Movimientos/>}/>
+
 
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>

@@ -95,6 +95,11 @@ const eliminarMaterial = async function (req, res) {
 const registrarMovimiento = async function (req, res) {
     let data = req.body;
     try {
+        // Verificamos si el tipo de ingreso es "Compra" o "Sobrantes"
+        if (data.tipo_ingreso === 'Sobrantes' && !data.proyecto) {
+            return res.status(400).send({ message: 'El proyecto es obligatorio para sobrantes' });
+        }
+        
         // Crear el registro de movimiento
         let reg = await Inventario.create(data);
         
@@ -105,19 +110,17 @@ const registrarMovimiento = async function (req, res) {
         let nuevo_stock = material.stock;
         let nuevo_stock_fisico = material.stock_fisico;
 
-        // Si es un ingreso, aumentamos el stock total y físico
         if (reg.tipo_movimiento === 'Ingreso') {
             nuevo_stock += reg.cantidad;
-            if (reg.motivo === 'Compra') {
+            if (reg.tipo_ingreso === 'Compra') {
                 nuevo_stock_fisico += reg.cantidad;
             }
         } else if (reg.tipo_movimiento === 'Egreso') {
-            // Si es egreso, reducimos el stock total y físico
             nuevo_stock -= reg.cantidad;
             nuevo_stock_fisico -= reg.cantidad;
         }
 
-        // Actualizar el stock y stock físico en el material
+        // Actualizamos el stock y el stock físico en el material
         await Material.findByIdAndUpdate({ _id: reg.id_material }, {
             stock: nuevo_stock,
             stock_fisico: nuevo_stock_fisico
@@ -135,11 +138,21 @@ const registrarMovimiento = async function (req, res) {
 const listarMovimientos = async function (req, res) {
     try {
         const movimientos = await Inventario.find().sort({ fecha_mov: -1 });
-        res.status(200).send({ data: movimientos });
+        
+        // Ajustar los datos para que las entradas y salidas tengan colores específicos
+        const movimientosFormateados = movimientos.map(mov => {
+            return {
+                ...mov.toObject(),
+                color: mov.tipo_movimiento === 'Ingreso' ? 'green' : 'red'
+            };
+        });
+
+        res.status(200).send({ data: movimientosFormateados });
     } catch (error) {
         res.status(500).send({ message: 'Error al listar movimientos', error });
     }
 };
+
 
 // Obtener movimiento por ID de inventario
 const obtenerMovimientoPorId = async function (req, res) {

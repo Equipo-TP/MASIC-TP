@@ -136,3 +136,6 @@ export const registrarPagoProyectoRequest = async (id, pago) => axios.post(`${AP
 // Eliminar un pago específico de un proyecto
 export const eliminarPagoProyectoRequest = async (idPago) => axios.delete(`${API}/pagos/${idPago}`);
 
+// En api/auth.js, asegúrate de tener algo como esto:
+
+export const listarMovimientosRequest = async () => {return await axios.get(`${API}/listar_movimientos`);};

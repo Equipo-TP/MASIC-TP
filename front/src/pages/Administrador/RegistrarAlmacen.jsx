@@ -10,6 +10,7 @@ const RegistrarAlmacen = () => {
   const [nombre, setNombre] = useState('');
   const [stock, setStock] = useState(0);
   const [unidadMedida, setUnidadMedida] = useState('');
+  const [tipoMaterial, setTipoMaterial] = useState('');  // Nuevo campo para Tipo de Material
   const [fechaRegistro, setFechaRegistro] = useState(new Date().toISOString()); // Guarda la fecha y hora actual
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -22,7 +23,7 @@ const RegistrarAlmacen = () => {
   };
 
   const registrarMaterial = async () => {
-    if (!nombre || stock === '' || !unidadMedida) {
+    if (!nombre || stock === '' || !unidadMedida || !tipoMaterial) {  // Verificamos que todos los campos sean completados
       setSnackbarMessage('Complete todos los campos');
       setSnackbarSeverity('warning');
       setOpenSnackbar(true);
@@ -33,16 +34,18 @@ const RegistrarAlmacen = () => {
       nombre,
       stock,
       unidad_medida: unidadMedida,
+      tipo_material: tipoMaterial,  // Añadimos el tipo de material
       fecha_registro: fechaRegistro,
     };
 
     try {
-      await axios.post('http://localhost:8000/api/registro_material', data);
+      await axios.post('http://localhost:8000/api/registro_material', data); // Ajusta la URL según tu backend
       setSnackbarMessage('Material registrado correctamente');
       setSnackbarSeverity('success');
       setNombre('');
       setStock(0);
       setUnidadMedida('');
+      setTipoMaterial(''); // Limpiamos el campo de tipo de material
       setFechaRegistro(new Date().toISOString()); // Reinicia a la fecha y hora actual
       setOpenSnackbar(true);
 
@@ -64,6 +67,7 @@ const RegistrarAlmacen = () => {
       setNombre('');
       setStock(0);
       setUnidadMedida('');
+      setTipoMaterial('');
       navigate('/gestionar_almacen');
     }
   };
@@ -145,6 +149,15 @@ const RegistrarAlmacen = () => {
                     label="Unidad de Medida"
                     value={unidadMedida}
                     onChange={(e) => setUnidadMedida(e.target.value)}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Tipo de Material"
+                    value={tipoMaterial}
+                    onChange={(e) => setTipoMaterial(e.target.value)}
                     required
                   />
                 </Grid>
