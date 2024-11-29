@@ -92,8 +92,7 @@ const listar_proyectos = async function (req, res) {
                 }
             })
             .populate('Horario.Tecnico')
-            .populate('Incidencias.afectado')
-            .populate('Cobro.estado_de_cobro');
+            .populate('Incidencias.afectado');
         res.status(200).send({ data: proyectos });
     } catch (error) {
         res.status(500).send({ message: 'Error al listar proyectos', error });
@@ -113,8 +112,7 @@ const ver_proyecto_por_id = async function (req, res) {
                 }
             })
             .populate('Horario.Tecnico')
-            .populate('Incidencias.afectado')
-            .populate('Cobro.estado_de_cobro');
+            .populate('Incidencias.afectado');
         if (proyecto) {
             res.status(200).send({ data: proyecto });
         } else {
