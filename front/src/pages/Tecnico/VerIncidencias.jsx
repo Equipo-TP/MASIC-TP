@@ -159,7 +159,7 @@ const tecnicos = proyecto.Horario.flatMap((horario) => horario.Tecnico || []);
                         <td className="border px-4 py-2">
                           <input
                             type="text"
-                            value={incidencia.afectado?.nombre || ''}
+                            value={incidencia.afectado?.nombre + ' ' + incidencia.afectado?.apellidos || ''}
                             
                             className="w-full p-2 border rounded"
                           />

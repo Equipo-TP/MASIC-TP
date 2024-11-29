@@ -176,7 +176,7 @@ const onSubmit = async (data) => {
                     alert('El presupuesto no está disponible.');
                   }
                 }}                
-                className="bg-green-500 text-white px-4 py-2 rounded"
+                className="bg-green-600 text-white px-4 py-2 rounded"
               >
                 Editar Presupuesto
                 </button>
@@ -189,9 +189,9 @@ const onSubmit = async (data) => {
                     alert('El presupuesto no está disponible.');
                   }
                 }}                
-                className="bg-red-500 text-white px-4 py-2 rounded"
+                className="bg-blue-400 text-white px-4 py-2 m-5 rounded"
               >
-                Editar incidencias
+                Manejar incidencias
                 </button>
             </div>
             <div className="col-span-2">
@@ -206,14 +206,14 @@ const onSubmit = async (data) => {
             <button 
                 type="submit"
                 
-                className="bg-green-500 text-white px-4 py-2 rounded"
+                className="bg-green-600 text-white px-4 py-2 rounded"
               >
                 Guardar cambios
                 </button>
             <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="bg-red-500 text-white px-4 py-2 rounded"
+                className="bg-gray-500 text-white px-4 py-2 rounded"
               >
                 Volver
                 </button>

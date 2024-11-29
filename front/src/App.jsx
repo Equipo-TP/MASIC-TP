@@ -49,8 +49,6 @@ import GestionarAlmacen from './pages/Administrador/GestionarAlmacen';
 import RegistrarAlmacen from './pages/Administrador/RegistrarAlmacen';
 import InventarioAlmacen from './pages/Administrador/InventarioMaterial';
 
-import RegistrarProyecto from './pages/Administrador/RegistrarProyecto';
-
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 import EditarProyectoTecnico from './pages/Tecnico/EditarProyecto';
 

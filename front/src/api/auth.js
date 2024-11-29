@@ -106,8 +106,6 @@ export const registrarAlmacenRequest = async (almacen) => axios.post(`${API}/reg
 export const actualizarAlmacenRequest = async (id, almacen) => axios.put(`${API}/editar_almacen/${id}`, almacen);
 
 
-export const ver_proyecto_por_idRequest = async (id) => {return await axios.post(`${API}/ver_proyecto_por_id/${id}`);};
-export const listar_proyectosRequest = async () => {return await axios.get(`${API}/listar_proyectos`);};
 export const editarProyectoPorIdRequest = async (id, data) => {return await axios.put(`${API}/editar_proyecto_por_id/${id}`, data);}
 
 // Función para eliminar un almacén específico por ID

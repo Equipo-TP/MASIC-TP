@@ -13,7 +13,7 @@ const VerProyecto = () => {
     fecha: '',
   });
   const [solicitud, setSolicitud] = useState(null);
-  const [cliente, NombreCliente] = useState(null);
+  const [cliente, setNombreCliente] = useState(null);
   const [presupuesto, setPresupuesto] = useState(null); // Estado para almacenar el proyecto
   const [isLoading, setLoading] = useState(true);
   
@@ -95,7 +95,7 @@ const handleInputChange = (field, value) => {
     [field]: value,
   }));
 };
-
+console.log(proyecto.Incidencias.afectado)
 const agregarIncidencia = () => {
   if (!nuevaIncidencia.descripcion || !nuevaIncidencia.fecha) {
     alert('Por favor, complete todos los campos antes de agregar una incidencia.');
@@ -159,11 +159,11 @@ const tecnicos = proyecto.Horario.flatMap((horario) => horario.Tecnico || []);
                         <td className="border px-4 py-2">
                           <input
                             type="text"
-                            value={incidencia.afectado?.nombre || ''}
+                            value={incidencia.afectado?.nombre + ' '+ incidencia.afectado?.apellidos || ''}
                             onChange={(e) =>
-                              handleProyectosChange(index, 'afectado', { ...incidencia.afectado, nombre: e.target.value })
+                              handleProyectosChange(index, 'afectado',  e.target.value )
                             }
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded" readOnly
                           />
                         </td>
                         <td className="border px-4 py-2">
@@ -171,7 +171,7 @@ const tecnicos = proyecto.Horario.flatMap((horario) => horario.Tecnico || []);
                             type="text"
                             value={incidencia.descripcion || ''}
                             onChange={(e) => handleProyectosChange(index, 'descripcion', e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded" readOnly
                           />
                         </td>
                         <td className="border px-4 py-2">
@@ -179,7 +179,7 @@ const tecnicos = proyecto.Horario.flatMap((horario) => horario.Tecnico || []);
                             type="date"
                             value={incidencia.fecha ? new Date(incidencia.fecha).toISOString().substr(0, 10) : ''}
                             onChange={(e) => handleProyectosChange(index, 'fecha', e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded" readOnly
                           />
                         </td>
                       </tr>
@@ -204,7 +204,7 @@ const tecnicos = proyecto.Horario.flatMap((horario) => horario.Tecnico || []);
               <option value="">Seleccione un técnico</option>
               {tecnicos.map((tecnico) => (
                 <option key={tecnico._id} value={tecnico._id}>
-                  {tecnico._id}
+                  {tecnico.nombre} {tecnico.apellidos}
                 </option>
               ))}
             </select>
