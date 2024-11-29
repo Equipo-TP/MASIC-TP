@@ -56,7 +56,11 @@ import EditarIncidenciasTecnico from './pages/Tecnico/EditarIncidencias';
 import VerIncidencias from './pages/Tecnico/VerIncidencias';
 import VerIncidenciasAdmin from './pages/Administrador/VerIncidencias';
 
+
+//import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
+
 import AsignarTecnicosProyecto from './pages/Administrador/AsignarTecnicosProyecto';
+import VisualizarCronograma from './pages/Administrador/VisualizarCronograma';
 
 
 import GestionarCobros from './pages/Administrador/GestionarCobros';
@@ -115,6 +119,9 @@ function App() {
 
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
+
+        <Route path='/visualizar_cronograma' element={<VisualizarCronograma/>}/>
+
 
         <Route path='/ver_proyectos/:id' element={<VerProyecto/>}/>
         <Route path='/ver_proyectos/:id' element={<VerProyectoTecnico/>}/>
