@@ -13,34 +13,6 @@ const VerPresupuestoA = () => {
     const [nombreCliente, setNombreCliente] = useState('');
 
 
-    useEffect(() => {
-        const fetchPresupuesto = async () => {
-            try {
-                //llama token por seguridad
-                const token = localStorage.getItem('token');
-                const headers = {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                };
-                //llama obtener presupuesto por ID
-                const response = await obtenerPresupuestoIDRequest(id, headers);
-                setPresupuesto(response.data.data);
-
-                //llama obtener solicitud por ID
-                const solicitudResponse = await obtener_solicitud_por_idRequest(response.data.data.ID_Solicitud_Presupuesto._id);
-                setSolicitud(solicitudResponse.data.data);
-          
-                //llama obtener cliente por ID
-                const clienteResponse = await obtener_cliente_por_idRequest(solicitudResponse.data.data.cliente._id); 
-                setNombreCliente(clienteResponse.data.data);
-                
-
-            } catch (error) {
-                console.error('Error al obtener el presupuesto:', error);
-            }
-        };
-        fetchPresupuesto();
-    }, [id]);
 
     //metodo para actualizar el estado del presupuesto
     const actualizarEstado = async (nuevoEstado) => {
@@ -192,7 +164,7 @@ const VerPresupuestoA = () => {
                                     <tbody>
                                         {presupuesto.instalaciones.map((instalacion, index) => (
                                             <tr key={index}>
-                                                <td className="border border-gray-300 px-4 py-2">{instalacion.tipo_luminaria.tipo_luminaria}</td>
+                                                <td className="border border-gray-300 px-4 py-2">{instalacion.tipo_luminaria?.tipo_luminaria}</td>
                                                 <td className="border border-gray-300 px-4 py-2">{instalacion.cantidad} UND</td>
                                                 <td className="border border-gray-300 px-4 py-2">$ {instalacion.costo_total}</td>
                                             </tr>

@@ -55,7 +55,7 @@ const AsignarTecnicoProyecto = () => {
             try {
                 const response = await listar_proyectosRequest();
                 const proyectos = response.data.data;
-        
+                console.log(response);
                 const eventosFormat = proyectos.flatMap(proyecto => 
                     proyecto.Horario.map(horario => ({
                         title: `Proyecto: ${proyecto.Nombre_Proyecto}`,  // El título sigue siendo el nombre del proyecto
@@ -119,8 +119,8 @@ const AsignarTecnicoProyecto = () => {
 
     return (
 
-        <div className='overflow-y-auto max-h-[1000px]'>
-            <form onSubmit={handleSubmit} className="bg-white border-4 rounded-lg shadow relative m-10 p-6 space-y-6">
+        <div className="bg-white border-4 rounded-lg shadow relative m-10 h-[calc(100vh-70px)] overflow-y-auto">
+            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow relative m-10 p-6 space-y-6">
             
             {/* Titulo y botón de cierre */}
             <div className="flex items-start justify-between border-b rounded-t">
@@ -128,7 +128,7 @@ const AsignarTecnicoProyecto = () => {
                 <button
                     type="button"
                     onClick={() => {
-                        //navigate('/gestionar_solicitudes');      // CAMBIAR A VISTA DE GESTIONAR PROYECTOS
+                        navigate('/gestionar_proyectos');      // CAMBIAR A VISTA DE GESTIONAR PROYECTOS
                     }}
                     className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                 >

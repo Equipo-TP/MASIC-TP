@@ -12,8 +12,6 @@ var ProyectoSchema = Schema({
         Tecnico: [{  type: Schema.ObjectId, ref: 'usuario'}],
         fecha_inicio: {type: Date, required: false},
         fecha_final: {type: Date, required: false},
-        //Hora_Inicio: { type: String, required: false },
-        //Hora_Fin: { type: String, required: false }
     }
   ],
   GestionarMaterial: [ 
@@ -26,13 +24,30 @@ var ProyectoSchema = Schema({
   Descripcion: { type: String, required: true },
   Estado: {type: String, default: 'Por realizar', required: false},
   Observacion: { type: String, required: false },//no es la de la solicitud, que notifique cuando no esta puesto el horario/tecnico
-  Incidencias: [//aun no esta en el back
+  Incidencias: [
     {
         afectado: {type: Schema.ObjectId, ref: 'usuario', required: false}, 
         descripcion: {type: String, required: false}, 
         fecha: {type: Date, required: false} 
     }
   ],
+  totalCobrado: { type: Number, required: false },
+  saldoRestante: { type: Number, required: false },
+  estadodeCobro: { type: String, enum: ['Cobrado Completamente', 'Por Cobrar', 'Saldo Parcial'], required: false },
+    pagos: [
+        {
+            monto: { type: Number },
+            porcentaje: {
+              type: Number,
+              required: false,
+              default: function () {
+                return this.Costo_Total - this.totalCobrado;
+              },
+            },
+            fecha: { type: Date },
+            observaciones: { type: String },
+        }
+    ],
   createdAt: { type: Date, default: Date.now, required: true }
 });
 module.exports = mongoose.model('proyecto', ProyectoSchema);
