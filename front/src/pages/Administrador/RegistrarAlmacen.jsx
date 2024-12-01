@@ -192,3 +192,4 @@ const RegistrarAlmacen = () => {
 };
 
 export default RegistrarAlmacen;
+
