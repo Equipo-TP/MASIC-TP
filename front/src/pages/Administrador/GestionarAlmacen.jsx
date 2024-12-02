@@ -147,17 +147,17 @@ const GestionarAlmacen = () => {
                           Inventario
                         </Link>
                         <button
-                        onClick={() => handleDelete(almacen._id)}
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                      >
-                        Eliminar
-                      </button>
+                          onClick={() => handleDelete(almacen._id)}
+                          className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                        >
+                          Eliminar
+                        </button>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center text-gray-500">No se encontraron almacenes.</td>
+                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">No se encontraron almacenes.</td>
                   </tr>
                 )}
               </tbody>

@@ -218,12 +218,12 @@ const EditarPresupuesto = () => {
                                                 <td className="border border-gray-300 px-4 py-2">
                                                 <select
                                                name="tipo_luminaria"
-                                               defaultValue={instalacion.tipo_luminaria._id}
+                                               defaultValue={instalacion.tipo_luminaria?._id}
                                                {...register(`instalaciones.${index}.tipo_luminaria`)}
                                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                                                
                                              >
-                                                {instalacion.tipo_luminaria.tipo_luminaria}
+                                                {instalacion.tipo_luminaria?.tipo_luminaria}
                                                {luminaria.map(tipoluminaria => (
                                                  <option key={tipoluminaria._id} value={tipoluminaria._id}>
                                                    {tipoluminaria.tipo_luminaria}

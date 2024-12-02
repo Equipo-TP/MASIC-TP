@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { inventarioAlmacenRequest, registrarMovimientoRequest, eliminarInventarioRequest } from '../../api/auth';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import MenuSideBar from '../../components/MenuSideBar';
 import NavBar from '../../components/NavBar';
 import { confirmAlert } from 'react-confirm-alert';
@@ -12,6 +11,7 @@ const InventarioMaterial = () => {
     const [movimientos, setMovimientos] = useState([]);
     const [cantidad, setCantidad] = useState('');
     const [fechaMov, setFechaMov] = useState('');
+    const [descripcion, setDescripcion] = useState('');  // Nuevo estado para la descripción
     const [alerta, setAlerta] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -37,21 +37,22 @@ const InventarioMaterial = () => {
     };
 
     const handleAgregarMovimiento = async () => {
-        if (cantidad === '' || fechaMov === '') {
+        if (cantidad === '' || fechaMov === '' || descripcion === '') {  // Verificar que la descripción no esté vacía
             setAlerta('Por favor, complete todos los campos.');
             return;
         }
         try {
             const newMovimiento = {
                 cantidad: parseInt(cantidad),
-                // Convertimos la fecha a UTC antes de enviar
-            fecha_mov: new Date(new Date(fechaMov).getTime() - new Date().getTimezoneOffset() * 60000).toISOString(),
-            id_material: id
+                fecha_mov: new Date(new Date(fechaMov).getTime() - new Date().getTimezoneOffset() * 60000).toISOString(),
+                id_material: id,
+                descripcion: descripcion  // Incluir la descripción en el objeto
             };
             await registrarMovimientoRequest(newMovimiento);
             fetchMovimientos();
             setCantidad('');
             setFechaMov('');
+            setDescripcion('');  // Limpiar la descripción
             setAlerta('');
         } catch (error) {
             console.error('Error adding movement:', error);
@@ -122,6 +123,12 @@ const InventarioMaterial = () => {
                             onChange={(e) => setFechaMov(e.target.value)} 
                             className="border p-2 rounded-md w-full"
                         />
+                        <textarea
+                            placeholder="Descripción del ingreso"
+                            value={descripcion}
+                            onChange={(e) => setDescripcion(e.target.value)}
+                            className="border p-2 rounded-md w-full"
+                        />
                         <button 
                             onClick={handleAgregarMovimiento} 
                             className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 rounded-md"
@@ -136,6 +143,7 @@ const InventarioMaterial = () => {
                                 <tr>
                                     <th scope="col" className="px-6 py-3">Cantidad</th>
                                     <th scope="col" className="px-6 py-3">Fecha de Movimiento</th>
+                                    <th scope="col" className="px-6 py-3">Descripción</th>  {/* Nueva columna para la descripción */}
                                     <th scope="col" className="px-6 py-3">Acción</th>
                                 </tr>
                             </thead>
@@ -145,6 +153,7 @@ const InventarioMaterial = () => {
                                         <tr key={movimiento._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento.cantidad}</td>
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">{new Date(movimiento.fecha_mov).toLocaleDateString()}</td>
+                                            <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento.descripcion}</td> {/* Mostrar descripción */}
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">
                                                 <button 
                                                     onClick={() => handleEliminarMovimiento(movimiento._id)} 
@@ -157,7 +166,7 @@ const InventarioMaterial = () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="3" className="px-6 py-4 text-center">No hay movimientos de inventario.</td>
+                                        <td colSpan="4" className="px-6 py-4 text-center">No hay movimientos de inventario.</td>
                                     </tr>
                                 )}
                             </tbody>
