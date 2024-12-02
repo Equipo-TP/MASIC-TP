@@ -55,6 +55,7 @@ import EditarProyectoTecnico from './pages/Tecnico/EditarProyecto';
 import EditarIncidenciasTecnico from './pages/Tecnico/EditarIncidencias';
 import VerIncidencias from './pages/Tecnico/VerIncidencias';
 import VerIncidenciasAdmin from './pages/Administrador/VerIncidencias';
+import Chatbot from './components/Chatbot';
 
 
 //import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto';
@@ -71,6 +72,7 @@ function App() {
   return (
     <UserProvider>
       <BrowserRouter>
+      <Chatbot />
       <Routes>
 
         <Route path='/' element={<LoginPage/>}/>
