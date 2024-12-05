@@ -10,6 +10,7 @@ const RegistrarAlmacen = () => {
   const [nombre, setNombre] = useState('');
   const [stock, setStock] = useState(0);
   const [unidadMedida, setUnidadMedida] = useState('');
+  const [tipoMaterial, setTipoMaterial] = useState('');  // Nuevo campo para Tipo de Material
   const [fechaRegistro, setFechaRegistro] = useState(new Date().toISOString()); // Guarda la fecha y hora actual
 
   const [errors, setErrors] = useState({
@@ -51,7 +52,13 @@ const RegistrarAlmacen = () => {
   };
 
   const registrarMaterial = async () => {
+
     if (!validateForm()) {
+
+      setSnackbarMessage('Error al registrar material');
+      setSnackbarSeverity('warning');
+      setOpenSnackbar(true);
+
       return;
     }
 
@@ -59,16 +66,18 @@ const RegistrarAlmacen = () => {
       nombre,
       stock,
       unidad_medida: unidadMedida,
+      tipo_material: tipoMaterial,  // Añadimos el tipo de material
       fecha_registro: fechaRegistro,
     };
 
     try {
-      await axios.post('http://localhost:8000/api/registro_material', data);
+      await axios.post('http://localhost:8000/api/registro_material', data); // Ajusta la URL según tu backend
       setSnackbarMessage('Material registrado correctamente');
       setSnackbarSeverity('success');
       setNombre('');
       setStock(0);
       setUnidadMedida('');
+      setTipoMaterial(''); // Limpiamos el campo de tipo de material
       setFechaRegistro(new Date().toISOString()); // Reinicia a la fecha y hora actual
       setOpenSnackbar(true);
 
@@ -90,6 +99,7 @@ const RegistrarAlmacen = () => {
       setNombre('');
       setStock(0);
       setUnidadMedida('');
+      setTipoMaterial('');
       navigate('/gestionar_almacen');
     }
   };
@@ -179,6 +189,15 @@ const RegistrarAlmacen = () => {
                     required
                   />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Tipo de Material"
+                    value={tipoMaterial}
+                    onChange={(e) => setTipoMaterial(e.target.value)}
+                    required
+                  />
+                </Grid>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                   <Button variant="contained" color="primary" onClick={registrarMaterial}>
                     Registrar Material
@@ -197,3 +216,4 @@ const RegistrarAlmacen = () => {
 };
 
 export default RegistrarAlmacen;
+

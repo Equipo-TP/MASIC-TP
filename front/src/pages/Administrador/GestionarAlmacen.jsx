@@ -13,6 +13,7 @@ const GestionarAlmacen = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(null); // Estado para manejar el dropdown
 
   useEffect(() => {
     const fetchAlmacenes = async () => {
@@ -43,7 +44,7 @@ const GestionarAlmacen = () => {
             try {
               await eliminarAlmacenRequest(id);
               setAlmacenes(almacenes.filter((almacen) => almacen._id !== id));
-              setFilteredAlmacenes(filteredAlmacenes.filter((almacen) => almacen._id !== id)); // Actualiza el filtro
+              setFilteredAlmacenes(filteredAlmacenes.filter((almacen) => almacen._id !== id));
             } catch (error) {
               console.error('Error al eliminar el almacén:', error);
             }
@@ -70,6 +71,14 @@ const GestionarAlmacen = () => {
     setSearchTerm('');
     setFilteredAlmacenes(almacenes);
     setCurrentPage(1);
+  };
+
+  const toggleDropdown = (id) => {
+    if (isOpen === id) {
+      setIsOpen(null); // Cierra el menú si ya está abierto
+    } else {
+      setIsOpen(id); // Abre el menú para el almacén específico
+    }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -124,7 +133,7 @@ const GestionarAlmacen = () => {
             </div>
 
             {/* Tabla de Almacenes */}
-            <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <table className="shadow-md w-full overflow-hidden rounded-lg text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">Nombre</th>
@@ -142,16 +151,48 @@ const GestionarAlmacen = () => {
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.stock}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.fecha_registro}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.unidad_medida}</td>
+
                       <td className="px-6 py-4 text-gray-900 dark:text-white">
-                        <Link to={`/inventario_almacen/${almacen._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
-                          Inventario
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(almacen._id)}
-                          className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                        >
-                          Eliminar
-                        </button>
+                        {/* Botón de opciones */}
+                        <div className="relative inline-block text-left">
+                          <button
+                            type="button"
+                            className="inline-flex justify-center w-full rounded-md border border-gray-300 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            id="options-menu-button"
+                            onClick={() => toggleDropdown(almacen._id)}
+                          >
+                            Opciones
+                          </button>
+                          {isOpen === almacen._id && (
+                            <div
+                              className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                              role="menu"
+                              aria-orientation="vertical"
+                              aria-labelledby="options-menu-button"
+                            >
+                              <div className="py-1" role="none">
+                                <Link
+                                  to={`/inventario_almacen/${almacen._id}`}
+                                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200"
+                                >
+                                  Inventario
+                                </Link>
+                                <Link
+                                  to={`/movimientos_almacen/${almacen._id}`}
+                                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200"
+                                >
+                                  Movimientos
+                                </Link>
+                                <button
+                                  onClick={() => handleDelete(almacen._id)}
+                                  className="block px-4 py-2 text-sm text-red-600 dark:text-red-500"
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -163,7 +204,7 @@ const GestionarAlmacen = () => {
               </tbody>
             </table>
 
-            {/* Controles de paginación */}
+            {/* Paginación */}
             <div className="flex justify-between items-center mt-4">
               <button
                 onClick={handlePreviousPage}

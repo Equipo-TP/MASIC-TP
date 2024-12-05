@@ -69,7 +69,7 @@ const GestionarProyectos = () => {
       <MenuSideBar open={drawerOpen} /> 
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} /> 
-        <div className="p-6">
+        <div className="p-6 mt-20 relative overflow-hidden overflow-y-auto h-[calc(100vh-6rem)] ml-0">
           <h1 className="text-3xl font-bold mb-4">Gestionar Proyectos</h1>
 
           <div className="flex justify-end mb-4">
@@ -102,7 +102,7 @@ const GestionarProyectos = () => {
                     <td className="py-3 px-6">
 
                       <div class="btn-group dropdown d-inline-block mb-3 mr-2">
-                        <button className="btn btn-outline-secondary border-2 py-2 px-6 dropdown-toggle rounded-lg bg-blue-400 text-cyan-50 font-semibold" aria-haspopup="true"
+                        <button className="btn btn-outline-secondary  py-2 px-6 dropdown-toggle rounded-md bg-blue-400 text-cyan-50 font-semibold hover:bg-blue-500" aria-haspopup="true"
                          aria-expanded={isOpen} type="button" onClick={() => toggleDropdown(proyecto._id)}>OPCIONES</button>
                       {isOpen === proyecto._id && (
                         <div class="dropdown-menu" className="absolute mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">

@@ -68,14 +68,12 @@ const GestionarTarifas = () => {
   return (
     <div className="flex">
       <MenuSideBar open={drawerOpen} />
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-auto h-[calc(100vh-1rem)]">
 
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
-        <div className="p-6 mt-16 h-full">
-          <div className="relative overflow-hidden h-full">
-            <div className="overflow-y-auto h-[calc(100vh-6rem)] ">
-              <h1 className="text-3xl font-bold mb-2">Gestor de Tarifas</h1>
-              <div className="flex justify-end mb-4">
+        <div className="p-5 mx-9 mt-16">
+              <h1 className="text-3xl font-bold mb-4">Gestor de Tarifas</h1>
+              <div className="flex justify-end mb-2">
                 <Link to="/registrar_tarifa">
                   <button className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Crear Tarifa
@@ -84,7 +82,7 @@ const GestionarTarifas = () => {
               </div>
 
               {/* Tabla para PC */}
-              <table className="hidden md:block shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <table className="hidden overflow-hidden rounded-lg md:block shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-6 py-3">Orden</th>
@@ -102,13 +100,13 @@ const GestionarTarifas = () => {
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{tarifa.tipo_luminaria}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{tarifa.precio}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{tarifa.descripcion}</td>
-                      <td className="px-6 py-4 text-gray-900 dark:text-white">
-                        <Link to={`/editar_tarifa/${tarifa._id}`} className="font-medium text-green-600 dark:text-green-500 hover:underline mr-4">
+                      <td className="flex px-6 py-4  dark:text-white">
+                        <Link to={`/editar_tarifa/${tarifa._id}`} className="font-medium bg-amber-300 text-white px-4 py-2 rounded m-2 hover:bg-amber-400">
                           Editar
                         </Link>
                         <button
                           onClick={() => handleDelete(tarifa._id)}
-                          className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                          className="font-medium bg-red-500 text-white px-4 py-2 rounded m-2 hover:bg-red-600"
                         >
                           Eliminar
                         </button>
@@ -161,8 +159,6 @@ const GestionarTarifas = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 };
 
