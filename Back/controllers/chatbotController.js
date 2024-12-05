@@ -80,7 +80,7 @@ ChatbotController.handleMessage = async (req, res) => {
             3. Llena el formulario con:<br>
                - Nombre y apellidos.<br>
                - Tipo (persona o empresa).<br>
-               - RUC, correo electrónico y teléfono.<br>
+               - Correo electrónico y teléfono.<br>
             4. Guarda los datos para finalizar.<br>
             5. También puedes buscar un cliente en la lista y editar su información si es necesario.<br>`,
 
