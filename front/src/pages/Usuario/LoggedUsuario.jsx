@@ -13,21 +13,8 @@ export function LoggedUsuario() {
   const { name } = useAuth(); // Obtenemos el nombre del usuario autenticado
 
   const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-    
-
-  };
-  // Datos para el gráfico
-  const data = [
-    { name: 'Enero', uv: 4000, pv: 2400, amt: 2400 },
-    { name: 'Febrero', uv: 3000, pv: 1398, amt: 2210 },
-    { name: 'Marzo', uv: 2000, pv: 9800, amt: 2290 },
-    { name: 'Abril', uv: 2780, pv: 3908, amt: 2000 },
-    { name: 'Mayo', uv: 1890, pv: 4800, amt: 2181 },
-    { name: 'Junio', uv: 2390, pv: 3800, amt: 2500 },
-    { name: 'Julio', uv: 3490, pv: 4300, amt: 2100 },
-  ]; 
- 
+    setDrawerOpen(!drawerOpen);    
+  }; 
 
   // Configuración del carrusel
   const carouselSettings = {
@@ -65,9 +52,9 @@ export function LoggedUsuario() {
   };
 
   const images = [
-    '/images/CARRUSEL1.png',
-    '/images/CARRUSEL2.png',
-    '/images/CARRUSEL3.png',
+    '/images/CARRUSEL4.png',
+    '/images/CARRUSEL5.png',
+    '/images/CARRUSEL6.png',
   ];
 
   return (
@@ -156,6 +143,62 @@ export function LoggedUsuario() {
             </Slider>
           </Box>
         </Box>
+{/* Video MASICVIDEO antes de los servicios */}
+<Box sx={{ mt: 10, px: 2, position: 'relative', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+  <Box sx={{
+    position: 'absolute',
+    width: '100%',
+    height: '300px',
+    backgroundColor: 'rgba(0, 0, 0, 0.0)',  // Filtro oscuro para resaltar el video
+    zIndex: 1,
+  }} />
+  <video
+    src="/videos/MASICVIDEO.mp4"
+    autoPlay
+    loop
+    playsInline
+    style={{
+      width: '30%',
+      height: '400px',
+      objectFit: 'cover',
+      borderRadius: '10px',
+      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+      opacity: 0.7,
+    }}
+  >
+    Tu navegador no soporta la etiqueta de video.
+  </video>
+
+  {/* Eslogan a la derecha del video, ligeramente movido a la izquierda */}
+  <Box sx={{
+    position: 'absolute',
+    right: '1.8%',  // Ajusta el valor aquí para mover el eslogan más a la izquierda
+    width: '65%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Fondo translúcido para destacar el eslogan
+    borderRadius: '10px',
+    zIndex: 2,
+  }}>
+    <Typography
+      variant="h4"
+      sx={{
+        color: '#fff',
+        fontWeight: 700,
+        textAlign: 'center',
+        fontFamily: 'Arial, sans-serif',
+        fontStyle: 'italic',
+        letterSpacing: '3px',
+        padding: 8,
+      }}
+    >
+      Iluminamos tu camino con calidad y compromiso
+    </Typography>
+  </Box>
+</Box>
+
 
         {/* Sección de Servicios */}
         <Box sx={{ mt: 10, px: 2 }}>
@@ -275,37 +318,6 @@ export function LoggedUsuario() {
             height: '330px',
           }} />
 </Box>
-
-{/* Gráfico Estadístico */}
-<Box
-      sx={{
-        mt: 4,
-        mb: 16,
-        px: 3,
-        py: 2,
-        border: '1px solid #ccc',
-        borderRadius: '10px',
-        backgroundColor: 'rgba(128, 128, 128, 0.002)',
-        maxWidth: '800px',
-        margin: '0 auto',
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-      }}
-    >
-      <h2 style={{ textAlign: 'center' }}>Gráfico Estadístico</h2>
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-          <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-        </LineChart>
-      </ResponsiveContainer>
-    </Box>
-
-
       </Box>
     </Box>
   );
