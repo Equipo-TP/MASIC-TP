@@ -5,11 +5,13 @@ var Schema = mongoose.Schema;
 
 var InventarioSchema = new Schema({
     id_material: { type: Schema.ObjectId, ref: 'Material', required: true },
-    tipo_movimiento: { type: String, enum: ['Ingreso', 'Egreso'], required: true }, // Identificar si es ingreso o egreso
+    tipo_movimiento: { type: String,  default: 'Entrada', required: false }, // Identificar si es entrada/ingreso
     cantidad: { type: Number, required: true },
-    descripcion: { type: String, required: false }, // Descripción del movimiento
+    descripcion: { type: String, required: false }, // Descripción del motivo de ingreso
     fecha_mov: { type: Date, required: true },
-    motivo: { type: String, enum: ['Compra', 'Sobrantes'], required: true }, // Motivo de ingreso
+    tipo_ingreso: { type: String, enum: ['Compra', 'Sobrantes'], required: false }, // Motivo de ingreso
+    proyecto: { type: Schema.ObjectId, ref: 'Proyecto', required: false }
+
 });
 
 module.exports = mongoose.model('Inventario', InventarioSchema);

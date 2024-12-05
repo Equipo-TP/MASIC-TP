@@ -48,6 +48,7 @@ import VerProyectoTecnico from './pages/Tecnico/VerProyecto';
 import GestionarAlmacen from './pages/Administrador/GestionarAlmacen';
 import RegistrarAlmacen from './pages/Administrador/RegistrarAlmacen';
 import InventarioAlmacen from './pages/Administrador/InventarioMaterial';
+import Movimientos from './pages/Administrador/Movimientos';
 
 import GestionarProyectosTecnico from './pages/Tecnico/GestionarProyecto2';
 import EditarProyectoTecnico from './pages/Tecnico/EditarProyecto';
@@ -116,6 +117,8 @@ function App() {
         <Route path='/gestionar_almacen' element={<GestionarAlmacen/>}/>
         <Route path='/registro_almacen' element={<RegistrarAlmacen/>}/>
         <Route path='/inventario_almacen/:id' element={<InventarioAlmacen/>}/>
+        <Route path='/movimientos_almacen/:id' element={<Movimientos/>}/>
+
 
         <Route path='/registrar_proyecto' element={<RegistrarProyecto />} />
         <Route path='/gestionar_proyectos_tecnico' element={<GestionarProyectosTecnico/>}/>
