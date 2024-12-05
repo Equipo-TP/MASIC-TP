@@ -120,7 +120,7 @@ useEffect(() => {
                           <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.ID_Presupuesto}</td>
                           <td className="px-6 py-4 text-gray-900 dark:text-white">{clientes ? `${clientes.nombre} ${clientes.apellidos}` : "Cargando cliente..."}</td>
                           <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Transporte_Personal}</td>
-                          <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Pago_Total}</td>
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.Pago_Total.toFixed(2)}</td>
                           <td className="px-6 py-4 text-gray-900 dark:text-white">{presupuesto.estado_2}</td>
                           <td className="px-6 py-4 text-gray-900 dark:text-white">  
                             <Link to={`/ver_presupuesto/${presupuesto._id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4">Ver</Link>
