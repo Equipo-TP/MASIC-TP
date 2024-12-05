@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { obtenerSolicitudPorIdRequest, listarSolicitudesRequest, registrarPresupuestoRequest, listarTarifasRequest } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-//import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { presupuestoSchema } from '../../Schemas/AUTH';
 import AddIcon from '@mui/icons-material/Add';
-
-
 
 const CrearPresupuesto = () => {
   const navigate = useNavigate();
-  const { user, name } = useAuth();
  
   const [nuevoPresupuesto, setNuevoPresupuesto] = useState({
       ID_Solicitud_Presupuesto: '', // ID de la solicitud seleccionada
@@ -35,6 +30,9 @@ const CrearPresupuesto = () => {
         estado_1: 'Enviado',
         estado_2: 'Pendiente',
     });
+
+    const [errores, setErrores] = useState({});
+
     // Función para listar todas las solicitudes
     const fetchSolicitudes = async () => {
         try {
@@ -77,11 +75,8 @@ const CrearPresupuesto = () => {
     if (selectedId !== 'nuevo') {
       try {
         const response = await obtenerSolicitudPorIdRequest(selectedId);
-        console.log(response.data.data);
         const solicitud = response.data.data; // Asumiendo que aquí tienes la solicitud seleccionada
         setSolicitudSeleccionada(solicitud);
-        console.log(solicitud);
-        console.log(solicitudSeleccionada);
   
         // Actualiza los campos del formulario con los datos de la solicitud seleccionada
         setNuevoPresupuesto({
@@ -102,21 +97,6 @@ const CrearPresupuesto = () => {
     } else {
       setNuevaSolicitud(true);
     }
-
-    /*if (selectedId === 'nuevo') {
-        setNuevaSolicitud(true);
-        setDatosNuevaSolicitud({
-            caracteristicas_obra: '',
-            descripcion_servicio: '',
-            observaciones: '',
-            estado_1: 'Enviado',
-            estado_2: 'Pendiente',
-        });
-    } else {
-        const response = await obtenerSolicitudPorIdRequest(selectedId);
-        setNuevaSolicitud(false);
-        setNuevoPresupuesto({ ...nuevoPresupuesto, solicitud: selectedId });
-    }*/
 };
 
 // Función para agregar una nueva instalación
@@ -130,96 +110,88 @@ const handleAddLuminaria = () => {
 // Función para manejar cambios en los campos de las instalaciones
 const handleLuminariaChange = (index, e) => {
   const { name, value } = e.target;
+
+  let newValue = value;
+  if (name === "cantidad") {
+    newValue = parseInt(value, 10);
+    if (newValue < 1) {
+      setErrores((prevErrores) => ({
+        ...prevErrores,
+        [`instalaciones[${index}].cantidad`]: "La cantidad no puede ser menor a 1",
+      }));
+    } else {
+      setErrores((prevErrores) => {
+        const { [`instalaciones[${index}].cantidad`]: _, ...rest } = prevErrores;
+        return rest;
+      });
+    }
+  }
+
   const nuevasInstalaciones = [...nuevoPresupuesto.instalaciones];
   nuevasInstalaciones[index] = {
     ...nuevasInstalaciones[index],
-    [name]: value
+    [name]: newValue,
   };
   setNuevoPresupuesto({ ...nuevoPresupuesto, instalaciones: nuevasInstalaciones });
 };
 
-/*const handleLuminariaChange = (e) => {
-  const selectedLuminariaId = e.target.value;
-  const luminariaSeleccionada = luminaria.find(l => l._id === selectedLuminariaId);
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
 
-  setNuevoPresupuesto({
-    ...nuevoPresupuesto,
-    instalaciones: [{ // Actualizamos el array de instalaciones
-      tipo_luminaria: selectedLuminariaId,
-      cantidad: nuevoPresupuesto.instalaciones[0].cantidad,
-    }],
-  });
+  // Convertir los valores a números si es necesario
+  let newValue = value;
+  if (name === "Costo_Transporte" || name === "Costo_Materiales") {
+    newValue = parseFloat(value); // Convierte el valor a número flotante
+  }
+
+  if (nuevaSolicitud && name in datosNuevaSolicitud) {
+    setDatosNuevaSolicitud({
+      ...datosNuevaSolicitud,
+      [name]: newValue,
+    });
+  } else {
+    setNuevoPresupuesto({
+      ...nuevoPresupuesto,
+      [name]: newValue,
+    });
+  }
 };
 
-const handleCantidadChange = (e) => {
-  const cantidad = e.target.value;
-  setNuevoPresupuesto({
-    ...nuevoPresupuesto,
-    instalaciones: [{ // Actualizamos la cantidad de la luminaria
-      tipo_luminaria: nuevoPresupuesto.instalaciones[0].tipo_luminaria,
-      cantidad: cantidad,
-    }],
-  });
-};*/
 
-/*
-const handleSolicitudChange2 = (event) => {
-  const selectedSolicitudId = event.target.value;
-  const selectedSolicitud = solicitudes.find((sol) => sol._id === selectedSolicitudId);
-  setNuevaSolicitud(selectedSolicitud);
-};*/
-console.log(nuevoPresupuesto);
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    if (nuevaSolicitud && name in datosNuevaSolicitud) {
-        setDatosNuevaSolicitud({
-            ...datosNuevaSolicitud,
-            [name]: value,
-        });
-    } else {
-        setNuevoPresupuesto({
-            ...nuevoPresupuesto,
-            [name]: value,
-        });
+const validarDatos = () => {
+  try {
+    presupuestoSchema.parse(nuevoPresupuesto);
+    setErrores({});
+    return true; // Los datos son válidos
+  } catch (error) {
+    if (error.errors) {
+      const erroresMapeados = error.errors.reduce((acc, curr) => {
+        acc[curr.path.join('.')] = curr.message;
+        return acc;
+      }, {});
+      setErrores(erroresMapeados);
     }
+    return false; // Los datos no son válidos
+  }
 };
-console.log(solicitudes)
-  /*const handleNuevaSolicitudSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        const solicitudResponse = await registroSolicitudRequest(datosNuevaSolicitud);
-        const nuevaSolicitudId = solicitudResponse.data._id;
-        setNuevoPresupuesto({ ...nuevoPresupuesto, solicitud: nuevaSolicitudId });
-        alert('Nueva solicitud registrada con éxito.');
-        setNuevaSolicitud(false); // Oculta el formulario de nueva solicitud
-        setDatosNuevaSolicitud({ // Reinicia los campos de la nueva solicitud
-            caracteristicas_obra: '',
-            descripcion_servicio: '',
-            observaciones: '',
-            estado_1: 'Enviado',
-            estado_2: 'Pendiente',
-        });
-    } catch (error) {
-        console.error('Error al registrar la nueva solicitud:', error);
-        alert('Hubo un error al registrar la nueva solicitud.');
-    }
-    fetchSolicitudes(); // Refresca la lista de solicitudes
-};*/
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        // Registrar el presupuesto
-        await registrarPresupuestoRequest(nuevoPresupuesto);
-        alert('Presupuesto registrado');
-    } catch (error) {
-        console.error('Error al registrar el presupuesto:', error);
-        alert('Hubo un error al registrar el presupuesto.');
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!validarDatos()) {
+    alert('Corrige los errores antes de continuar.');
+    console.log(errores);
+    return;
+  }
+
+  try {
+    await registrarPresupuestoRequest(nuevoPresupuesto);
+    alert('Presupuesto registrado');
+  } catch (error) {
+    console.error('Error al registrar el presupuesto:', error);
+    alert('Hubo un error al registrar el presupuesto.');
+  }
 };
- console.log(nuevaSolicitud);
-
 
   return (
     <div className="bg-white border-4 rounded-lg shadow relative m-10 h-[calc(100vh-70px)] overflow-y-auto">
@@ -351,6 +323,9 @@ console.log(solicitudes)
                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                 required
               />
+              {errores.Transporte_Personal && (
+                <p className="text-red-500 text-sm mt-1">{errores.Transporte_Personal}</p>
+              )}
             </div>
 
 
@@ -366,6 +341,9 @@ console.log(solicitudes)
                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                 required
               />
+              {errores.Costo_Transporte && (
+                <p className="text-red-500 text-sm mt-1">{errores.Costo_Transporte}</p>
+              )}
             </div>
 
             <div className="col-span-6 sm:col-span-3">
@@ -380,6 +358,9 @@ console.log(solicitudes)
                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                 required
               />
+              {errores.Materiales && (
+                <p className="text-red-500 text-sm mt-1">{errores.Materiales}</p>
+              )}
             </div>
 
             <div className="col-span-6 sm:col-span-3">
@@ -394,6 +375,9 @@ console.log(solicitudes)
                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                 required
               />
+              {errores.Costo_Materiales && (
+                <p className="text-red-500 text-sm mt-1">{errores.Costo_Materiales}</p>
+              )}
             </div>
 
 
@@ -432,6 +416,10 @@ console.log(solicitudes)
                   className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                   required
                 />
+                {errores[`instalaciones.${index}.cantidad`] && (
+                  <p className="text-red-500 text-sm mt-1">{errores[`instalaciones.${index}.cantidad`]}</p>
+                )}
+
               </div>
             </React.Fragment>
           ))}

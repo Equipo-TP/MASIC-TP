@@ -1,5 +1,4 @@
 import { useForm } from 'react-hook-form';
-import { useAuth } from '../../context/AuthContext';
 import { Box, TextField, Button, Typography, Grid, Paper, Snackbar, Alert, CircularProgress } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -9,7 +8,6 @@ import NavBar from '../../components/NavBar';
 
 function EditTarifaPage() {
   const { id } = useParams();
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const [tarifa, setTarifa] = useState(null);
@@ -41,13 +39,6 @@ function EditTarifaPage() {
     obtTarifa();
   }, [id, reset]);
 
-  const generateNextOrderNumber = () => {
-    if (tarifa) {
-      return tarifa.orden + 1;
-    }
-    return 1; // Si no hay tarifas, empieza desde 1
-  };
-
   const onSubmit = async (data) => {
     try {
       await editarTarifaRequest(id, data); // API para actualizar la tarifa
@@ -60,6 +51,19 @@ function EditTarifaPage() {
       setSnackbarMessage('Error al actualizar tarifa');
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
+    }
+  };
+
+  // Validar que no haya números negativos y que solo haya números
+  const handlePriceChange = (event) => {
+    const value = event.target.value;
+    // Evita caracteres no numéricos
+    if (/[^0-9.]/.test(value)) {
+      event.target.value = value.replace(/[^0-9.]/g, '');
+    }
+    // Asegura que no haya números negativos
+    if (parseFloat(value) < 0) {
+      event.target.value = 0;
     }
   };
 
@@ -108,10 +112,18 @@ function EditTarifaPage() {
                   <TextField
                     fullWidth
                     label="Precio"
+                    type="number"
                     defaultValue={tarifa?.precio || ''}
-                    {...register('precio', { required: 'El precio es requerido' })}
+                    {...register('precio', { 
+                      required: 'El precio es requerido',
+                      min: {
+                        value: 0,
+                        message: 'El precio no puede ser negativo',
+                      }
+                    })}
                     error={!!errors.precio}
                     helperText={errors.precio ? errors.precio.message : ''}
+                    onInput={handlePriceChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
