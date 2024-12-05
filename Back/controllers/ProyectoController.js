@@ -144,6 +144,38 @@ const editar_proyecto_por_id = async function (req, res) {
             }
         }
 
+        /*// Obtener el horario más cercano a la fecha actual
+        const horarioMasCercano = data.Horario.reduce((prev, curr) => {
+            const fechaActual = new Date();
+            const diferenciaPrev = Math.abs(new Date(prev.fecha_inicio) - fechaActual);
+            const diferenciaCurr = Math.abs(new Date(curr.fecha_inicio) - fechaActual);
+            return diferenciaCurr < diferenciaPrev ? curr : prev;
+        });
+
+        const fechaInicioCercana = new Date(horarioMasCercano.fecha_inicio);
+        const fechaActual = new Date();
+
+        // Si la fecha más cercana coincide con la fecha actual
+        if (fechaInicioCercana.toDateString() === fechaActual.toDateString()) {
+            if (Array.isArray(data.GestionarMaterial) && data.GestionarMaterial.length > 0) {
+                for (const material of data.GestionarMaterial) {
+                    const materialData = await Material.findById(material.id_Material);
+
+                    if (materialData) {
+                        materialData.stock -= material.Cantidad;
+
+                        if (materialData.stock < 0) {
+                            materialData.Comentario = (materialData.Comentario || "") + " hace falta stock";
+                        }
+
+                        await materialData.save();
+                    } else {
+                        return res.status(404).send({ message: `El material con ID ${material.id_Material} no existe.` });
+                    }
+                }
+            }
+        }*/
+
         const proyecto = await Proyecto.findByIdAndUpdate(
             { _id: id },
             {
