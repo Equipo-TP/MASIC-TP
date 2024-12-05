@@ -46,9 +46,12 @@ const RegistrarTarifa = () => {
         }));
         break;
       case 'precio':
+        // Validar que sea un número mayor a 0
         setErrors((prevErrors) => ({
           ...prevErrors,
-          precio: /^\d+(\.\d{1,2})?$/.test(value) ? '' : 'Precio inválido, debe ser un número positivo'
+          precio: (parseFloat(value) <= 0 || !/^\d+(\.\d{1,2})?$/.test(value)) 
+            ? 'Precio inválido, debe ser un número mayor que 0' 
+            : ''
         }));
         break;
       case 'descripcion':
@@ -61,6 +64,7 @@ const RegistrarTarifa = () => {
         break;
     }
   };
+  
 
   const validateForm = () => {
     let valid = true;
@@ -117,7 +121,6 @@ const RegistrarTarifa = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          marginLeft: drawerOpen ? '300px' : '70px',
           transition: 'margin-left 0.3s ease',
           padding: '16px',
           overflowX: 'hidden',
@@ -203,6 +206,7 @@ const RegistrarTarifa = () => {
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} // Agrega esta propiedad
       >
         <Alert
           onClose={handleCloseSnackbar}
@@ -212,6 +216,7 @@ const RegistrarTarifa = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
     </Box>
   );
 };
