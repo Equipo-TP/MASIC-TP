@@ -53,7 +53,7 @@ const GestionSolicitud = () => {
                                 <th className="px-6 py-3">ID</th>
                                 <th className="px-6 py-3">Característica</th>
                                 <th className="px-6 py-3">Descripción</th>
-                                <th className="px-6 py-3">Estado</th>
+                                <th className="px-6 py-3">Revisión</th>
                                 <th className="px-6 py-3">Acciones</th>
                             </tr>
                         </thead>
@@ -64,7 +64,9 @@ const GestionSolicitud = () => {
                                     <td className="px-6 py-4">{solicitud.id}</td>
                                     <td className="px-6 py-4">{solicitud.caracteristicas_obra}</td>
                                     <td className="px-6 py-4">{solicitud.descripcion_servicio}</td>
-                                    <td className="px-6 py-4">{solicitud.estado_2}</td>
+                                    <td className={`px-6 py-4 ${
+    solicitud.estado_2 === "Pendiente" ? "text-red-500 font-semibold" : ""
+  }`}>{solicitud.estado_2}</td>
                                     <td className="px-6 py-4">
                                         <button
                                             className="bg-blue-500 text-white px-4 py-2 rounded"

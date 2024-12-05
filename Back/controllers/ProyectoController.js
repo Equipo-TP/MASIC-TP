@@ -57,6 +57,7 @@ const registrar_proyecto = async function (req, res) {
             }
         } else {
             console.log('No hay materiales');
+            console.log(data);
         }
 
         data.totalCobrado = data.totalCobrado || 0;
@@ -259,6 +260,7 @@ const actualizar_cobros_proyecto = async function (req, res) {
 // Eliminar proyecto
 const eliminar_proyecto = async function (req, res) {
     const id = req.params.id;
+    console.log(id);
     try {
         const proyecto = await Proyecto.findByIdAndDelete(id);
         if (!proyecto) {

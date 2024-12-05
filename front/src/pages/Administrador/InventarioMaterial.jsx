@@ -54,8 +54,12 @@ const InventarioMaterial = () => {
     };
 
     const handleAgregarMovimiento = async () => {
-        if (cantidad === '' || fechaMov === '' || (tipoIngreso === 'compras' && descripcion === '') || (tipoIngreso === 'sobrantes' && proyectoSeleccionado === '')) {
+        if (cantidad === '' || fechaMov === '' || (tipoIngreso === 'Compra' && descripcion === '') || (tipoIngreso === 'Sobrantes' && proyectoSeleccionado === '')) {
             setAlerta('Por favor, complete todos los campos.');
+            return;
+        }
+        if (cantidad <= 0) {
+            setAlerta('La cantidad ingresada debe ser un número positivo')
             return;
         }
 
@@ -64,8 +68,8 @@ const InventarioMaterial = () => {
             fecha_mov: new Date(new Date(fechaMov).getTime() - new Date().getTimezoneOffset() * 60000).toISOString(),
             id_material: id,
             tipo_ingreso: tipoIngreso,
-            descripcion: tipoIngreso === 'compras' ? descripcion : '', // Solo agregar descripción si es compras
-            proyecto_id: tipoIngreso === 'sobrantes' ? proyectoSeleccionado : '' // Si es sobrante, incluir el proyecto
+            descripcion: tipoIngreso === 'Compra' ? descripcion : '', // Solo agregar descripción si es compras
+            proyecto_id: tipoIngreso === 'Sobrantes' ? proyectoSeleccionado : '' // Si es sobrante, incluir el proyecto
         };
 
         try {
@@ -132,7 +136,7 @@ const InventarioMaterial = () => {
                         </button>
                     </div>
 
-                    <p className="text-gray-600">Este módulo lista todos los productos de la tienda.</p>
+                    <p className="text-gray-600">Este módulo lista todos los ingresos de stock de materiales.</p>
                     
                     {alerta && <div className="mb-4 text-red-600 font-semibold">{alerta}</div>}
                     
@@ -143,11 +147,11 @@ const InventarioMaterial = () => {
                             className="border p-2 rounded-md w-full"
                         >
                             <option value="">Seleccione tipo de ingreso</option>
-                            <option value="compras">Compras</option>
-                            <option value="sobrantes">Sobrantes</option>
+                            <option value="Compra">Compras</option>
+                            <option value="Sobrantes">Sobrantes</option>
                         </select>
 
-                        {tipoIngreso === 'compras' && (
+                        {tipoIngreso === 'Compra' && (
                             <input 
                                 type="text" 
                                 placeholder="Descripción del ingreso" 
@@ -157,7 +161,7 @@ const InventarioMaterial = () => {
                             />
                         )}
 
-                        {tipoIngreso === 'sobrantes' && (
+                        {tipoIngreso === 'Sobrantes' && (
                             <select 
                                 value={proyectoSeleccionado} 
                                 onChange={(e) => setProyectoSeleccionado(e.target.value)} 
@@ -214,7 +218,7 @@ const InventarioMaterial = () => {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">{new Date(movimiento.fecha_mov).toLocaleDateString()}</td>
-                                            <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento.descripcion || movimiento.proyecto_id}</td>
+                                            <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento?.tipo_ingreso+': ' + movimiento.descripcion || movimiento.proyecto_id}</td>
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">
                                                 <button 
                                                     onClick={() => handleEliminarMovimiento(movimiento._id)} 

@@ -26,7 +26,6 @@ function MenuSideBar({ open }) {
     { icon: <BudgetIcon />, text: 'Gestionar presupuestos', path: '/gestionar_presupuestos', roles: ['Administrador'] },
     { icon: <BudgetIcon />, text: 'Gestionar presupuestos', path: '/visualizar_presupuestos', roles: ['Vendedor'] },
     { icon: <ProjectIcon />, text: 'Gestionar proyectos', path: '/gestionar_proyectos', roles: ['Administrador'] },
-    { icon: <ProjectIcon />, text: 'Gestionar programación de proyectos', path: '/gestionar_programacion_proyectos', roles: ['Administrador', 'Tecnico'] },
     { icon: <ClientIcon />, text: 'Gestionar clientes', path: '/gestionar_clientes', roles: ['Vendedor'] },
     { icon: <RateIcon />, text: 'Gestionar tarifas', path: '/gestionar_tarifas', roles: ['Administrador'] },
     { icon: <ProjectIcon />, text: 'Gestionar proyectos', path: '/gestionar_proyectos_tecnico', roles: ['Tecnico'] },

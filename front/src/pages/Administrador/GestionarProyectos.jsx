@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'; 
 import { useNavigate } from 'react-router-dom';
-import { listar_proyectosRequest, obtenerClienteConSolicitudesRequest } from '../../api/auth'; 
+import { listar_proyectosRequest, obtenerClienteConSolicitudesRequest, eliminarProyectoRequest } from '../../api/auth'; 
 import MenuSideBar from '../../components/MenuSideBar'; 
 import NavBar from '../../components/NavBar'; 
 import ModalCliente from '../../components/ModalCliente';
+import { confirmAlert } from 'react-confirm-alert';
 import { Link } from 'react-router-dom';
 
 const GestionarProyectos = () => {
@@ -64,6 +65,30 @@ const GestionarProyectos = () => {
     proyecto.Nombre_Proyecto.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleDelete = (id) => {
+    confirmAlert({
+      title: 'Confirmar eliminación de proyecto',
+      message: '¿Estás seguro de que deseas eliminar este proyecto?',
+      buttons: [
+        {
+          label: 'Sí',
+          onClick: async () => {
+            try {
+              await eliminarProyectoRequest(id);
+              setProyectos(proyectos.filter((proyecto) => proyecto._id !== id));
+            } catch (error) {
+              console.error('Error al eliminar proyecto:', error);
+            }
+          },
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
+  };
+
   return (
     <div className="flex">
       <MenuSideBar open={drawerOpen} /> 
@@ -88,6 +113,7 @@ const GestionarProyectos = () => {
                 <th className="py-3 px-6 text-left">Nombre del proyecto</th>
                 <th className="py-3 px-6 text-left">Nombre del cliente</th>                
                 <th className="py-3 px-6 text-left">Ubicación</th>
+                <th className="py-3 px-6 text-left">Estado</th>
                 <th className="py-3 px-6 text-left">Acciones</th> 
               </tr>
             </thead>
@@ -99,6 +125,7 @@ const GestionarProyectos = () => {
                     <td className="py-3 px-6">{proyecto.Nombre_Proyecto}</td>
                     <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.nombre} {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.apellidos}</td>
                     <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.direccion}, {proyecto.ID_Presupuesto_Proyecto?.Transporte_Personal}</td>
+                    <td className="py-3 px-6">{proyecto.Estado}</td>
                     <td className="py-3 px-6">
 
                       <div class="btn-group dropdown d-inline-block mb-3 mr-2">
@@ -108,10 +135,16 @@ const GestionarProyectos = () => {
                         <div class="dropdown-menu" className="absolute mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
                           <Link to={`/ver_proyectos/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Ver</Link>
                           <Link to={`/ver_incidencias/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                          Gestionar incidencias
+                          Visualizar incidencias
                           </Link>
                           <Link to={`/asignar_tecnicos/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Asignar técnico</Link>
                           <Link to={`/visualizar_presupuesto/${proyecto.ID_Presupuesto_Proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Detalle Presupuesto</Link>
+                          <button
+                          onClick={() => handleDelete(proyecto._id)}
+                          className="block px-4 py-2 font-medium text-red-600 dark:text-red-500 hover:underline"
+                        >
+                          Eliminar
+                        </button>
                         </div>)}
                       </div> 
 

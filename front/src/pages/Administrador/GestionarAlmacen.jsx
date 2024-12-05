@@ -11,7 +11,7 @@ const GestionarAlmacen = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredAlmacenes, setFilteredAlmacenes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(null); // Estado para manejar el dropdown
 
@@ -99,10 +99,9 @@ const GestionarAlmacen = () => {
       <MenuSideBar open={drawerOpen} />
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
-        <div className="p-6">
-          <div className="relative overflow-x-auto sm:rounded-lg">
+        <div className="p-6 mx-20 mt-20 relative overflow-hidden overflow-y-auto h-[calc(100vh-1rem)] ml-0">
             <h1 className="text-3xl font-bold mb-2">Gestionar Almacén</h1>
-            <p className="mb-6">Este módulo lista todos los almacenes de la empresa.</p>
+            <p className="mb-6 text-zinc-700">Este módulo lista todos los materiales de la empresa.</p>
 
             {/* Fila para el filtro, input y botones */}
             <div className="flex items-center gap-4 mb-4">
@@ -137,27 +136,29 @@ const GestionarAlmacen = () => {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">Nombre</th>
+                  <th scope="col" className="px-6 py-3">Disponible</th>
                   <th scope="col" className="px-6 py-3">Stock</th>
                   <th scope="col" className="px-6 py-3">Fecha de Registro</th>
                   <th scope="col" className="px-6 py-3">Unidad de Medida</th>
                   <th scope="col" className="px-6 py-3">Acciones</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody >
                 {currentItems.length > 0 ? (
                   currentItems.map((almacen, index) => (
                     <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.nombre}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.stock}</td>
+                      <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.stock_fisico}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.fecha_registro}</td>
                       <td className="px-6 py-4 text-gray-900 dark:text-white">{almacen.unidad_medida}</td>
 
-                      <td className="px-6 py-4 text-gray-900 dark:text-white">
+                      <td className="px-6 py-3 text-gray-900 dark:text-white">
                         {/* Botón de opciones */}
-                        <div className="relative inline-block text-left">
+                        <div className="btn-group dropdown d-inline-block mb-3 mr-2">
                           <button
-                            type="button"
-                            className="inline-flex justify-center w-full rounded-md border border-gray-300 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            type="button" aria-expanded={isOpen} aria-haspopup="true"
+                            className="inline-flex items-center justify-center w-full rounded-lg border border-gray-300 bg-gradient-to-r from-gray-200 to-gray-300 px-5 py-2 font-semibold text-gray-800 shadow-md hover:from-gray-300 hover:to-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-gray-500 transition-all duration-300"
                             id="options-menu-button"
                             onClick={() => toggleDropdown(almacen._id)}
                           >
@@ -165,12 +166,8 @@ const GestionarAlmacen = () => {
                           </button>
                           {isOpen === almacen._id && (
                             <div
-                              className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                              role="menu"
-                              aria-orientation="vertical"
-                              aria-labelledby="options-menu-button"
+                               class="dropdown-menu" className="absolute mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10"
                             >
-                              <div className="py-1" role="none">
                                 <Link
                                   to={`/inventario_almacen/${almacen._id}`}
                                   className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -189,7 +186,6 @@ const GestionarAlmacen = () => {
                                 >
                                   Eliminar
                                 </button>
-                              </div>
                             </div>
                           )}
                         </div>
@@ -227,7 +223,6 @@ const GestionarAlmacen = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

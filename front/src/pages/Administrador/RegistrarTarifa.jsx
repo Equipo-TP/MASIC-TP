@@ -147,7 +147,6 @@ const RegistrarTarifa = () => {
             sx={{
               p: 2,
               borderRadius: 2,
-              backgroundColor: 'rgba(211, 211, 211, 0.2)',
               backdropFilter: 'blur(3px)',
               width: '100%',
               boxSizing: 'border-box',

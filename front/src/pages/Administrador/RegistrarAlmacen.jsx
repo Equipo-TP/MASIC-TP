@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Grid, Paper } from '@mui/material';
+import { Box, TextField, Button, Typography, Grid, Paper, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MenuSideBar from '../../components/MenuSideBar';
@@ -10,6 +10,9 @@ const RegistrarAlmacen = () => {
   const [nombre, setNombre] = useState('');
   const [stock, setStock] = useState(0);
   const [unidadMedida, setUnidadMedida] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [tipoMaterial, setTipoMaterial] = useState('');  // Nuevo campo para Tipo de Material
   const [fechaRegistro, setFechaRegistro] = useState(new Date().toISOString()); // Guarda la fecha y hora actual
 
@@ -37,6 +40,9 @@ const RegistrarAlmacen = () => {
     if (!nombre.trim()) {
       formIsValid = false;
       newErrors.nombre = 'Este campo es obligatorio y no puede contener solo espacios';
+    } else if (/^\d+$/.test(nombre.trim())) {
+      formIsValid = false;
+      newErrors.nombre = 'Este campo no puede contener solo números';
     }
     if (stock === '' || stock <= 0) {
       formIsValid = false;
@@ -45,7 +51,10 @@ const RegistrarAlmacen = () => {
     if (!unidadMedida.trim()) {
       formIsValid = false;
       newErrors.unidadMedida = 'Este campo es obligatorio y no puede contener solo espacios';
-    }
+    } else if (/^\d+$/.test(unidadMedida.trim())) {
+      formIsValid = false;
+      newErrors.unidadMedida = 'Este campo no puede contener solo números';
+  }
 
     setErrors(newErrors);
     return formIsValid;
@@ -65,6 +74,7 @@ const RegistrarAlmacen = () => {
     const data = {
       nombre,
       stock,
+      stock_fisico: stock,
       unidad_medida: unidadMedida,
       tipo_material: tipoMaterial,  // Añadimos el tipo de material
       fecha_registro: fechaRegistro,
@@ -147,7 +157,6 @@ const RegistrarAlmacen = () => {
             sx={{
               p: 2,
               borderRadius: 2,
-              backgroundColor: 'rgba(211, 211, 211, 0.2)',
               backdropFilter: 'blur(3px)',
               width: '100%',
               boxSizing: 'border-box',
@@ -189,15 +198,6 @@ const RegistrarAlmacen = () => {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Tipo de Material"
-                    value={tipoMaterial}
-                    onChange={(e) => setTipoMaterial(e.target.value)}
-                    required
-                  />
-                </Grid>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                   <Button variant="contained" color="primary" onClick={registrarMaterial}>
                     Registrar Material
@@ -211,6 +211,19 @@ const RegistrarAlmacen = () => {
           </Paper>
         </Box>
       </Box>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

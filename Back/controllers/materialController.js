@@ -9,6 +9,7 @@ const registrarMaterial = async function (req, res) {
 
     try {
         const materialExistente = await Material.findOne({ nombre: data.nombre });
+        console.log(materialExistente)
         if (!materialExistente) {
             if (data.nombre && data.stock !== undefined && data.unidad_medida) {
                 const nuevoMaterial = await Material.create(data);
@@ -95,30 +96,35 @@ const eliminarMaterial = async function (req, res) {
 const registrarMovimiento = async function (req, res) {
     let data = req.body;
     try {
+        console.log('hila');
         // Verificamos si el tipo de ingreso es "Compra" o "Sobrantes"
         if (data.tipo_ingreso === 'Sobrantes' && !data.proyecto) {
             return res.status(400).send({ message: 'El proyecto es obligatorio para sobrantes' });
         }
-        
+        console.log(data.tipo_ingreso);
         // Crear el registro de movimiento
         let reg = await Inventario.create(data);
-        
+        console.log('hola1');
         // Obtener el material para actualizar el stock
         let material = await Material.findById({ _id: reg.id_material });
-        
+        console.log('hola2');
         // Actualizar el stock total y el stock físico según el tipo de movimiento
         let nuevo_stock = material.stock;
         let nuevo_stock_fisico = material.stock_fisico;
 
-        if (reg.tipo_movimiento === 'Ingreso') {
-            nuevo_stock += reg.cantidad;
+        if (reg.tipo_movimiento === 'Entrada') {
+            nuevo_stock = material.stock + reg.cantidad;
             if (reg.tipo_ingreso === 'Compra') {
-                nuevo_stock_fisico += reg.cantidad;
+                nuevo_stock_fisico = material.stock_fisico + reg.cantidad;
             }
         } else if (reg.tipo_movimiento === 'Egreso') {
             nuevo_stock -= reg.cantidad;
             nuevo_stock_fisico -= reg.cantidad;
         }
+        console.log(reg.tipo_movimiento);
+        console.log(material.stock);
+        console.log(reg.cantidad);
+        console.log(nuevo_stock);
 
         // Actualizamos el stock y el stock físico en el material
         await Material.findByIdAndUpdate({ _id: reg.id_material }, {

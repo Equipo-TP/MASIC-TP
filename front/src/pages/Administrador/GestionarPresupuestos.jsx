@@ -105,6 +105,7 @@ const GestionarPresupuestosA = () => {
                     <th className="px-6 py-3">Nombre del vendedor</th>
                     <th className="px-6 py-3">Costo Materiales</th>
                     <th className="px-6 py-3">Pago Total</th>
+                    <th className="px-6 py-3">Aprobado</th>
                     <th className="px-6 py-3">Acciones</th>
                   </tr>
                 </thead>
@@ -117,6 +118,7 @@ const GestionarPresupuestosA = () => {
                       <td className="px-6 py-4  dark:text-white">{presupuesto.ID_Solicitud_Presupuesto.vendedor.nombre} {presupuesto.ID_Solicitud_Presupuesto.vendedor.apellidos}</td>
                       <td className="px-6 py-4  dark:text-white">{presupuesto?.Costo_Materiales}</td>
                       <td className="px-6 py-4  dark:text-white">{presupuesto?.Pago_Total}</td>
+                      <td className="px-6 py-4  dark:text-white">{presupuesto?.estado_2}</td>
                       <td className="px-6 py-4  dark:text-white">
                         <Link to={`/visualizar_presupuesto/${presupuesto._id}`} className="font-medium bg-blue-500 text-white px-4 py-2 rounded mr-3 hover:bg-blue-600">Ver</Link>
                         <Link to={`/editar_presupuesto/${presupuesto._id}`} className="font-medium bg-amber-300 text-white px-4 py-2 rounded hover:bg-amber-400">Editar</Link>
