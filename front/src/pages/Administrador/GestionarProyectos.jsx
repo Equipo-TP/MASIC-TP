@@ -69,7 +69,7 @@ const GestionarProyectos = () => {
       <MenuSideBar open={drawerOpen} /> 
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} /> 
-        <div className="p-6">
+        <div className="p-6 mt-20 relative overflow-hidden overflow-y-auto h-[calc(100vh-6rem)] ml-0">
           <h1 className="text-3xl font-bold mb-4">Gestionar Proyectos</h1>
 
           <div className="flex justify-end mb-4">
@@ -100,16 +100,21 @@ const GestionarProyectos = () => {
                     <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.nombre} {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.apellidos}</td>
                     <td className="py-3 px-6">{proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.direccion}, {proyecto.ID_Presupuesto_Proyecto?.Transporte_Personal}</td>
                     <td className="py-3 px-6">
+
                       <div class="btn-group dropdown d-inline-block mb-3 mr-2">
-                        <button className="btn btn-outline-secondary border-2 py-2 px-6 dropdown-toggle rounded-lg bg-gray-300" aria-haspopup="true"
+                        <button className="btn btn-outline-secondary  py-2 px-6 dropdown-toggle rounded-md bg-blue-400 text-cyan-50 font-semibold hover:bg-blue-500" aria-haspopup="true"
                          aria-expanded={isOpen} type="button" onClick={() => toggleDropdown(proyecto._id)}>OPCIONES</button>
                       {isOpen === proyecto._id && (
                         <div class="dropdown-menu" className="absolute mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
-                          <Link to={`/asignar_tecnico/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Ver</Link>
+                          <Link to={`/ver_proyectos/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Ver</Link>
+                          <Link to={`/ver_incidencias/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                          Gestionar incidencias
+                          </Link>
                           <Link to={`/asignar_tecnicos/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Asignar técnico</Link>
                           <Link to={`/visualizar_presupuesto/${proyecto.ID_Presupuesto_Proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Detalle Presupuesto</Link>
                         </div>)}
                       </div> 
+
                     </td>
                   </tr>
                 ))

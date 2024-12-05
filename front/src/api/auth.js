@@ -105,6 +105,9 @@ export const registrarAlmacenRequest = async (almacen) => axios.post(`${API}/reg
 // Función para actualizar un almacén específico por ID
 export const actualizarAlmacenRequest = async (id, almacen) => axios.put(`${API}/editar_almacen/${id}`, almacen);
 
+
+export const editarProyectoPorIdRequest = async (id, data) => {return await axios.put(`${API}/editar_proyecto_por_id/${id}`, data);}
+
 // Función para eliminar un almacén específico por ID
 export const eliminarAlmacenRequest = async (id) => axios.delete(`${API}/eliminar_material/${id}`);
 
@@ -140,3 +143,4 @@ export const eliminarPagoProyectoRequest = async (idPago) => axios.delete(`${API
 // En api/auth.js, asegúrate de tener algo como esto:
 
 export const listarMovimientosRequest = async () => {return await axios.get(`${API}/listar_movimientos`);};
+

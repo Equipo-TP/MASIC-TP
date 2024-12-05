@@ -111,7 +111,7 @@ const VerDetallesPagosCuenta = () => {
           >
             Regresar &gt;
             </button>
-            <h1 className="text-3xl font-bold text-left mt-6">Detalles - Pagos del Proyecto: {proyecto?.Nombre_Proyecto}</h1>
+            <h1 className="text-3xl font-bold text-left my-6">Detalles - Pagos del Proyecto: {proyecto?.Nombre_Proyecto}</h1>
             
           {alerta && <div className="mb-4 text-red-600 font-semibold">{alerta}</div>}
 

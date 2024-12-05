@@ -45,7 +45,7 @@ const GestionarSolicitudes = () => {
     <div className="flex">
       <Layout/>
       <div className="flex-1 relative">
-        <div className="p-6 mt-16 h-full">
+        <div className="p-6 mt-16 h-full m-20">
           <div className="relative overflow-hidden h-full">
             <div className="overflow-y-auto h-[calc(100vh-6rem)]">
 
