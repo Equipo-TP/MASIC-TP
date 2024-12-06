@@ -117,7 +117,7 @@ const GestionarPresupuestosA = () => {
                       <td className="px-6 py-4  dark:text-white">{presupuesto.ID_Solicitud_Presupuesto?.cliente.nombre} {presupuesto.ID_Solicitud_Presupuesto?.cliente.apellidos}</td>
                       <td className="px-6 py-4  dark:text-white">{presupuesto.ID_Solicitud_Presupuesto.vendedor.nombre} {presupuesto.ID_Solicitud_Presupuesto.vendedor.apellidos}</td>
                       <td className="px-6 py-4  dark:text-white">{presupuesto?.Costo_Materiales}</td>
-                      <td className="px-6 py-4  dark:text-white">{presupuesto?.Pago_Total}</td>
+                      <td className="px-6 py-4  dark:text-white">{presupuesto?.Pago_Total.toFixed(2)}</td>
                       <td className="px-6 py-4  dark:text-white">{presupuesto?.estado_2}</td>
                       <td className="px-6 py-4  dark:text-white">
                         <Link to={`/visualizar_presupuesto/${presupuesto._id}`} className="font-medium bg-blue-500 text-white px-4 py-2 rounded mr-3 hover:bg-blue-600">Ver</Link>

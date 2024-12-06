@@ -139,6 +139,7 @@ const RegistrarUsuario = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
+        console.log(formData);
         const response = await axios.post('http://localhost:8000/api/registro_usuario', formData);
         console.log('Usuario registrado con éxito:', response.data);
         if (response.data.data) {
@@ -289,9 +290,9 @@ const RegistrarUsuario = () => {
                       <MenuItem value="" disabled>
                         Selecciona un rol
                       </MenuItem>
-                      <MenuItem value="usuario">Usuario</MenuItem>
-                      <MenuItem value="administrador">Administrador</MenuItem>
-                      <MenuItem value="tecnico">Técnico</MenuItem>
+                      <MenuItem value="Vendedor">Vendedor</MenuItem>
+                      <MenuItem value="Administrador">Administrador</MenuItem>
+                      <MenuItem value="Tecnico">Técnico</MenuItem>
                     </Select>
                     {errors.rol && (
                       <Typography variant="caption" color="error">
