@@ -16,6 +16,8 @@ export function LoggedUsuario() {
     setDrawerOpen(!drawerOpen);    
   }; 
 
+  console.log('hola');
+
   // Configuración del carrusel
   const carouselSettings = {
     dots: true,
