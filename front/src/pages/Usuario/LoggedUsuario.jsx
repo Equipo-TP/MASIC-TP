@@ -155,7 +155,7 @@ export function LoggedUsuario() {
     zIndex: 1,
   }} />
   <video
-    src="/videos/MASICVIDEO.mp4"
+    src="./videos/MASICVIDEO.mp4"
     autoPlay
     loop
     playsInline
