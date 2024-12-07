@@ -16,9 +16,26 @@ const registro_cliente = async function(req, res) {
     }
 }
 
+//const listar_clientes = async function(req, res) {
+//    var reg = await Cliente.find().sort({ createdAt: -1 });
+//    res.status(200).send({ data: reg });
+//}
 const listar_clientes = async function(req, res) {
-    var reg = await Cliente.find().sort({ createdAt: -1 });
-    res.status(200).send({ data: reg });
+    try {
+        // Obtener la lista de clientes ordenados por fecha de creación descendente
+        var clientes = await Cliente.find().sort({ createdAt: -1 });
+
+        // Contar el número total de clientes
+        var total = await Cliente.countDocuments();
+
+        res.status(200).send({
+            total: total, // Número total de clientes
+            data: clientes // Lista de clientes
+        });
+    } catch (error) {
+        console.error('Error al listar clientes:', error);
+        res.status(500).send({ message: 'Error al listar clientes', error });
+    }
 }
 
 const obtener_cliente = async function(req, res) {
@@ -109,5 +126,6 @@ module.exports = {
     obtener_cliente,
     eliminar_cliente,
     obtener_cliente_por_id,
+    obtenerClienteConSolicitudes,
 }
 

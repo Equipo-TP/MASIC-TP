@@ -35,7 +35,6 @@ function MenuSideBar({ open }) {
     { icon: <ProjectIcon />, text: 'Visualizar clientes', path: '/visualizar_clientes', roles: ['Administrador'] },
     { icon: <InventoryIcon />, text: 'Gestionar Almacén', path: '/gestionar_almacen', roles: ['Administrador'] },
     { icon: <PersonIcon />, text: 'Gestionar usuario', path: '/gestionar_usuarios', roles: ['Administrador'] },
-
   ];
 
   return (
@@ -59,7 +58,6 @@ function MenuSideBar({ open }) {
           display: 'block', // Siempre visible en pantallas mayores a 767px
         },
       }}
-      
     >
       {/* Código del logo */}
       <Box
@@ -76,13 +74,14 @@ function MenuSideBar({ open }) {
           backgroundColor: 'rgba(0, 0, 0, 0.0)',
         }}
       >
-        {/* Imagen logo2.2 siempre visible */}
+        {/* Imagen logo2.2 siempre visible y redirige a /logged_user */}
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            //marginRight: '20px',
+            cursor: 'pointer', // Indicamos que es clickeable
           }}
+          onClick={() => navigate('/logged_user')} // Redirige a la ruta deseada
         >
           <img
             src="/images/logo2.2.png"
@@ -114,7 +113,7 @@ function MenuSideBar({ open }) {
         </Box>
 
       </Box>
-      
+
       <Box
         sx={{
           marginTop: '64px',
@@ -166,7 +165,6 @@ function MenuSideBar({ open }) {
             ))}
         </List>
       </Box>
-
     </Drawer>
   );
 }
