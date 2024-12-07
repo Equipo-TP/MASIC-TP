@@ -10,10 +10,17 @@ const RegistrarAlmacen = () => {
   const [nombre, setNombre] = useState('');
   const [stock, setStock] = useState(0);
   const [unidadMedida, setUnidadMedida] = useState('');
-  const [fechaRegistro, setFechaRegistro] = useState(new Date().toISOString()); // Guarda la fecha y hora actual
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [tipoMaterial, setTipoMaterial] = useState('');  // Nuevo campo para Tipo de Material
+  const [fechaRegistro, setFechaRegistro] = useState(new Date().toISOString()); // Guarda la fecha y hora actual
+
+  const [errors, setErrors] = useState({
+    nombre: '',
+    stock: '',
+    unidadMedida: ''
+  });
 
   const navigate = useNavigate();
 
@@ -21,28 +28,66 @@ const RegistrarAlmacen = () => {
     setDrawerOpen(!drawerOpen);
   };
 
+  const validateForm = () => {
+    let formIsValid = true;
+    let newErrors = {
+      nombre: '',
+      stock: '',
+      unidadMedida: ''
+    };
+
+    // Validaciones
+    if (!nombre.trim()) {
+      formIsValid = false;
+      newErrors.nombre = 'Este campo es obligatorio y no puede contener solo espacios';
+    } else if (/^\d+$/.test(nombre.trim())) {
+      formIsValid = false;
+      newErrors.nombre = 'Este campo no puede contener solo números';
+    }
+    if (stock === '' || stock <= 0) {
+      formIsValid = false;
+      newErrors.stock = 'El stock debe ser un número positivo';
+    }
+    if (!unidadMedida.trim()) {
+      formIsValid = false;
+      newErrors.unidadMedida = 'Este campo es obligatorio y no puede contener solo espacios';
+    } else if (/^\d+$/.test(unidadMedida.trim())) {
+      formIsValid = false;
+      newErrors.unidadMedida = 'Este campo no puede contener solo números';
+  }
+
+    setErrors(newErrors);
+    return formIsValid;
+  };
+
   const registrarMaterial = async () => {
-    if (!nombre || stock === '' || !unidadMedida) {
-      setSnackbarMessage('Complete todos los campos');
+
+    if (!validateForm()) {
+
+      setSnackbarMessage('Error al registrar material');
       setSnackbarSeverity('warning');
       setOpenSnackbar(true);
+
       return;
     }
 
     const data = {
       nombre,
       stock,
+      stock_fisico: stock,
       unidad_medida: unidadMedida,
+      tipo_material: tipoMaterial,  // Añadimos el tipo de material
       fecha_registro: fechaRegistro,
     };
 
     try {
-      await axios.post('http://localhost:8000/api/registro_material', data);
+      await axios.post('http://localhost:8000/api/registro_material', data); // Ajusta la URL según tu backend
       setSnackbarMessage('Material registrado correctamente');
       setSnackbarSeverity('success');
       setNombre('');
       setStock(0);
       setUnidadMedida('');
+      setTipoMaterial(''); // Limpiamos el campo de tipo de material
       setFechaRegistro(new Date().toISOString()); // Reinicia a la fecha y hora actual
       setOpenSnackbar(true);
 
@@ -64,6 +109,7 @@ const RegistrarAlmacen = () => {
       setNombre('');
       setStock(0);
       setUnidadMedida('');
+      setTipoMaterial('');
       navigate('/gestionar_almacen');
     }
   };
@@ -85,7 +131,6 @@ const RegistrarAlmacen = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          marginLeft: drawerOpen ? '300px' : '70px',
           transition: 'margin-left 0.3s ease',
           padding: '16px',
           overflowX: 'hidden',
@@ -112,7 +157,6 @@ const RegistrarAlmacen = () => {
             sx={{
               p: 2,
               borderRadius: 2,
-              backgroundColor: 'rgba(211, 211, 211, 0.2)',
               backdropFilter: 'blur(3px)',
               width: '100%',
               boxSizing: 'border-box',
@@ -126,6 +170,8 @@ const RegistrarAlmacen = () => {
                     label="Nombre"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
+                    error={Boolean(errors.nombre)}
+                    helperText={errors.nombre}
                     required
                   />
                 </Grid>
@@ -136,6 +182,8 @@ const RegistrarAlmacen = () => {
                     type="number"
                     value={stock}
                     onChange={(e) => setStock(Number(e.target.value))}
+                    error={Boolean(errors.stock)}
+                    helperText={errors.stock}
                     required
                   />
                 </Grid>
@@ -145,6 +193,8 @@ const RegistrarAlmacen = () => {
                     label="Unidad de Medida"
                     value={unidadMedida}
                     onChange={(e) => setUnidadMedida(e.target.value)}
+                    error={Boolean(errors.unidadMedida)}
+                    helperText={errors.unidadMedida}
                     required
                   />
                 </Grid>
@@ -179,3 +229,4 @@ const RegistrarAlmacen = () => {
 };
 
 export default RegistrarAlmacen;
+

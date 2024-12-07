@@ -11,14 +11,20 @@ const InventarioMaterial = () => {
     const [movimientos, setMovimientos] = useState([]);
     const [cantidad, setCantidad] = useState('');
     const [fechaMov, setFechaMov] = useState('');
-    const [descripcion, setDescripcion] = useState('');  // Nuevo estado para la descripción
+    const [descripcion, setDescripcion] = useState('');
     const [alerta, setAlerta] = useState('');
+    const [tipoIngreso, setTipoIngreso] = useState('');
+    const [proyectos, setProyectos] = useState([]);
+    const [proyectoSeleccionado, setProyectoSeleccionado] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [optionsVisible, setOptionsVisible] = useState(false); // Estado para mostrar las opciones del menú
 
     const navigate = useNavigate();
 
+    // Fetch de movimientos al cargar el componente
     useEffect(() => {
         fetchMovimientos();
+        fetchProyectos();
     }, []);
 
     const fetchMovimientos = async () => {
@@ -36,23 +42,44 @@ const InventarioMaterial = () => {
         }
     };
 
+    // Fetch de proyectos
+    const fetchProyectos = async () => {
+        try {
+            const response = await fetch('/api/proyectos'); // Reemplazar por el endpoint real
+            const data = await response.json();
+            setProyectos(data);
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
+    };
+
     const handleAgregarMovimiento = async () => {
-        if (cantidad === '' || fechaMov === '' || descripcion === '') {  // Verificar que la descripción no esté vacía
+        if (cantidad === '' || fechaMov === '' || (tipoIngreso === 'Compra' && descripcion === '') || (tipoIngreso === 'Sobrantes' && proyectoSeleccionado === '')) {
             setAlerta('Por favor, complete todos los campos.');
             return;
         }
+        if (cantidad <= 0) {
+            setAlerta('La cantidad ingresada debe ser un número positivo')
+            return;
+        }
+
+        const newMovimiento = {
+            cantidad: parseInt(cantidad),
+            fecha_mov: new Date(new Date(fechaMov).getTime() - new Date().getTimezoneOffset() * 60000).toISOString(),
+            id_material: id,
+            tipo_ingreso: tipoIngreso,
+            descripcion: tipoIngreso === 'Compra' ? descripcion : '', // Solo agregar descripción si es compras
+            proyecto_id: tipoIngreso === 'Sobrantes' ? proyectoSeleccionado : '' // Si es sobrante, incluir el proyecto
+        };
+
         try {
-            const newMovimiento = {
-                cantidad: parseInt(cantidad),
-                fecha_mov: new Date(new Date(fechaMov).getTime() - new Date().getTimezoneOffset() * 60000).toISOString(),
-                id_material: id,
-                descripcion: descripcion  // Incluir la descripción en el objeto
-            };
             await registrarMovimientoRequest(newMovimiento);
             fetchMovimientos();
             setCantidad('');
             setFechaMov('');
-            setDescripcion('');  // Limpiar la descripción
+            setDescripcion('');
+            setProyectoSeleccionado('');
+            setTipoIngreso('');
             setAlerta('');
         } catch (error) {
             console.error('Error adding movement:', error);
@@ -89,6 +116,10 @@ const InventarioMaterial = () => {
         setDrawerOpen(!drawerOpen);
     };
 
+    const handleToggleOptions = () => {
+        setOptionsVisible(!optionsVisible);
+    };
+
     return (
         <div className="flex">
             <MenuSideBar open={drawerOpen} />
@@ -104,12 +135,47 @@ const InventarioMaterial = () => {
                             Regresar &gt;
                         </button>
                     </div>
-                    
-                    <p className="text-gray-600">Este módulo lista todos los productos de la tienda.</p>
+
+                    <p className="text-gray-600">Este módulo lista todos los ingresos de stock de materiales.</p>
                     
                     {alerta && <div className="mb-4 text-red-600 font-semibold">{alerta}</div>}
                     
                     <div className="flex space-x-4 mb-6">
+                        <select 
+                            value={tipoIngreso} 
+                            onChange={(e) => setTipoIngreso(e.target.value)} 
+                            className="border p-2 rounded-md w-full"
+                        >
+                            <option value="">Seleccione tipo de ingreso</option>
+                            <option value="Compra">Compras</option>
+                            <option value="Sobrantes">Sobrantes</option>
+                        </select>
+
+                        {tipoIngreso === 'Compra' && (
+                            <input 
+                                type="text" 
+                                placeholder="Descripción del ingreso" 
+                                value={descripcion} 
+                                onChange={(e) => setDescripcion(e.target.value)} 
+                                className="border p-2 rounded-md w-full"
+                            />
+                        )}
+
+                        {tipoIngreso === 'Sobrantes' && (
+                            <select 
+                                value={proyectoSeleccionado} 
+                                onChange={(e) => setProyectoSeleccionado(e.target.value)} 
+                                className="border p-2 rounded-md w-full"
+                            >
+                                <option value="">Selecciona un proyecto</option>
+                                {proyectos.map((proyecto) => (
+                                    <option key={proyecto.id} value={proyecto.id}>
+                                        {proyecto.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+
                         <input 
                             type="number" 
                             placeholder="Cantidad" 
@@ -123,12 +189,7 @@ const InventarioMaterial = () => {
                             onChange={(e) => setFechaMov(e.target.value)} 
                             className="border p-2 rounded-md w-full"
                         />
-                        <textarea
-                            placeholder="Descripción del ingreso"
-                            value={descripcion}
-                            onChange={(e) => setDescripcion(e.target.value)}
-                            className="border p-2 rounded-md w-full"
-                        />
+                        
                         <button 
                             onClick={handleAgregarMovimiento} 
                             className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 rounded-md"
@@ -143,7 +204,7 @@ const InventarioMaterial = () => {
                                 <tr>
                                     <th scope="col" className="px-6 py-3">Cantidad</th>
                                     <th scope="col" className="px-6 py-3">Fecha de Movimiento</th>
-                                    <th scope="col" className="px-6 py-3">Descripción</th>  {/* Nueva columna para la descripción */}
+                                    <th scope="col" className="px-6 py-3">Descripción</th>  
                                     <th scope="col" className="px-6 py-3">Acción</th>
                                 </tr>
                             </thead>
@@ -151,9 +212,13 @@ const InventarioMaterial = () => {
                                 {movimientos.length > 0 ? (
                                     movimientos.map((movimiento) => (
                                         <tr key={movimiento._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento.cantidad}</td>
+                                            <td className="px-6 py-4 text-gray-900 dark:text-white">
+                                                <span style={{ color: movimiento.tipo_ingreso === 'entrada' ? 'green' : 'red' }}>
+                                                    {movimiento.cantidad}
+                                                </span>
+                                            </td>
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">{new Date(movimiento.fecha_mov).toLocaleDateString()}</td>
-                                            <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento.descripcion}</td> {/* Mostrar descripción */}
+                                            <td className="px-6 py-4 text-gray-900 dark:text-white">{movimiento?.tipo_ingreso+': ' + movimiento.descripcion || movimiento.proyecto_id}</td>
                                             <td className="px-6 py-4 text-gray-900 dark:text-white">
                                                 <button 
                                                     onClick={() => handleEliminarMovimiento(movimiento._id)} 
@@ -171,6 +236,19 @@ const InventarioMaterial = () => {
                                 )}
                             </tbody>
                         </table>
+                    </div>
+
+                    <div className="mt-4">
+                        <button onClick={handleToggleOptions} className="bg-gray-200 p-2 rounded-md">
+                            Opciones
+                        </button>
+                        {optionsVisible && (
+                            <div className="absolute bg-white shadow-md rounded-md mt-2">
+                                <button onClick={() => navigate('/inventario')}>Inventario</button>
+                                <button onClick={() => navigate('/movimientos')}>Movimientos</button>
+                                <button onClick={() => handleEliminar()}>Eliminar</button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

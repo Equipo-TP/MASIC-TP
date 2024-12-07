@@ -105,6 +105,8 @@ const AsignarTecnicoProyecto = () => {
                 await editar_proyecto_Request(id, updatedProyecto); // Asegúrate de que esta función esté implementada
                 //navigate('/gestionar_proyectos_tecnico');  // O cualquier otra redirección que necesites
                 console.log('Funciono')
+
+                fetchEventos();
             } catch (error) {
                 console.error('Error al editar proyecto:', error);
             }

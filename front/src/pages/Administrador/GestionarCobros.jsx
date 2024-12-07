@@ -90,7 +90,7 @@ const GestionarCobros = () => {
       <MenuSideBar open={drawerOpen} />
       <div className="flex-1">
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
-        <div className="p-6">
+        <div className="p-6 m-20">
           <div className="relative overflow-x-auto sm:rounded-lg">
             <h1 className="text-3xl font-bold mb-2">Control de Estado de Cobro</h1>
             <p className="mb-6">Este módulo lista todos los proyectos con sus cobros asociados.</p>
@@ -117,7 +117,7 @@ const GestionarCobros = () => {
               </button>
             </div>
 
-            <table className="shadow-md w-full text-sm text-left text-gray-500">
+            <table className="shadow-md w-full overflow-hidden rounded-lg text-sm text-left text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" className="px-6 py-3">Nombre del Proyecto</th>

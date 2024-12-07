@@ -134,8 +134,9 @@ const GestionarProyectosTecnico = () => {
         <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
         <div className="p-6">
           
-            <div className='select-none flex items-center justify-between mb-4'>
-              <h1 className="text-3xl font-bold mb-2">Proyectos Asignados</h1>
+            <div>
+              <h1 className="text-3xl font-bold mb-6">Proyectos Asignados</h1>
+              <p className="mb-8 text-zinc-600">En este módulo podrá visualizar los proyectos que se le ha asignado.</p>
             </div>
             <table className="shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -144,7 +145,7 @@ const GestionarProyectosTecnico = () => {
                   <th scope="col" className="px-6 py-3">Nombre del Proyecto</th>
                   <th scope="col" className="px-6 py-3">Nombre del cliente</th>
                   <th scope="col" className="px-6 py-3">Dirección</th>
-                
+                  <th className="py-3 px-6 text-left">Estado</th>
                   <th scope="col" className="px-6 py-3">Acciones</th>
                 </tr>
               </thead>
@@ -159,7 +160,7 @@ const GestionarProyectosTecnico = () => {
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {proyecto.Nombre_Proyecto} </td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.nombre} {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.cliente.apellidos}</td>
                     <td className="px-6 py-4 text-gray-900 dark:text-white"> {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.direccion}, {proyecto.ID_Presupuesto_Proyecto?.ID_Solicitud_Presupuesto?.distrito} </td>
-                                                      
+                    <td className="py-3 px-6">{proyecto.Estado}</td>                                 
                     <td className="px-6 py-4 text-gray-900 dark:text-white">  
 
                     <div class="btn-group dropdown d-inline-block mb-3 mr-2">
@@ -174,7 +175,6 @@ const GestionarProyectosTecnico = () => {
                       <Link to={`/editar_proyectos/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                         Editar
                       </Link>
-                          <Link to={`/asignar_tecnicos/${proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Asignar técnico</Link>
                           <Link to={`/visualizar_presupuesto/${proyecto.ID_Presupuesto_Proyecto._id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Detalle Presupuesto</Link>
                         </div>)}
                       </div> 

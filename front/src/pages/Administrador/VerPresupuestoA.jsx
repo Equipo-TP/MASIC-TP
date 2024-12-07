@@ -12,43 +12,34 @@ const VerPresupuestoA = () => {
     const [solicitud, setSolicitud] = useState(null);
     const [nombreCliente, setNombreCliente] = useState('');
 
+    useEffect(() => {
+        const fetchPresupuesto = async () => {
+            try {
+                //llama token por seguridad
+                const token = localStorage.getItem('token');
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                };
+                //llama obtener presupuesto por ID
+                const response = await obtenerPresupuestoIDRequest(id, headers);
+                setPresupuesto(response.data.data);
 
+                //llama obtener solicitud por ID
+                const solicitudResponse = await obtener_solicitud_por_idRequest(response.data.data.ID_Solicitud_Presupuesto._id);
+                setSolicitud(solicitudResponse.data.data);
+          
+                //llama obtener cliente por ID
+                const clienteResponse = await obtener_cliente_por_idRequest(solicitudResponse.data.data.cliente._id); 
+                setNombreCliente(clienteResponse.data.data);
+                
 
-    //metodo para actualizar el estado del presupuesto
-    const actualizarEstado = async (nuevoEstado) => {
-        try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            };
-            const response = await editarPresupuestoRequest(id, { estado_2: nuevoEstado }, headers);
-            console.log(response)
-            if (response.data && response.data.data) {
-                setPresupuesto(prev => ({
-                    ...prev,
-                    estado_2: response.data.data.estado_2 || nuevoEstado
-                }))
-            } else {
-                console.error('No se recibió una respuesta válida de la API:', response);
+            } catch (error) {
+                console.error('Error al obtener el presupuesto:', error);
             }
-        } catch (error) {
-            console.error('Error al actualizar el estado del presupuesto:', error);
-        }
-    };
-
-    const manejarAprobacion = () => {
-        actualizarEstado('Aprobado');
-        alert("Presupuesto aprobado con éxito")
-        navigate('/gestionar_presupuestos');
-    };
-
-    const manejarRechazo = () => {
-        actualizarEstado('Rechazado');
-        alert("Presupuesto rechazado")
-        navigate('/gestionar_presupuestos');
-
-    };
+        };
+        fetchPresupuesto();
+    }, [id]);
 
     if (!presupuesto) {
         return <div>Cargando presupuesto...</div>;

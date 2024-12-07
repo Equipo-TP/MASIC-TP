@@ -61,7 +61,7 @@ const VisualizarCronograma = () => {
     return (
         <div className='flex'>
             <Layout />
-            <div className="flex-1">
+            <div className="flex-1 m-20">
                 <h1 className='font-bold mb-2 text-3xl'>Cronograma de Proyectos</h1>
                 <h2 className='italic'>Horario de los proyectos que se encuentran programados</h2>
                 <div className="mt-5 bg-white p-4 rounded shadow-xl">

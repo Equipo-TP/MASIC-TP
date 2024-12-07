@@ -167,19 +167,6 @@ const onSubmit = async (data) => {
                 className="w-full p-2 border rounded"
                 readOnly
               />
-               <button
-                type="button"
-                onClick={() => {
-                  if (proyecto.ID_Presupuesto_Proyecto && proyecto.ID_Presupuesto_Proyecto._id) {
-                    navigate(`/ver_presupuesto/${proyecto.ID_Presupuesto_Proyecto._id}`);
-                  } else {
-                    alert('El presupuesto no está disponible.');
-                  }
-                }}                
-                className="bg-green-600 text-white px-4 py-2 rounded"
-              >
-                Editar Presupuesto
-                </button>
                 <button
                 type="button"
                 onClick={() => {
@@ -189,9 +176,9 @@ const onSubmit = async (data) => {
                     alert('El presupuesto no está disponible.');
                   }
                 }}                
-                className="bg-blue-400 text-white px-4 py-2 m-5 rounded"
+                className="bg-blue-400 text-white px-2 py-2 m-3 ml-0 rounded"
               >
-                Manejar incidencias
+                Registrar incidencias
                 </button>
             </div>
             <div className="col-span-2">

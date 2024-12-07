@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { obtenerPresupuestoIDRequest, editarPresupuestoAdminRequest, listarTarifasRequest} from '../../api/auth'; // Asegúrate de que esta función esté disponible en tu API
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { confirmAlert } from 'react-confirm-alert';
 import { useForm } from 'react-hook-form';
+import { presupuestoSchema } from '../../Schemas/AUTH';
 
 const EditarPresupuesto = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const { name } = useAuth();
     const [presupuesto, setPresupuesto] = useState(null);
-    const [solicitud, setSolicitud] = useState(null);
-    const [nombreCliente, setNombreCliente] = useState('');
     const [ luminaria, setLuminaria] = useState([]); // Lista de tipos de luminarias a instalar par el menú desplegable
-
-    const { register , handleSubmit, reset, formState: { errors } } = useForm({
+    const { register , handleSubmit, getValues} = useForm({
         defaultValues: presupuesto,
       });
+    const [errores, setErrores] = useState({});
       
     useEffect(() => {
         const fetchPresupuesto = async () => {
@@ -38,7 +34,6 @@ const EditarPresupuesto = () => {
                 const response = await obtenerPresupuestoIDRequest(id, headers);
                 setPresupuesto(response.data.data);
                 //reset(response.data.data);
-                console.log(presupuesto);
 
             } catch (error) {
                 console.error('Error al obtener el presupuesto:', error);
@@ -46,18 +41,41 @@ const EditarPresupuesto = () => {
         };
         fetchPresupuesto();
     }, [id]);
+
+    const validarDatos = () => {
+        try {
+          const validarData = getValues();
+            
+          presupuestoSchema.parse(validarData);
+          setErrores({});
+          return true; // Los datos son válidos
+        } catch (error) {
+          if (error.errors) {
+            const erroresMapeados = error.errors.reduce((acc, curr) => {
+              acc[curr.path.join('.')] = curr.message;
+              return acc;
+            }, {});
+            setErrores(erroresMapeados);
+          }
+          return false; // Los datos no son válidos
+        }
+      };
     
     //metodo para actualizar el estado del presupuesto
     const onSubmit = async (data) => {
+
+        if (!validarDatos()) {
+            alert('Corrige los errores antes de continuar.');
+            return;
+          }
+
         try {
             const token = localStorage.getItem('token');
             const headers = {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             };
-            console.log(data);
             await editarPresupuestoAdminRequest(id, data, headers);
-            console.log(data);
             alert("Presupuesto actualizado correctamente");
             navigate('/gestionar_presupuestos');
         } catch (error) {
@@ -65,27 +83,10 @@ const EditarPresupuesto = () => {
         }
     };
 
-
     if (!presupuesto) {
         return <div>Cargando presupuesto...</div>;
     }
-    /*const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            };
 
-            await editarPresupuestoRequest(id, e, headers); // Asegúrate de que esta función esté implementada
-            console.log(e);
-            navigate('/gestionar_presupuestos'); // Redirige a la ruta deseada después de editar
-        } catch (error) {
-            console.error('Error al editar el presupuesto:', error);
-            // Manejo de errores si es necesario
-        }
-    };*/
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='h-5/6'> 
             <div className="bg-white border-4 rounded-lg shadow relative m-5 mt-10 h-[calc(100vh-120px)] overflow-y-auto overflow-x-auto">
@@ -117,7 +118,6 @@ const EditarPresupuesto = () => {
                             type="text"
                                 name="nombre"
                                 defaultValue={presupuesto.ID_Solicitud_Presupuesto.vendedor.nombre + " " + presupuesto.ID_Solicitud_Presupuesto.vendedor.apellidos}
-                                error={!!errors.name}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 required
                                 disabled
@@ -129,7 +129,6 @@ const EditarPresupuesto = () => {
                             type="text"
                                 name="nombre"
                                 defaultValue={presupuesto.ID_Solicitud_Presupuesto.cliente.nombre}
-                                error={!!errors.nombre}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 required
                                 disabled
@@ -142,7 +141,6 @@ const EditarPresupuesto = () => {
                             type="text"
                                 name="apellidos"
                                 defaultValue={presupuesto.ID_Solicitud_Presupuesto.cliente.apellidos}
-                                error={!!errors.apellidos}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 required
                                 disabled
@@ -155,7 +153,6 @@ const EditarPresupuesto = () => {
                 type="text"
                 name="ID_Presupuesto"
                 defaultValue={presupuesto.ID_Presupuesto}
-                error={!!errors.ID_Presupuesto}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
                 disabled
@@ -167,84 +164,87 @@ const EditarPresupuesto = () => {
                 type="text"
                 name="ID_Solicitud_Presupuesto"
                 defaultValue={presupuesto.ID_Solicitud_Presupuesto.id}
-                error={!!errors.ID_Solicitud_Presupuesto}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
                 disabled
               />
             </div>
-                        
+            <div className="col-span-6 sm:col-span-3">
+                <label className="text-sm font-medium text-gray-900 block mb-2">
+                    Fecha
+                </label>
+                <input
+                    type="text"
+                    value={new Date(presupuesto.createdAt).toLocaleDateString()}
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                    disabled
+                />
+            </div>
 
-                        <div className="col-span-6 sm:col-span-3">
-                            <label className="text-sm font-medium text-gray-900 block mb-2">
-                                Fecha
-                            </label>
-                            <input
-                                type="text"
-                                value={new Date(presupuesto.createdAt).toLocaleDateString()}
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                                disabled
-                            />
-                        </div>
-
-                        <div className="col-span-6 sm:col-span-3">
+            <div className="col-span-6 sm:col-span-3">
               <label className="block text-gray-700 text-sm font-bold mb-2">Transporte Personal</label>
               <input
                 type="text"
                 name="Transporte_Personal"
                 defaultValue={presupuesto.Transporte_Personal}
                 {...register('Transporte_Personal')}
-                error={!!errors.Transporte_Personal}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
+              {errores.Transporte_Personal && (
+                    <p className="text-red-500 text-xs mt-1">{errores.Transporte_Personal}</p>
+                )}
             </div>
 
 
-                        <div className="col-span-6 sm:col-span-6">
-                            <h3 className="text-xl font-semibold mt-6">Instalaciones</h3>
-                            {presupuesto.instalaciones && presupuesto.instalaciones.length > 0 ? (
-                                <table className="table-auto border-collapse border border-gray-300 w-full mt-4">
-                                    <thead>
-                                        <tr className="bg-gray-200">
-                                            <th className="border border-gray-300 px-4 py-2">Tipo Luminaria</th>
-                                            <th className="border border-gray-300 px-4 py-2">Cantidad</th>
-                                            <th className="border border-gray-300 px-4 py-2">Costo Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {presupuesto.instalaciones.map((instalacion, index) => (
-                                            <tr key={index}>
-                                                <td className="border border-gray-300 px-4 py-2">
-                                                <select
-                                               name="tipo_luminaria"
-                                               defaultValue={instalacion.tipo_luminaria?._id}
-                                               {...register(`instalaciones.${index}.tipo_luminaria`)}
-                                               className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                               
-                                             >
-                                                {instalacion.tipo_luminaria?.tipo_luminaria}
-                                               {luminaria.map(tipoluminaria => (
-                                                 <option key={tipoluminaria._id} value={tipoluminaria._id}>
-                                                   {tipoluminaria.tipo_luminaria}
-                                                 </option>
-                                               ))}
-                                             </select></td>
-                                             <td className="border border-gray-300 px-4 py-2">
-                                                <input
-                                                  type="number"
-                                                  name="cantidad"
-                                                  defaultValue={instalacion.cantidad}
-                                                  {...register(`instalaciones.${index}.cantidad`, {
-                                                    required: true,
-                                                    valueAsNumber: true, // Si deseas que el valor se maneje como número
-                                                  })}
-                                                  className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                                                 required
-                                                      />
-                                                      </td>
-                                                <td className="border border-gray-300 px-4 py-2">$ {instalacion.costo_total}</td>
-                                            </tr>
+            <div className="col-span-6 sm:col-span-6">
+                <h3 className="text-xl font-semibold mt-6">Instalaciones</h3>
+                {presupuesto.instalaciones && presupuesto.instalaciones.length > 0 ? (
+                <table className="table-auto border-collapse border border-gray-300 w-full mt-4">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="border border-gray-300 px-4 py-2">Tipo Luminaria</th>
+                            <th className="border border-gray-300 px-4 py-2">Cantidad</th>
+                            <th className="border border-gray-300 px-4 py-2">Costo Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {presupuesto.instalaciones.map((instalacion, index) => (
+                        <tr key={index}>
+                                <td className="border border-gray-300 px-4 py-2">
+                                    <select
+                                        name="tipo_luminaria"
+                                        defaultValue={instalacion.tipo_luminaria?._id}
+                                        {...register(`instalaciones.${index}.tipo_luminaria`)}
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                                    >
+                                    {instalacion.tipo_luminaria?.tipo_luminaria}
+                                    {luminaria.map(tipoluminaria => (
+                                        <option key={tipoluminaria._id} value={tipoluminaria._id}>
+                                            {tipoluminaria.tipo_luminaria}
+                                        </option>
+                                    ))}
+                                    </select>
+                                </td>
+
+                                <td className="border border-gray-300 px-4 py-2">
+                                    <input
+                                        type="number"
+                                        name="cantidad"
+                                        defaultValue={instalacion.cantidad}
+                                        {...register(`instalaciones.${index}.cantidad`, {
+                                            required: true,
+                                            valueAsNumber: true, // Si deseas que el valor se maneje como número
+                                        })}
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                                        required
+                                    />
+                                    {errores[`instalaciones.${index}.cantidad`] && (
+                                        <p className="text-red-500 text-sm mt-1">{errores[`instalaciones.${index}.cantidad`]}</p>
+                                    )}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">$ {instalacion.costo_total}</td>
+                        </tr>
                                         ))}
                                     </tbody>
                                 </table>
@@ -253,42 +253,51 @@ const EditarPresupuesto = () => {
                             )}
                         </div>
 
-                       
-                        <div className="col-span-6 sm:col-span-3">
+            <div className="col-span-6 sm:col-span-3">
               <label className="block text-gray-700 text-sm font-bold mb-2">Materiales</label>
               <input
                 type="text"
                 name="Materiales"
                 defaultValue={presupuesto.Materiales}
                 {...register('Materiales')}
-                error={!!errors.Materiales}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
+              {errores.Materiales && (
+                <p className="text-red-500 text-sm mt-1">{errores.Materiales}</p>
+              )}
             </div>
             <div className="col-span-6 sm:col-span-3">
               <label className="block text-gray-700 text-sm font-bold mb-2">Costo Materiales</label>
               <input
-                type="text"
+                type="number"
                 name="Costo_Materiales"
                 defaultValue={presupuesto.Costo_Materiales}
-                {...register('Costo_Materiales')}
-                error={!!errors.Costo_Materiales}
+                {...register('Costo_Materiales', {
+                    valueAsNumber: true, // Convierte automáticamente a número
+                  })}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
+              {errores.Costo_Materiales && (
+                <p className="text-red-500 text-sm mt-1">{errores.Costo_Materiales}</p>
+              )}
             </div>
             <div className="col-span-6 sm:col-span-3">
               <label className="block text-gray-700 text-sm font-bold mb-2">Costo de Transporte de Personal</label>
               <input
-                type="text"
+                type="number"
                 name="Costo_Transporte"
                 defaultValue={presupuesto.Costo_Transporte}
-                {...register('Costo_Transporte')}
-                error={!!errors.Costo_Transporte}
+                {...register('Costo_Transporte', {
+                    valueAsNumber: true, // Convierte automáticamente a número
+                  })}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
+              {errores.Costo_Transporte && (
+                <p className="text-red-500 text-sm mt-1">{errores.Costo_Transporte}</p>
+              )}
             </div>
             
                         <div className="col-span-6 sm:col-span-3">

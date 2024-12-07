@@ -5,6 +5,8 @@ var cors = require('cors');
 var express = require('express');
 var bodyparser = require('body-parser');
 var mongoose = require('mongoose');
+const chatbotRoutes = require('./routes/chatbotRoutes');
+
 
 //declaramos la variable app que manejaremos mediante express
 var app = express();
@@ -72,6 +74,7 @@ app.use('/api', proyecto_route);
 app.use('/api', material_route);
 app.use('/api', inventario_route);
 app.use('/api', cobro_route);
+app.use('/api', chatbotRoutes);
 
 
 //Exportación del módulo app para que se puedan comunicar entre sí

@@ -41,19 +41,19 @@ const GestionSolicitud = () => {
     return (
         <div className="flex">
             <MenuSideBar open={drawerOpen} />
-            <div className="flex-1">
+            <div className="flex-1 overflow-y-auto h-[calc(100vh-1rem)]">
                 <NavBar onDrawerToggle={handleDrawerToggle} drawerOpen={drawerOpen} />
-                <div className="p-6">
+                <div className="p-6 mx-20 mt-20">
                     <h1 className="text-3xl font-bold mb-6">Gestión de Solicitud</h1>
-                    
+                    <p className="mb-8 text-zinc-600">En este módulo podrá visualizar y gestionar los estados de las solicitudes de servicio recibidas.</p>
                     {/* Tabla para pantallas grandes */}
-                    <table className="hidden md:block shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <table className="hidden overflow-hidden rounded-lg md:block shadow-md w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th className="px-6 py-3">ID</th>
                                 <th className="px-6 py-3">Característica</th>
                                 <th className="px-6 py-3">Descripción</th>
-                                <th className="px-6 py-3">Estado</th>
+                                <th className="px-6 py-3">Revisión</th>
                                 <th className="px-6 py-3">Acciones</th>
                             </tr>
                         </thead>
@@ -64,10 +64,12 @@ const GestionSolicitud = () => {
                                     <td className="px-6 py-4">{solicitud.id}</td>
                                     <td className="px-6 py-4">{solicitud.caracteristicas_obra}</td>
                                     <td className="px-6 py-4">{solicitud.descripcion_servicio}</td>
-                                    <td className="px-6 py-4">{solicitud.estado_2}</td>
+                                    <td className={`px-6 py-4 ${
+    solicitud.estado_2 === "Pendiente" ? "text-red-500 font-semibold" : ""
+  }`}>{solicitud.estado_2}</td>
                                     <td className="px-6 py-4">
                                         <button
-                                            className="bg-blue-500 text-black px-4 py-2 rounded"
+                                            className="bg-blue-500 text-white px-4 py-2 rounded"
                                             onClick={() => navigate(`/info_solicitud/${solicitud._id}`)}
                                         >
                                             Ver
